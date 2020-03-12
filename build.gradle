@@ -86,6 +86,7 @@ sonarqube {
         property "sonar.projectKey", project.sonarProjectKey
         property "sonar.organization", project.sonarOrganization
         property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.projectName", project.sonarProjectName
         property "sonar.login", project.sonarToken
         property "sonar.coverage.jacoco.xmlReportPaths", ["$buildDir/jacocoReportDir/test/jacocoTestReport.xml"]
         property "sonar.cpd.exclusions", "**/entity/*.java,**/rest/dto/*.java"
