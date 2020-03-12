@@ -1,5 +1,7 @@
 # SoPra RESTful Service Template FS20
 
+![Deploy Project](https://github.com/group-08/server/workflows/Deploy%20Project/badge.svg)
+
 ## Getting started with Spring Boot
 
 -   Documentation: https://docs.spring.io/spring-boot/docs/current/reference/html/index.html
