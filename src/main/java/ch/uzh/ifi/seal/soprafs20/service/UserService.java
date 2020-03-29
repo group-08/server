@@ -61,7 +61,7 @@ public class UserService {
      */
     private void checkIfUserExists(User userToBeCreated) {
         User userByUsername = userRepository.findByUsername(userToBeCreated.getUsername());
-        User userByEmail = userRepository.findbyEmail(userToBeCreated.getEmail());
+        User userByEmail = userRepository.findByEmail(userToBeCreated.getEmail());
 
         String baseErrorMessage = "The %s provided %s not unique. Therefore, the user could not be created!";
         if (userByUsername != null && userByEmail != null) {

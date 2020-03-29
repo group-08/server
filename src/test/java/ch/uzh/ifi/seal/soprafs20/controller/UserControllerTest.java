@@ -73,12 +73,14 @@ public class UserControllerTest {
         user.setId(1L);
         user.setEmail("test@user.tld");
         user.setUsername("testUsername");
+        user.setPassword("password");
         user.setToken("1");
         user.setStatus(UserStatus.ONLINE);
 
         UserPostDTO userPostDTO = new UserPostDTO();
         userPostDTO.setEmail("test@user.tld");
         userPostDTO.setUsername("testUsername");
+        userPostDTO.setPassword("password");
 
         given(userService.createUser(Mockito.any())).willReturn(user);
 

@@ -7,6 +7,7 @@ import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostDTO;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * DTOMapperTest
@@ -19,6 +20,7 @@ public class DTOMapperTest {
         UserPostDTO userPostDTO = new UserPostDTO();
         userPostDTO.setEmail("user@name.tld");
         userPostDTO.setUsername("username");
+        userPostDTO.setPassword("password");
 
         // MAP -> Create user
         User user = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
@@ -26,6 +28,7 @@ public class DTOMapperTest {
         // check content
         assertEquals(userPostDTO.getEmail(), user.getEmail());
         assertEquals(userPostDTO.getUsername(), user.getUsername());
+        assertTrue(user.checkPassword(userPostDTO.getPassword()));
     }
 
     @Test
