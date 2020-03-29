@@ -3,6 +3,7 @@ package ch.uzh.ifi.seal.soprafs20.service;
 import ch.uzh.ifi.seal.soprafs20.constant.UserStatus;
 import ch.uzh.ifi.seal.soprafs20.entity.User;
 import ch.uzh.ifi.seal.soprafs20.repository.UserRepository;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostLoginDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,19 @@ public class UserService {
 
         log.debug("Created Information for User: {}", newUser);
         return newUser;
+    }
+
+    public User login(UserPostLoginDTO loginUser) throws IllegalAccessException {
+        // Get the user trying to login
+        User user = userRepository.findByEmail(loginUser.getEmail());
+
+        // Check the password
+        if (!user.checkPassword(loginUser.getPassword())) {
+           throw new IllegalAccessException();
+        }
+
+        // return the user
+        return user;
     }
 
     /**
