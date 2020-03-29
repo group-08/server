@@ -42,7 +42,7 @@ public class DTOMapperTest {
 
         // check content
         assertEquals(user.getId(), userGetDTO.getId());
-        assertEquals(user.getName(), userGetDTO.getName());
+        assertEquals(user.getName(), userGetDTO.getEmail());
         assertEquals(user.getUsername(), userGetDTO.getUsername());
         assertEquals(user.getStatus(), userGetDTO.getStatus());
     }
