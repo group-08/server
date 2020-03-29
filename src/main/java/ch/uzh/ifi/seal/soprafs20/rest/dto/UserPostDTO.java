@@ -2,18 +2,18 @@ package ch.uzh.ifi.seal.soprafs20.rest.dto;
 
 public class UserPostDTO {
 
-    private String name;
+    private String email;
 
     private String username;
 
     private String password;
 
-    public String getName() {
-        return name;
+    public String getEmail() {
+        return email;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getUsername() {
