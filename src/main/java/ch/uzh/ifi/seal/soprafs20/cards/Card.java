@@ -4,7 +4,5 @@ public interface Card {
     //Has to be abstract
 
 
-    public String toString(){
-        //returns a String
-    }
+    public String toString();
 }

@@ -8,5 +8,6 @@ public class JokerCard implements Card{
 
     public String toString(){
         //returns a String
+        return null;
     }
 }

@@ -7,6 +7,7 @@ public class Deck {
 
     public Card deal(int amount){
         //returns a Card
+        return null;
     }
 
     public void shuffle(){

@@ -35,7 +35,7 @@ public class Game {
     }
 
     public Player getNextPlayer(){
-
+        return null;
     }
 
     public void endGame(){

@@ -6,5 +6,6 @@ public class NormalCard implements Card {
 
     public String toString(){
         //returns a String
+        return null;
     }
 }
