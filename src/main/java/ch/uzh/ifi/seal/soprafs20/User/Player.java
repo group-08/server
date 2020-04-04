@@ -1,6 +1,6 @@
 package ch.uzh.ifi.seal.soprafs20.User;
 
-import cards.Card;
+import ch.uzh.ifi.seal.soprafs20.cards.Card;
 
 import java.util.ArrayList;
 

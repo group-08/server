@@ -1,9 +1,11 @@
 package ch.uzh.ifi.seal.soprafs20.game;
 
 
-import User.Figure;
-import board.Board;
-import cards.Card;
+
+
+import ch.uzh.ifi.seal.soprafs20.User.Figure;
+import ch.uzh.ifi.seal.soprafs20.board.Board;
+import ch.uzh.ifi.seal.soprafs20.cards.Card;
 
 import java.util.ArrayList;
 

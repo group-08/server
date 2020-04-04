@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.field;
 
-import action.Action;
+
+import ch.uzh.ifi.seal.soprafs20.action.Action;
 
 public class SpecialField extends Field implements Action {
 

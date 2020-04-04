@@ -1,6 +1,8 @@
 package ch.uzh.ifi.seal.soprafs20.board;
 
-import User.Player;
+
+
+import ch.uzh.ifi.seal.soprafs20.User.Player;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
