@@ -2,10 +2,13 @@ package ch.uzh.ifi.seal.soprafs20.game;
 
 
 
+import ch.uzh.ifi.seal.soprafs20.User.Figure;
 import ch.uzh.ifi.seal.soprafs20.User.Player;
 import ch.uzh.ifi.seal.soprafs20.board.Board;
 import ch.uzh.ifi.seal.soprafs20.cards.Card;
 import ch.uzh.ifi.seal.soprafs20.cards.Deck;
+import ch.uzh.ifi.seal.soprafs20.field.Field;
+
 
 import java.util.ArrayList;
 
@@ -46,7 +49,17 @@ public class Game {
 
     }
 
-    public void move(Card card, Player player){
-
+    public void move(Card card, Player player, Figure figure){
+        Field currentField = this.board.getCurrentField(figure);
+        Field targetField = this.board.getTargetField(currentField, card);
+        if (targetField.getOccupant() != null) {
+            Figure occupant = targetField.getOccupant();
+            this.board.sendFigureHome(occupant);
+            currentField.setOccupant(null);
+            targetField.setOccupant(figure);
+        } else {
+            currentField.setOccupant(null);
+            targetField.setOccupant(figure);
+        }
     }
 }
