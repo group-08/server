@@ -1,8 +1,16 @@
 package ch.uzh.ifi.seal.soprafs20.cards;
 
-public class JokerCard implements Card{
+import javax.persistence.Enumerated;
 
-    public void transformInto(Card card){
+public class JokerCard extends Card {
+
+    @Enumerated
+    private Suit suit = null;
+
+    @Enumerated
+    private Value value = null;
+
+    public void transformInto(Suit suit, Value value){
         //maybe this should return something
     }
 

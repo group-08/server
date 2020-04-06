@@ -1,8 +1,15 @@
 package ch.uzh.ifi.seal.soprafs20.cards;
 
-public interface Card {
+import javax.persistence.*;
+import java.io.Serializable;
+
+@Entity
+@Table( name = "CARD")
+public abstract class Card implements Serializable {
     //Has to be abstract
+    @Id
+    @GeneratedValue
+    private long id;
 
-
-    public String toString();
+    public abstract String toString();
 }
