@@ -7,14 +7,20 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
+@Entity
+@Table(name = "BOARD")
 public abstract class Board implements Serializable {
+
+    @Id
+    private long id;
 
     @OneToMany(targetEntity = Field.class)
     private Collection<Field> fields;
 
     @OneToMany(targetEntity = Player.class)
-    private ArrayList<Player> players;
+    private List<Player> players;
 
     public void play(){
         /* something */

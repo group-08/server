@@ -9,6 +9,7 @@ import ch.uzh.ifi.seal.soprafs20.cards.Deck;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "GAME")
@@ -20,19 +21,19 @@ public class Game implements Serializable {
     @GeneratedValue
     private Long id;
 
-    @OneToMany(targetEntity = GameState.class)
+    @Enumerated
     GameState gameState;
 
     @OneToMany(targetEntity = Player.class)
-    ArrayList<Player> players;
+    List<Player> players = new ArrayList<>();
 
-    @OneToOne(targetEntity = Board.class)
+    @OneToOne
     Board board;
 
-    @OneToOne(targetEntity = Deck.class)
+    @OneToOne
     Deck deck;
 
-    @ManyToOne(targetEntity = WeatherState.class)
+    @Enumerated
     WeatherState weatherState;
 
     Game(){

@@ -1,7 +1,6 @@
 package ch.uzh.ifi.seal.soprafs20.User;
 
 
-
 import ch.uzh.ifi.seal.soprafs20.game.Game;
 
 import java.util.ArrayList;
