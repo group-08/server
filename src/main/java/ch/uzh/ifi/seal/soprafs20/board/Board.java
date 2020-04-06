@@ -12,10 +12,12 @@ public abstract class Board {
 
     private Collection<Field> fields;
     private ArrayList<Player> players;
+    protected int version;
 
     public void play(){
         /* something */
     }
+
 
 
 }
