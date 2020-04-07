@@ -52,14 +52,19 @@ public class Game {
     public void move(Card card, Player player, Figure figure){
         Field currentField = this.board.getCurrentField(figure);
         Field targetField = this.board.getTargetField(currentField, card);
-        if (targetField.getOccupant() != null) {
-            Figure occupant = targetField.getOccupant();
-            this.board.sendFigureHome(occupant);
-            currentField.setOccupant(null);
-            targetField.setOccupant(figure);
+        if (this.board.isMovePossible(currentField, targetField)) {
+            if (targetField.getOccupant() != null) {
+                Figure occupant = targetField.getOccupant();
+                this.board.sendFigureHome(occupant);
+                currentField.setOccupant(null);
+                targetField.setOccupant(figure);
+            }
+            else {
+                currentField.setOccupant(null);
+                targetField.setOccupant(figure);
+            }
         } else {
-            currentField.setOccupant(null);
-            targetField.setOccupant(figure);
+            // throw error message
         }
     }
 }

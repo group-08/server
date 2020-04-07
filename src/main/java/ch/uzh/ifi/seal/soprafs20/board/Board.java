@@ -54,6 +54,20 @@ public abstract class Board {
         /* sends figure home */
     }
 
+    /**
+     * This checks if there are any savezones involved in this move and if the move is possible
+     * @param currentField the field the figure is on now
+     * @param targetField the field the figure wants to move on
+     * @return boolean if move is possible
+     */
+    public boolean isMovePossible(Field currentField, Field targetField) {
+        /* check if targetfield is safezone, if so, make sure that if it is a goalfield, there's no other
+        figure in the goalzone in between, if it is the first field and occupied, not possible, if on the way there is
+        a first field that is occupied and blocking not possible either.
+         */
+        return false;
+    }
+
 
 
 }
