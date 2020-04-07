@@ -11,7 +11,18 @@ public class NormalCard extends Card {
     private Value value;
 
     public String toString(){
-        //returns a String
-        return null;
+
+       return String.format("Suit: %s Value: %s", this.suit, this.value);
+
     }
+
+    public Suit getSuit() {
+        return suit;
+    }
+
+    public Value getValue() {
+        return value;
+    }
+
+
 }

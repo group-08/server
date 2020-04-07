@@ -1,8 +1,13 @@
 package ch.uzh.ifi.seal.soprafs20.cards;
 
+import ch.uzh.ifi.seal.soprafs20.User.Player;
+import ch.uzh.ifi.seal.soprafs20.User.User;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -17,12 +22,11 @@ public class Deck implements Serializable {
     List<Card> cards = new ArrayList<Card>();
 
     public List<Card> deal(int amount){
-        //returns cards
         return null;
     }
 
     public void shuffle(){
-
+        Collections.shuffle(cards);
     }
 
 }
