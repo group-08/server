@@ -68,7 +68,25 @@ public abstract class Board {
         }
     }
 
-    public void move(Card card, Player player, Figure figure){
+    public void getPossibleTargetFields(Figure figure, Card card) {
+        Field currentField = this.getCurrentField(figure);
+        // gets all the possible moves from Adj. List, gets ID's of the fields and returns them as a list
+    }
+
+    public void move(Figure figure, Field targetField) {
+        Field currentField = this.getCurrentField(figure);
+        if (targetField.getOccupant() != null) {
+            Figure occupant = targetField.getOccupant();
+            this.sendFigureHome(occupant);
+            currentField.setOccupant(null);
+            targetField.setOccupant(figure);
+        }
+        else {
+            currentField.setOccupant(null);
+            targetField.setOccupant(figure);
+        }
+
+        /* Old Version
         Field currentField = this.getCurrentField(figure);
         Field targetField = this.getTargetField(currentField, card);
         if (this.isMovePossible(currentField, targetField)) {
@@ -84,7 +102,7 @@ public abstract class Board {
             }
         } else {
             // throw error message
-        }
+        } */
     }
 
 }
