@@ -62,6 +62,8 @@ public abstract class Board {
         a first field that is occupied and blocking not possible either. Furthermore checks if targetfield or any field
         in between is not a home field.
          */
+
+
         return false;
     }
 
