@@ -5,7 +5,7 @@ package ch.uzh.ifi.seal.soprafs20.board;
 import ch.uzh.ifi.seal.soprafs20.User.Figure;
 import ch.uzh.ifi.seal.soprafs20.User.Player;
 import ch.uzh.ifi.seal.soprafs20.cards.Card;
-import ch.uzh.ifi.seal.soprafs20.field.Field;
+import ch.uzh.ifi.seal.soprafs20.field.*;
 
 
 import java.util.ArrayList;
@@ -57,14 +57,15 @@ public abstract class Board {
      * @return boolean if move is possible
      */
     public boolean isMovePossible(Field currentField, Field targetField) {
-        /* check if targetfield is safezone, if so, make sure that if it is a goalfield, there's no other
-        figure in the goalzone in between, if it is the first field and occupied, not possible, if on the way there is
-        a first field that is occupied and blocking not possible either. Furthermore checks if targetfield or any field
-        in between is not a home field.
-         */
-
-
-        return false;
+        if (currentField instanceof GoalField) {
+            // check if there is another figure in the goalfields before
+        } else if (currentField instanceof HomeField) {
+            // check if any field is homefield
+        } else if (currentField instanceof FirstField) {
+            // If occupied the first time, save and lock
+        } else {
+            return true;
+        }
     }
 
     public void move(Card card, Player player, Figure figure){
