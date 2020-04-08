@@ -8,6 +8,7 @@ import javax.persistence.*;
 @Entity
 @Table( name = "FIELD")
 public abstract class Field {
+
     @Id
     @GeneratedValue
     private long id;
