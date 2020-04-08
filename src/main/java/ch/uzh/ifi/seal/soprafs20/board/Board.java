@@ -17,10 +17,6 @@ public abstract class Board {
     private ArrayList<Player> players;
     protected int version;
 
-    public void play(){
-        /* something */
-    }
-
     /**
      * Gets a currentField as well as a Card and returns the targetField
      * @param currentField Current Field the figure is on
@@ -67,6 +63,25 @@ public abstract class Board {
         in between is not a home field.
          */
         return false;
+    }
+
+    public void move(Card card, Player player, Figure figure){
+        Field currentField = this.getCurrentField(figure);
+        Field targetField = this.getTargetField(currentField, card);
+        if (this.isMovePossible(currentField, targetField)) {
+            if (targetField.getOccupant() != null) {
+                Figure occupant = targetField.getOccupant();
+                this.sendFigureHome(occupant);
+                currentField.setOccupant(null);
+                targetField.setOccupant(figure);
+            }
+            else {
+                currentField.setOccupant(null);
+                targetField.setOccupant(figure);
+            }
+        } else {
+            // throw error message
+        }
     }
 
 }
