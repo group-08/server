@@ -52,20 +52,12 @@ public abstract class Board {
 
     /**
      * This checks if there are any savezones involved in this move and if the move is possible
-     * @param currentField the field the figure is on now
+     * @param figure figure to move
      * @param targetField the field the figure wants to move on
      * @return boolean if move is possible
      */
-    public boolean isMovePossible(Field currentField, Field targetField) {
-        if (currentField instanceof GoalField) {
-            // check if there is another figure in the goalfields before
-        } else if (currentField instanceof HomeField) {
-            // check if any field is homefield
-        } else if (currentField instanceof FirstField) {
-            // If occupied the first time, save and lock
-        } else {
-            return true;
-        }
+    public boolean isMovePossible(Figure figure, Field targetField) {
+        return false;
     }
 
     public void getPossibleTargetFields(Figure figure, Card card) {
