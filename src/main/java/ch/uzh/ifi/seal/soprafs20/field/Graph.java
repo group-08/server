@@ -80,8 +80,8 @@ public class Graph {
             else{
                 List<Field> adjFields= graph.getAdjFields(temp);
                 for(Field f: adjFields){
-                    if(f instanceof FirstField && f.getOccupant()!=null) {
-
+                    if(f instanceof FirstField && ((FirstField) f).getBlocked()) {
+                        assert true;
                     }
                     else{
                         queue.add(f);
