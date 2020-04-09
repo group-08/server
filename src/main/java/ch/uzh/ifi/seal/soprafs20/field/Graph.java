@@ -1,9 +1,19 @@
 package ch.uzh.ifi.seal.soprafs20.field;
 
+import ch.uzh.ifi.seal.soprafs20.cards.Card;
+import org.hibernate.mapping.Value;
+
+
+
 import java.util.*;
 
 public class Graph {
-    private HashMap<Field, List<Field>> adjVertices = new HashMap<>();
+
+    public HashMap<Field, List<Field>> adjVertices;
+
+    public Graph(){
+        this.adjVertices = new HashMap<>();
+    }
 
     void addField(Field field){
         adjVertices.putIfAbsent(field, new ArrayList<Field>());
@@ -30,61 +40,101 @@ public class Graph {
         long id=1;
         while(sortedFields.size()!=fields.size()) {
             for (Field field : fields) {
-                if (field.id == id) {
+                if (field.getId() == id) {
                     sortedFields.add(field);
+                    id++;
                 }
             }
         }
         return sortedFields;
     }
 
-    public Graph createGraph(ArrayList<Field> fields){
-        Graph graph = new Graph();
+    List<Field> getAdjFields(Field field){
+        return adjVertices.get(field);
+    }
+
+    ArrayList<Field> getPossibleFields(Card card, Field field, Graph graph){
+        int moveValue = card.getValue().getValue();
+
+        int level = 0;
+        Queue<Field> queue = new LinkedList<>();
+        queue.add(field);
+        queue.add(null);
+        while(!queue.isEmpty() && level<moveValue){
+            Field temp = queue.poll();
+            if(temp==null){
+                level++;
+                queue.add(null);
+            }
+            else{
+                List<Field> adjFields= graph.getAdjFields(temp);
+                for(Field f: adjFields){
+                    if(f instanceof FirstField && f.getOccupant()!=null) {
+
+                    }
+                    else{
+                        queue.add(f);
+                    }
+                }
+            }
+        }
+        ArrayList<Field> fields = new ArrayList<>();
+        while(!queue.isEmpty()){
+            if(queue.peek()!=null) {
+                fields.add(queue.poll());
+            }
+            else{
+                queue.poll();
+            }
+        }
+
+        return fields;
+    }
+
+    public void createGraph(ArrayList<Field> fields){
         ArrayList<Field> sortedFields = sortById(fields);
 
         for(int id=0; id<63;id++){
-            graph.addField(sortedFields.get(id));
+            addField(sortedFields.get(id));
             Field first = sortedFields.get(id);
             Field second = sortedFields.get(id+1);
-            graph.addEdge(first,second);
+            addEdge(first,second);
         }
 
         for(int id=64; id<67;id++){
-            graph.addField(sortedFields.get(id));
+            addField(sortedFields.get(id));
             Field first = sortedFields.get(id);
             Field second = sortedFields.get(id+1);
-            graph.addEdge(first,second);
+            addEdge(first,second);
         }
         for(int id=68; id<71;id++){
-            graph.addField(sortedFields.get(id));
+            addField(sortedFields.get(id));
             Field first = sortedFields.get(id);
             Field second = sortedFields.get(id+1);
-            graph.addEdge(first,second);
+            addEdge(first,second);
         }
         for(int id=72; id<75;id++){
-            graph.addField(sortedFields.get(id));
+            addField(sortedFields.get(id));
             Field first = sortedFields.get(id);
             Field second = sortedFields.get(id+1);
-            graph.addEdge(first,second);
+            addEdge(first,second);
         }
-        for(int id=76; id<80;id++){
-            graph.addField(sortedFields.get(id));
+        for(int id=76; id<79;id++){
+            addField(sortedFields.get(id));
             Field first = sortedFields.get(id);
             Field second = sortedFields.get(id+1);
-            graph.addEdge(first,second);
+            addEdge(first,second);
         }
 
-        graph.addField(sortedFields.get(63));
-        graph.addField(sortedFields.get(67));
-        graph.addField(sortedFields.get(71));
-        graph.addField(sortedFields.get(75));
-        graph.addField(sortedFields.get(79));
-        graph.addEdge(sortedFields.get(63), sortedFields.get(0));
-        graph.addEdge(sortedFields.get(0),sortedFields.get(64));
-        graph.addEdge(sortedFields.get(16),sortedFields.get(68));
-        graph.addEdge(sortedFields.get(32),sortedFields.get(72));
-        graph.addEdge(sortedFields.get(48),sortedFields.get(76));
-
-        return graph;
+        addField(sortedFields.get(63));
+        addField(sortedFields.get(67));
+        addField(sortedFields.get(71));
+        addField(sortedFields.get(75));
+        addField(sortedFields.get(79));
+        addEdge(sortedFields.get(63), sortedFields.get(0));
+        addEdge(sortedFields.get(0),sortedFields.get(64));
+        addEdge(sortedFields.get(16),sortedFields.get(68));
+        addEdge(sortedFields.get(32),sortedFields.get(72));
+        addEdge(sortedFields.get(48),sortedFields.get(76));
     }
 }

@@ -8,4 +8,8 @@ public class NormalCard implements Card {
         //returns a String
         return null;
     }
+
+    public Value getValue(){
+        return this.value;
+    }
 }
