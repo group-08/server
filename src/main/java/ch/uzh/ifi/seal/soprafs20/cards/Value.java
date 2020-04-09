@@ -1,7 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.cards;
 
 public enum Value {
-    TWO(1),
+    TWO(2),
     THREE(3),
     FOUR(4),
     FIVE(5),

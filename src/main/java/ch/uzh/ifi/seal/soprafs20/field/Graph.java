@@ -1,8 +1,8 @@
 package ch.uzh.ifi.seal.soprafs20.field;
 
+import ch.uzh.ifi.seal.soprafs20.User.Player;
 import ch.uzh.ifi.seal.soprafs20.cards.Card;
-import org.hibernate.mapping.Value;
-
+import ch.uzh.ifi.seal.soprafs20.cards.Value;
 
 
 import java.util.*;
@@ -53,9 +53,20 @@ public class Graph {
         return adjVertices.get(field);
     }
 
+
     ArrayList<Field> getPossibleFields(Card card, Field field, Graph graph){
         int moveValue = card.getValue().getValue();
 
+        if(field instanceof HomeField && card.getValue() == Value.KING || card.getValue() == Value.ACE){
+            Player playerOfField = ((HomeField) field).getPlayer();
+            for (Field key : adjVertices.keySet()){
+                if(key instanceof FirstField && ((FirstField) key).getPlayer()==playerOfField){
+                    ArrayList<Field> fields = new ArrayList<>();
+                    fields.add(key);
+                    return fields;
+                }
+            }
+        }
         int level = 0;
         Queue<Field> queue = new LinkedList<>();
         queue.add(field);
@@ -91,6 +102,7 @@ public class Graph {
         return fields;
     }
 
+
     public void createGraph(ArrayList<Field> fields){
         ArrayList<Field> sortedFields = sortById(fields);
 
@@ -123,6 +135,30 @@ public class Graph {
             addField(sortedFields.get(id));
             Field first = sortedFields.get(id);
             Field second = sortedFields.get(id+1);
+            addEdge(first,second);
+        }
+        for(int id=80; id<84;id++){
+            addField(sortedFields.get(id));
+            Field first = sortedFields.get(id);
+            Field second = sortedFields.get(0);
+            addEdge(first, second);
+        }
+        for(int id=84; id<88;id++){
+            addField(sortedFields.get(id));
+            Field first = sortedFields.get(id);
+            Field second = sortedFields.get(16);
+            addEdge(first,second);
+        }
+        for(int id=88; id<92;id++){
+            addField(sortedFields.get(id));
+            Field first = sortedFields.get(id);
+            Field second = sortedFields.get(32);
+            addEdge(first,second);
+        }
+        for(int id=92; id<96;id++){
+            addField(sortedFields.get(id));
+            Field first = sortedFields.get(id);
+            Field second = sortedFields.get(48);
             addEdge(first,second);
         }
 
