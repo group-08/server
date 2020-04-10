@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import ch.uzh.ifi.seal.soprafs20.field.Graph;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -34,7 +35,8 @@ public class GameService {
         GameLog game = gameRepository.getOne(move.getId());
         int lastIndex = game.getBoards().size()-1;
         Board actualBoard = game.getBoards().get(lastIndex);
-        /**
+
+        /*
         Field currentField = Figure.getFieldId();
          targetField = getTargetField(currentfield, move.getCard)
          Boolean isLegal = checkIfLegalMove(currentField, targetField)
