@@ -13,18 +13,13 @@ import java.util.Collection;
 
 public abstract class Board {
 
-    private Collection<Field> fields;
+    private Graph fields;
     private ArrayList<Player> players;
     protected int version;
+    private Board board;
 
-    /**
-     * Gets a currentField as well as a Card and returns the targetField
-     * @param currentField Current Field the figure is on
-     * @param card Card to be played
-     * @return the field the figure will land on
-     */
-    public Field getTargetField(Field currentField, Card card) {
-        /* takes value of card, adds it to current field and returns target field */
+    public Graph getGraph() {
+        return this.fields;
     }
 
     /**
@@ -33,13 +28,7 @@ public abstract class Board {
      * @return the current field of the figure
      */
     public Field getCurrentField(Figure figure) {
-        /* loop through all the fields and check if occupant matches figure */
-        for (Field field: fields) {
-            if (field.getOccupant() == figure) {
-                return field;
-            }
-        }
-        return null;
+        return figure.getField();
     }
 
     /**
@@ -48,21 +37,6 @@ public abstract class Board {
      */
     public void sendFigureHome(Figure figure) {
         /* sends figure home */
-    }
-
-    /**
-     * This checks if there are any savezones involved in this move and if the move is possible
-     * @param figure figure to move
-     * @param targetField the field the figure wants to move on
-     * @return boolean if move is possible
-     */
-    public boolean isMovePossible(Figure figure, Field targetField) {
-        return false;
-    }
-
-    public void getPossibleTargetFields(Figure figure, Card card) {
-        Field currentField = this.getCurrentField(figure);
-        // gets all the possible moves from Adj. List, gets ID's of the fields and returns them as a list
     }
 
     public void move(Figure figure, Field targetField) {
@@ -77,24 +51,16 @@ public abstract class Board {
             currentField.setOccupant(null);
             targetField.setOccupant(figure);
         }
+        if (targetField instanceof FirstField && currentField instanceof HomeField) {
+            ((FirstField) targetField).setBlocked(true);
+        }
+        if (currentField instanceof FirstField && !(targetField instanceof FirstField)) {
+            ((FirstField) currentField).setBlocked(false);
+        }
+    }
 
-        /* Old Version
-        Field currentField = this.getCurrentField(figure);
-        Field targetField = this.getTargetField(currentField, card);
-        if (this.isMovePossible(currentField, targetField)) {
-            if (targetField.getOccupant() != null) {
-                Figure occupant = targetField.getOccupant();
-                this.sendFigureHome(occupant);
-                currentField.setOccupant(null);
-                targetField.setOccupant(figure);
-            }
-            else {
-                currentField.setOccupant(null);
-                targetField.setOccupant(figure);
-            }
-        } else {
-            // throw error message
-        } */
+    public ArrayList<Field> getPossibleFields(Card card, Field field) {
+        return this.fields.getPossibleFields(card, field, fields);
     }
 
 }

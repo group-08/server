@@ -13,8 +13,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import ch.uzh.ifi.seal.soprafs20.field.Graph;
 
 import javax.transaction.Transactional;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
@@ -29,27 +31,17 @@ public class GameService {
         this.gameRepository = gameRepository;
     }
 
-    public boolean checkIfMoveIsValid(MovePostDTO move){
+    public ArrayList<Field> getPossibleFields(MovePostDTO move){
 
         GameLog game = gameRepository.getOne(move.getId());
         int lastIndex = game.getBoards().size()-1;
         Board actualBoard = game.getBoards().get(lastIndex);
-        /**
-        Field currentField = Figure.getFieldId();
-         targetField = getTargetField(currentfield, move.getCard)
-         Boolean isLegal = checkIfLegalMove(currentField, targetField)
+        Card card = move.getCard();
+        Figure figure = move.getFigure();
+        Field field = figure.getField();
 
+        return actualBoard.getPossibleFields(card, field);
 
-        */
-        return false;
-    }
-
-    public Field getTargetField(Field currentField, Card card){
-        return Field;
-    }
-
-    public boolean checkIfLegalMove(Field currentField, Field targetField){
-        return true;
     }
 
     public void updateGame(long id, Board board, Card card){

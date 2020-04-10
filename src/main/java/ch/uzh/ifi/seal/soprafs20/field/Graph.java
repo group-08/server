@@ -49,14 +49,12 @@ public class Graph {
         return sortedFields;
     }
 
-    List<Field> getAdjFields(Field field){
+    public List<Field> getAdjFields(Field field){
         return adjVertices.get(field);
     }
 
-
-    ArrayList<Field> getPossibleFields(Card card, Field field, Graph graph){
+    public ArrayList<Field> getPossibleFields(Card card, Field field, Graph graph){
         int moveValue = card.getValue().getValue();
-
         if(field instanceof HomeField && card.getValue() == Value.KING || card.getValue() == Value.ACE){
             Player playerOfField = ((HomeField) field).getPlayer();
             for (Field key : adjVertices.keySet()){
@@ -86,6 +84,7 @@ public class Graph {
                         }
                     }
                 }
+                List<Field> adjFields = graph.getAdjFields(temp);
                 for(Field f: adjFields){
                     if(f instanceof FirstField && ((FirstField) f).getBlocked()) {
                         assert true;
@@ -111,7 +110,6 @@ public class Graph {
 
         return fields;
     }
-
 
     public void createGraph(ArrayList<Field> fields){
         ArrayList<Field> sortedFields = sortById(fields);
