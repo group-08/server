@@ -16,6 +16,7 @@ public abstract class Board {
     private Graph fields;
     private ArrayList<Player> players;
     protected int version;
+    private Board board;
 
     public Graph getGraph() {
         return this.fields;
@@ -56,6 +57,10 @@ public abstract class Board {
         if (currentField instanceof FirstField && !(targetField instanceof FirstField)) {
             ((FirstField) currentField).setBlocked(false);
         }
+    }
+
+    public ArrayList<Field> getPossibleFields(Card card, Field field) {
+        return this.fields.getPossibleFields(card, field, fields);
     }
 
 }
