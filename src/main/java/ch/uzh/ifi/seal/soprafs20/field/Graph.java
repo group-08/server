@@ -79,8 +79,18 @@ public class Graph {
             }
             else{
                 List<Field> adjFields= graph.getAdjFields(temp);
+                if(temp instanceof FirstField && ((FirstField) temp).getBlocked()){
+                    for(Field field1 : adjFields){
+                        if (field1 instanceof GoalField){
+                            adjFields.remove(field1);
+                        }
+                    }
+                }
                 for(Field f: adjFields){
                     if(f instanceof FirstField && ((FirstField) f).getBlocked()) {
+                        assert true;
+                    }
+                    else if (f instanceof GoalField && ((GoalField) f).getPlayer()!=field.getOccupant().getPlayer()){
                         assert true;
                     }
                     else{
