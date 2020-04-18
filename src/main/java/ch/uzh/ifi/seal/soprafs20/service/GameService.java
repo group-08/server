@@ -44,6 +44,10 @@ public class GameService {
 
     }
 
+    public Board moveFigure(Figure figure, Field field) {
+
+    }
+
     public void updateGame(long id, Board board, Card card){
 
     }
