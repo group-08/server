@@ -12,4 +12,8 @@ public abstract class Card implements Serializable {
     private long id;
 
     public abstract String toString();
+
+    public Value getValue(){
+        return null;
+    }
 }

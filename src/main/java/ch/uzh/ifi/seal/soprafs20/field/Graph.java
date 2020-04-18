@@ -2,6 +2,7 @@ package ch.uzh.ifi.seal.soprafs20.field;
 
 import ch.uzh.ifi.seal.soprafs20.User.Player;
 import ch.uzh.ifi.seal.soprafs20.cards.Card;
+import ch.uzh.ifi.seal.soprafs20.cards.NormalCard;
 import ch.uzh.ifi.seal.soprafs20.cards.Value;
 
 
