@@ -5,5 +5,4 @@ public interface Card {
 
 
     public String toString();
-    public Value getValue();
 }

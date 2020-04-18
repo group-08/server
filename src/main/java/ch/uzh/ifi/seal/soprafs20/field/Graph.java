@@ -84,7 +84,6 @@ public class Graph {
                         }
                     }
                 }
-                List<Field> adjFields = graph.getAdjFields(temp);
                 for(Field f: adjFields){
                     if(f instanceof FirstField && ((FirstField) f).getBlocked()) {
                         assert true;
