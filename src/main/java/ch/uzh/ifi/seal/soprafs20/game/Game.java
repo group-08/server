@@ -5,6 +5,8 @@ import ch.uzh.ifi.seal.soprafs20.User.Player;
 import ch.uzh.ifi.seal.soprafs20.board.Board;
 import ch.uzh.ifi.seal.soprafs20.cards.Card;
 import ch.uzh.ifi.seal.soprafs20.cards.Deck;
+import ch.uzh.ifi.seal.soprafs20.field.Field;
+
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -62,7 +64,4 @@ public class Game implements Serializable {
 
     }
 
-    public void move(Card card, Player player){
-
-    }
 }

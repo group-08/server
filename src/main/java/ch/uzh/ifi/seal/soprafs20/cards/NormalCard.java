@@ -14,4 +14,8 @@ public class NormalCard extends Card {
         //returns a String
         return null;
     }
+
+    public Value getValue(){
+        return this.value;
+    }
 }

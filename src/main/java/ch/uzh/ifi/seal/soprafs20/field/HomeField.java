@@ -7,4 +7,7 @@ public class HomeField extends Field {
 
     private Player player;
 
+    public Player getPlayer(){return player;}
+
+
 }
