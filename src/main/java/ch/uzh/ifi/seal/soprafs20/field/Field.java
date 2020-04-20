@@ -14,7 +14,6 @@ public abstract class Field {
 
     @OneToOne(targetEntity = Figure.class)
     private Figure occupant;
-    protected long id;
 
     public Figure getOccupant() {
         return occupant;
