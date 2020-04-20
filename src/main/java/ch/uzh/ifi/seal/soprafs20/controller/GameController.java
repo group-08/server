@@ -1,6 +1,8 @@
 package ch.uzh.ifi.seal.soprafs20.controller;
 
 
+import ch.uzh.ifi.seal.soprafs20.User.Figure;
+import ch.uzh.ifi.seal.soprafs20.board.Board;
 import ch.uzh.ifi.seal.soprafs20.field.Field;
 import ch.uzh.ifi.seal.soprafs20.game.Game;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.MovePostDTO;
@@ -21,12 +23,18 @@ public class GameController {
     @PostMapping("/game")
     @ResponseStatus(HttpStatus.ACCEPTED)
     @ResponseBody
-    public Game playMove(@RequestBody MovePostDTO move){
-        ArrayList<Field> possibleMoves = gameService.getPossibleFields(move);
-        // somehow send to frontend to let user choose which field to move on
-        // gameService.moveFigure()
-        return null;
+    public ArrayList<Field> getPossibleFields(@RequestBody MovePostDTO move){
+        return gameService.getPossibleFields(move);
     }
+
+    @PostMapping("/move")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @ResponseBody
+    public Board move(@RequestBody Figure figure, Field field, Board board) {
+        return gameService.moveFigure(figure, field, board);
+    }
+
+
 
 
 }

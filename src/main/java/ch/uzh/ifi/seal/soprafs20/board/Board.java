@@ -55,7 +55,7 @@ public abstract class Board implements Serializable {
     }
 
 
-    public void move(Figure figure, Field targetField) {
+    public Board move(Figure figure, Field targetField) {
         Field currentField = this.getCurrentField(figure);
         if (targetField.getOccupant() != null) {
             Figure occupant = targetField.getOccupant();
@@ -73,6 +73,7 @@ public abstract class Board implements Serializable {
         if (currentField instanceof FirstField && !(targetField instanceof FirstField)) {
             ((FirstField) currentField).setBlocked(false);
         }
+        return this.board;
     }
 
     public ArrayList<Field> getPossibleFields(Card card, Field field) {
