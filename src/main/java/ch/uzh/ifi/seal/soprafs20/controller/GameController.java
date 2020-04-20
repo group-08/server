@@ -30,8 +30,8 @@ public class GameController {
     @PostMapping("/move")
     @ResponseStatus(HttpStatus.ACCEPTED)
     @ResponseBody
-    public Board move(@RequestBody Figure figure, Field field, Board board) {
-        return gameService.moveFigure(figure, field, board);
+    public Board move(@RequestBody MovePostDTO move) {
+        return gameService.moveFigure(move);
     }
 
 

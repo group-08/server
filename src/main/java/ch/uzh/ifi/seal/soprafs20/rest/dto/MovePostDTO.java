@@ -2,6 +2,7 @@ package ch.uzh.ifi.seal.soprafs20.rest.dto;
 
 import ch.uzh.ifi.seal.soprafs20.User.Figure;
 import ch.uzh.ifi.seal.soprafs20.cards.Card;
+import ch.uzh.ifi.seal.soprafs20.field.Field;
 
 public class MovePostDTO {
 
@@ -10,6 +11,8 @@ public class MovePostDTO {
     private Card card;
 
     private Figure figure;
+
+    private Field targetField;
 
     public Long getId() {
         return id;
@@ -30,4 +33,10 @@ public class MovePostDTO {
     public Figure getFigure() {return figure;}
 
     public void setFigure(Figure figure){ this.figure=figure;}
+
+    public Field getTargetField() {
+        return targetField;
+    }
+
+
 }

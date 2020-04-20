@@ -34,7 +34,6 @@ public class GameService {
 
 
     public ArrayList<Field> getPossibleFields(MovePostDTO move){
-
         GameLog game = gameRepository.getOne(move.getId());
         int lastIndex = game.getBoards().size()-1;
         Board actualBoard = game.getBoards().get(lastIndex);
@@ -46,9 +45,13 @@ public class GameService {
 
     }
 
-    public Board moveFigure(Figure figure, Field field, Board board) {
-        Board updatedBoard = board.move(figure, field);
-        return updatedBoard;
+    public Board moveFigure(MovePostDTO move) {
+        GameLog game = gameRepository.getOne(move.getId());
+        int lastIndex = game.getBoards().size()-1;
+        Board actualBoard = game.getBoards().get(lastIndex);
+        Figure figure = move.getFigure();
+        Field targetField = move.getTargetField();
+        return actualBoard.move(figure, targetField);
     }
 
     public void updateGame(long id, Board board, Card card){
