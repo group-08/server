@@ -19,8 +19,6 @@ public abstract class Field {
         return occupant;
     }
 
-
-
     public void setOccupant(Figure occupant){
         return;
     }
