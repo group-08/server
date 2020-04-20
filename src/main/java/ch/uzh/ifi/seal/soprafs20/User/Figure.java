@@ -16,6 +16,8 @@ public class Figure {
 
     @OneToOne(targetEntity = Player.class)
     Player player;
+
+    @OneToOne(targetEntity = Field.class)
     Field field;
 
 
