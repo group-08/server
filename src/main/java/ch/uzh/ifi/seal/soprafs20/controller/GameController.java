@@ -23,6 +23,8 @@ public class GameController {
     @ResponseBody
     public Game playMove(@RequestBody MovePostDTO move){
         ArrayList<Field> possibleMoves = gameService.getPossibleFields(move);
+        // somehow send to frontend to let user choose which field to move on
+        // gameService.moveFigure()
         return null;
     }
 
