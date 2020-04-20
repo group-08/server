@@ -25,13 +25,14 @@ public abstract class Board implements Serializable {
     @OneToMany(targetEntity = Field.class)
     private Collection<Field> fields;
 
-    @OneToMany(targetEntity = Player.class)
+        @OneToMany(targetEntity = Player.class)
     private List<Player> players;
 
-    private Graph graphFields;
     private ArrayList<Player> players2;
     protected int version;
-    private Board board;
+
+    @Transient
+    private Graph graphFields;
 
     public Graph getGraph() {
         return this.graphFields;
@@ -73,7 +74,7 @@ public abstract class Board implements Serializable {
         if (currentField instanceof FirstField && !(targetField instanceof FirstField)) {
             ((FirstField) currentField).setBlocked(false);
         }
-        return this.board;
+        return this;
     }
 
     public ArrayList<Field> getPossibleFields(Card card, Field field) {
