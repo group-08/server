@@ -45,7 +45,7 @@ public class GameService {
     }
 
     public Board moveFigure(Figure figure, Field field) {
-
+        return null;
     }
 
     public void updateGame(long id, Board board, Card card){

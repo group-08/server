@@ -76,7 +76,7 @@ public abstract class Board implements Serializable {
     }
 
     public ArrayList<Field> getPossibleFields(Card card, Field field) {
-        return this.fields.getPossibleFields(card, field, fields);
+        return this.graphFields.getPossibleFields(card, field, graphFields);
     }
 
 }
