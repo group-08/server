@@ -62,6 +62,16 @@ public class Game implements Serializable {
 
     public void play(){
 
+
+        if(checkIfFinished()){
+            //winner = currentPlayer
+            //set currentPlayerStatus to finished
+        }
+    }
+
+    public Boolean checkIfFinished(){
+        Player currentPlayer = get(0);
+        return board.checkIfAllTargetFieldsOccupied(id, currentPlayer);
     }
 
 }

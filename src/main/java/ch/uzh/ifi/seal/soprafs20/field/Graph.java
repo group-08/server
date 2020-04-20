@@ -55,28 +55,36 @@ public class Graph {
     }
 
     public ArrayList<Field> getPossibleFields(Card card, Field field, Graph graph){
-        int moveValue = card.getValue().getValue();
-        if(field instanceof HomeField && card.getValue() == Value.KING || card.getValue() == Value.ACE){
+        int moveValue = ((NormalCard)card).getValue().getValue();
+        // From Homefield one can go to firstField with Ace or King if firstField empty
+        if(field instanceof HomeField && ((NormalCard)card).getValue() == Value.KING ||
+                ((NormalCard)card).getValue() == Value.ACE){
             Player playerOfField = ((HomeField) field).getPlayer();
             for (Field key : adjVertices.keySet()){
-                if(key instanceof FirstField && ((FirstField) key).getPlayer()==playerOfField){
+                if(key instanceof FirstField && ((FirstField) key).getPlayer()==playerOfField &&
+                key.getOccupant()==null){
                     ArrayList<Field> fields = new ArrayList<>();
                     fields.add(key);
                     return fields;
                 }
             }
         }
+        if(field instanceof HomeField && ((NormalCard)card).getValue() != Value.KING &&
+                ((NormalCard)card).getValue() != Value.ACE){
+            return new ArrayList<>();
+        }
         int level = 0;
         Queue<Field> queue = new LinkedList<>();
         queue.add(field);
         queue.add(null);
-        while(!queue.isEmpty() && level<moveValue){
+        //Normal Value
+        while(!queue.isEmpty() && level<moveValue){ //Level checks how far the figure moves
             Field temp = queue.poll();
             if(temp==null){
                 level++;
                 queue.add(null);
             }
-            else{
+            else{ //from Firstfield figure cant directly go to Goalfield
                 List<Field> adjFields= graph.getAdjFields(temp);
                 if(temp instanceof FirstField && ((FirstField) temp).getBlocked()){
                     for(Field field1 : adjFields){
@@ -86,12 +94,15 @@ public class Graph {
                     }
                 }
                 for(Field f: adjFields){
+                    //Field is firstField and is blocked, not added to possible moves
                     if(f instanceof FirstField && ((FirstField) f).getBlocked()) {
                         assert true;
                     }
+                    //goalField of other player not added to queue
                     else if (f instanceof GoalField && ((GoalField) f).getPlayer()!=field.getOccupant().getPlayer()){
                         assert true;
                     }
+                    //everything else is added
                     else{
                         queue.add(f);
                     }
@@ -99,6 +110,7 @@ public class Graph {
             }
         }
         ArrayList<Field> fields = new ArrayList<>();
+        //switch from queue to Listarray
         while(!queue.isEmpty()){
             if(queue.peek()!=null) {
                 fields.add(queue.poll());
