@@ -124,6 +124,8 @@ public class Game implements Serializable {
         //Get all possible moves
         //Choose move
         //Perform move
+        //Check if finished
+        //Check if won
     }
 
     public void play(){
