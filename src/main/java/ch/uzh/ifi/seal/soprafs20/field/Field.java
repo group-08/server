@@ -44,4 +44,15 @@ public abstract class Field {
         result = (int) (31 * result + id);
         return result;
     }
+
+    @OneToOne(mappedBy = "field", optional = false)
+    private Figure figure;
+
+    public Figure getFigure() {
+        return figure;
+    }
+
+    public void setFigure(Figure figure) {
+        this.figure = figure;
+    }
 }
