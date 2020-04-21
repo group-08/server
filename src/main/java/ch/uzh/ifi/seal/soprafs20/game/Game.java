@@ -69,6 +69,8 @@ public class Game implements Serializable {
 
         // Set the gameState to running
         this.gameState = GameState.RUNNING;
+
+        // Assign figures to players
     }
 
     /**
