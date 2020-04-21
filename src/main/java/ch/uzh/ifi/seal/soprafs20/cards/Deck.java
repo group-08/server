@@ -50,7 +50,7 @@ public class Deck implements Serializable {
     }
 
 
-    private void shuffle(){
+    public void shuffle(){
         Collections.shuffle(cards);
     }
 

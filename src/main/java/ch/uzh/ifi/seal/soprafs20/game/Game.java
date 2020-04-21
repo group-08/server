@@ -95,13 +95,12 @@ public class Game implements Serializable {
 
 
         if(checkIfFinished()){
-            //winner = currentPlayer
-            //set currentPlayerStatus to finished
+            this.players.get(0).setFinish();
         }
     }
 
     public Boolean checkIfFinished(){
-        Player currentPlayer = get(0);
+        Player currentPlayer = this.players.get(0);
         return board.checkIfAllTargetFieldsOccupied(id, currentPlayer);
     }
 
