@@ -1,5 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.cards;
 
+import org.springframework.web.bind.annotation.PostMapping;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.*;
@@ -20,22 +22,33 @@ public class Deck implements Serializable {
     private final int numberOfDecks = 2;
 
     public List<Card> deal(int amount){
-        return null;
+
+        if (cards.isEmpty()) {
+            createDeck();
+            shuffle(cards);
+            deal(amount);
+        }else {
+            List<Card> hand = new ArrayList<Card>();
+
+            for (int loopVal = 0; loopVal < amount; loopVal++){
+                hand.add(cards.remove(0));
+            }
+
+            return hand;
+        }
+
+
     }
 
-    private Deck createDeck(){
-        if (cards.isEmpty()){
+    private void createDeck(){
             createDeckNormalPart();
             createJokers();
-            return
-        }else {
-            return deck;
-        }
     }
+
 
     private void createDeckNormalPart(){
         for(Suit suit : Suit.values()){
-            for(Value myValue : values()){
+            for(Value myValue : Value.values()){
                 cards.add(new NormalCard(suit, myValue));
             }
         }
@@ -50,8 +63,8 @@ public class Deck implements Serializable {
     }
 
 
-    private void shuffle(){
-        Collections.shuffle(cards);
+    private void shuffle(List<Card> cards){
+        Collections.shuffle(this.cards);
     }
 
 

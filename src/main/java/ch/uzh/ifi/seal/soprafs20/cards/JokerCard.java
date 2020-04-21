@@ -17,7 +17,7 @@ public class JokerCard extends Card {
     public void transformInto( Value value){
         try {
             this.value = value;
-        }catch (Exception jokervalueexeption){
+        }catch (Exception jokerValueException){
             System.out.printf("invalid new value " + value + " for the Joker");
             return;
         }
