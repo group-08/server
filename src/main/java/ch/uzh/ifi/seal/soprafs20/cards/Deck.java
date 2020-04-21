@@ -37,8 +37,15 @@ public class Deck implements Serializable {
 
         List<Card> hand = new ArrayList<Card>();
 
+        Card topCard;
+
         for (int loopVal = 0; loopVal < amount; loopVal++){
-            hand.add(cards.remove(0));
+            topCard = cards.remove(0);
+            hand.add(topCard);
+         /* here it we have two options we either push the topCard onto the DiscardPile immediately
+         * which is technically wrong since there would be a backend and e frontend card duplicated
+         * or when a card is played in the frontend we send it to the discardPile after that.*/
+
         }
 
         return hand;
