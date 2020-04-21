@@ -11,6 +11,7 @@ import ch.uzh.ifi.seal.soprafs20.field.Field;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -85,6 +86,13 @@ public class Game implements Serializable {
 
         // Return the player
         return nextPlayer;
+    }
+
+    public void distributeCards(int cardNum) {
+        for (Player player : players) {
+            List<Card> cards = this.deck.deal(cardNum);
+            player.setHand(cards);
+        }
     }
 
     public void endGame(){

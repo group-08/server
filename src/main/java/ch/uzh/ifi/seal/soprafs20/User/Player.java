@@ -36,5 +36,9 @@ public class Player {
         return finished;
     }
 
+    public void setHand(List<Card> cards) {
+        this.hand = cards;
+    }
+
 
 }
