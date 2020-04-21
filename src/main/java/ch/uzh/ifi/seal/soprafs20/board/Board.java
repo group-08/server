@@ -18,11 +18,12 @@ import java.util.List;
 @Table(name = "BOARD")
 public abstract class Board implements Serializable {
 
+    @GeneratedValue
     @Id
     private long id;
 
     @OneToMany(targetEntity = Field.class)
-    private Collection<Field> fields;
+    private ArrayList<Field> fields = new ArrayList<>();;
 
     @OneToMany(targetEntity = Player.class)
     private List<Player> players = new ArrayList<>();
@@ -30,7 +31,17 @@ public abstract class Board implements Serializable {
     protected int version;
 
     @Transient
-    private Graph graphFields;
+    private Graph graphFields = new Graph();
+
+    public Board() {
+        // Create all the fields
+        for (int i = 0; i < 96; i++){
+            this.fields.add(new CasualField());
+        }
+
+        // Add the graphs
+        this.graphFields.createGraph(this.fields);
+    }
 
     public Graph getGraph() {
         return this.graphFields;
