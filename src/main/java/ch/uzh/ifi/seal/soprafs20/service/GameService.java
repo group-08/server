@@ -6,20 +6,14 @@ import ch.uzh.ifi.seal.soprafs20.board.Board;
 import ch.uzh.ifi.seal.soprafs20.cards.Card;
 import ch.uzh.ifi.seal.soprafs20.entity.GameLog;
 import ch.uzh.ifi.seal.soprafs20.field.Field;
-import ch.uzh.ifi.seal.soprafs20.game.Game;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.MovePostDTO;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import ch.uzh.ifi.seal.soprafs20.field.Graph;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.logging.Logger;
 
 @Service
 @Transactional
