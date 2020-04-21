@@ -23,18 +23,16 @@ import java.util.Optional;
 @Table(name = "BOARD")
 public abstract class Board implements Serializable {
 
-
     @Id
     private long id;
 
     @OneToMany(targetEntity = Field.class)
     private Collection<Field> fields;
 
-        @OneToMany(targetEntity = Player.class)
-    private List<Player> players;
+    @OneToMany(targetEntity = Player.class)
+    private List<Player> players = new ArrayList<>();
 
 
-    private ArrayList<Player> players2;
     protected int version;
 
     @Transient
