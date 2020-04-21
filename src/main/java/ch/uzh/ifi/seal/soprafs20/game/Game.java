@@ -99,29 +99,48 @@ public class Game implements Serializable {
 
     // BigRound is from 6 cards to 2 cards
     public void playBigRound() {
-
+        int cardNum = 6;
+        while (cardNum >= 2) {
+            playSmallRound(cardNum);
+            cardNum--;
+        }
     }
 
     // SmallRound is if every player played once
-    public void playSmallRound() {
-
+    public void playSmallRound(int cardNum) {
+        for (Player player : players) {
+            List<Card> cards = this.deck.deal(cardNum);
+            player.setHand(cards);
+        }
+        for (int i = 0; i < 4; i++) {
+            Player currentPlayer = this.getNextPlayer();
+            playPlayersMove(currentPlayer);
+        }
     }
 
     // playerMove is a players move
-    public void playPlayersMove() {
-        
-    }
-
-    public void endGame(){
-
+    public void playPlayersMove(Player currentPlayer) {
+        //Choose figure and card
+        //Get all possible moves
+        //Choose move
+        //Perform move
     }
 
     public void play(){
+        /*
+        while (game not finished) {
+            this.playBigRound();
+        }
+         */
 
 
         if(checkIfFinished()){
             this.players.get(0).setFinish();
         }
+    }
+
+    public void endGame(){
+
     }
 
     public Boolean checkIfFinished(){
