@@ -92,19 +92,11 @@ public class Game implements Serializable {
     }
 
     public void play(){
-        //while (game not finished){
-        //  int cardNum = 6;
-        //  while (cardNum >= 2) {
-        //      make move
-        //      if(checkIfFinished()){
-        //          this.players.get(0).setFinish();
-        //      }
-        //      cardNum--;
-        //}
-    }
 
-    public void makeMove() {
-        //the move of one player
+
+        if(checkIfFinished()){
+            this.players.get(0).setFinish();
+        }
     }
 
     public Boolean checkIfFinished(){
