@@ -97,6 +97,21 @@ public class Game implements Serializable {
         }
     }
 
+    // BigRound is from 6 cards to 2 cards
+    public void playBigRound() {
+
+    }
+
+    // SmallRound is if every player played once
+    public void playSmallRound() {
+
+    }
+
+    // playerMove is a players move
+    public void playPlayersMove() {
+        
+    }
+
     public void endGame(){
 
     }
