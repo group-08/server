@@ -23,7 +23,7 @@ public abstract class Board implements Serializable {
     private long id;
 
     @OneToMany(targetEntity = Field.class)
-    private ArrayList<Field> fields = new ArrayList<>();;
+    private List<Field> fields = new ArrayList<>();;
 
     @OneToMany(targetEntity = Player.class)
     private List<Player> players = new ArrayList<>();

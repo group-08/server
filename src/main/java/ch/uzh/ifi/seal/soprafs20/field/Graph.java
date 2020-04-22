@@ -36,8 +36,8 @@ public class Graph {
         }
     }
 
-    ArrayList<Field> sortById(ArrayList<Field> fields){
-        ArrayList<Field> sortedFields = new ArrayList<>();
+    List<Field> sortById(List<Field> fields){
+        List<Field> sortedFields = new ArrayList<>();
         long id=1;
         while(sortedFields.size()!=fields.size()) {
             for (Field field : fields) {
@@ -111,8 +111,8 @@ public class Graph {
         return fields;
     }
 
-    public void createGraph(ArrayList<Field> fields){
-        ArrayList<Field> sortedFields = sortById(fields);
+    public void createGraph(List<Field> fields){
+        List<Field> sortedFields = sortById(fields);
 
         for(int id=0; id<63;id++){
             addField(sortedFields.get(id));
