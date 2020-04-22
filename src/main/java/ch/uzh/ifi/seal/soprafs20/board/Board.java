@@ -141,10 +141,10 @@ public abstract class Board implements Serializable {
         int moveValue = card.getValue().getValue();
         ArrayList<Field> possibleFields = new ArrayList<>();
 
-        /* Still some cleanup to do
+
         if(field instanceof HomeField && card.getValue() == Value.KING || card.getValue() == Value.ACE){
             Player playerOfField = ((HomeField) field).getPlayer();
-            for (Field key : adjVertices.keySet()){
+            for (Field key : this.fields){
                 if(key instanceof FirstField && ((FirstField) key).getPlayer()==playerOfField){
                     ArrayList<Field> fields = new ArrayList<>();
                     fields.add(key);
@@ -163,7 +163,7 @@ public abstract class Board implements Serializable {
                 queue.add(null);
             }
             else{
-                List<Field> adjFields= graph.getAdjFields(temp);
+                List<Field> adjFields= temp.getAdjacentFields();
                 if(temp instanceof FirstField && ((FirstField) temp).getBlocked()){
                     for(Field field1 : adjFields){
                         if (field1 instanceof GoalField){
@@ -185,15 +185,14 @@ public abstract class Board implements Serializable {
             }
         }
         ArrayList<Field> fields = new ArrayList<>();
-        while(!queue.isEmpty()){
-            if(queue.peek()!=null) {
+        while(!queue.isEmpty()) {
+            if (queue.peek() != null) {
                 fields.add(queue.poll());
             }
-            else{
+            else {
                 queue.poll();
             }
         }
-         */
 
         return possibleFields;
     }

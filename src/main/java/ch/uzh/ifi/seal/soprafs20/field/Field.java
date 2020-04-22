@@ -33,7 +33,7 @@ public abstract class Field {
         }
     }
 
-    public List<Field> getAdjacentField() {
+    public List<Field> getAdjacentFields() {
         return this.adjacencyList;
     }
 
