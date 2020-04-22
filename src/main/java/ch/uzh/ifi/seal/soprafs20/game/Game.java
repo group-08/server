@@ -90,6 +90,10 @@ public class Game implements Serializable {
         return nextPlayer;
     }
 
+    public void letPlayersChangeCard() {
+        // Let partners change one card
+    }
+
     public void distributeCards(int cardNum) {
         for (Player player : players) {
             List<Card> cards = this.deck.deal(cardNum);
@@ -112,6 +116,9 @@ public class Game implements Serializable {
             List<Card> cards = this.deck.deal(cardNum);
             player.setHand(cards);
         }
+
+        this.letPlayersChangeCard();
+
         for (int i = 0; i < 4; i++) {
             Player currentPlayer = this.getNextPlayer();
             playPlayersMove(currentPlayer);
