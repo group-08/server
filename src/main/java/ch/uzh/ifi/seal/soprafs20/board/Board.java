@@ -137,6 +137,12 @@ public abstract class Board implements Serializable {
         return this;
     }
 
+    /**
+     * Get the possible field so we can either automatically move the piece or display all possible fields
+     * @param card the card that was played
+     * @param field field the card is being palyed on
+     * @return List of all possible fields the player on field could land on
+     */
     public ArrayList<Field> getPossibleFields(Card card, Field field) {
         int moveValue = card.getValue().getValue();
         ArrayList<Field> possibleFields = new ArrayList<>();
