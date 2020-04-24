@@ -31,5 +31,9 @@ public class Player {
         this.hand = cards;
     }
 
+    public List<Card> getHand() {
+        return this.hand;
+    }
+
 
 }
