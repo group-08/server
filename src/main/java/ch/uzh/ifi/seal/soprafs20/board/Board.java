@@ -15,40 +15,101 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+
 
 @Entity
 @Table(name = "BOARD")
 public abstract class Board implements Serializable {
 
+    @GeneratedValue
     @Id
     private long id;
 
     @OneToMany(targetEntity = Field.class)
-    private Collection<Field> fields;
+    private List<Field> fields = new ArrayList<>();
+    ;
 
     @OneToMany(targetEntity = Player.class)
     private List<Player> players = new ArrayList<>();
 
-
     protected int version;
-
-    @Transient
-    private Graph graphFields;
-
 
     private final BoardRepository boardRepository;
 
     @Autowired
     public Board(@Qualifier("boardRepository") BoardRepository boardRepository) {
         this.boardRepository = boardRepository;
+
+        // Create all the fields
+        for (int i = 0; i <= 63; i++){ // Casual fields
+            this.fields.add(new CasualField());
+        }
+        for (int i = 64; i <= 79; i++){ // Goal field
+            this.fields.add(new GoalField());
+        }
+        for (int i = 80; i <= 95; i++){ // Home field
+            this.fields.add(new HomeField());
+        }
+
+        // Add the graphs to all the field
+        this.createGraphs(this.fields);
     }
 
-    public Graph getGraph() {
-        return this.graphFields;
+    private void createGraphs(List<Field> fields) {
+        for(int id=0; id<63;id++){
+            Field first = fields.get(id);
+            Field second = fields.get(id+1);
+            first.addAdjacency(second);
+        }
+
+        for(int id=64; id<67;id++){
+            Field first = fields.get(id);
+            Field second = fields.get(id+1);
+            first.addAdjacency(second);
+        }
+        for(int id=68; id<71;id++){
+            Field first = fields.get(id);
+            Field second = fields.get(id+1);
+            first.addAdjacency(second);
+        }
+        for(int id=72; id<75;id++){
+            Field first = fields.get(id);
+            Field second = fields.get(id+1);
+            first.addAdjacency(second);
+        }
+        for(int id=76; id<79;id++){
+            Field first = fields.get(id);
+            Field second = fields.get(id+1);
+            first.addAdjacency(second);
+        }
+        for(int id=80; id<84;id++){
+            Field first = fields.get(id);
+            Field second = fields.get(0);
+            first.addAdjacency(second);
+        }
+        for(int id=84; id<88;id++){
+            Field first = fields.get(id);
+            Field second = fields.get(16);
+            first.addAdjacency(second);
+        }
+        for(int id=88; id<92;id++){
+            Field first = fields.get(id);
+            Field second = fields.get(32);
+            first.addAdjacency(second);
+        }
+        for(int id=92; id<96;id++){
+            Field first = fields.get(id);
+            Field second = fields.get(48);
+            first.addAdjacency(second);
+        }
+
+        fields.get(63).addAdjacency(fields.get(0));
+        fields.get(0).addAdjacency(fields.get(64));
+        fields.get(16).addAdjacency(fields.get(68));
+        fields.get(32).addAdjacency(fields.get(72));
+        fields.get(48).addAdjacency(fields.get(76));
+
     }
 
     public Collection<Field> getAllFields(Long id){
@@ -110,7 +171,8 @@ public abstract class Board implements Serializable {
         return this;
     }
 
-    public ArrayList<Integer> getMoveValues(Card card){
+
+    private ArrayList<Integer> getMoveValues(Card card){
         ArrayList<Integer> possibleValues = new ArrayList<>();
         if(card.getValue()== Value.ACE){
             possibleValues.add(1);
@@ -118,8 +180,20 @@ public abstract class Board implements Serializable {
         }
         else{
             possibleValues.add(card.getValue().getValue());
-
         }
+
+        return possibleValues;
+    }
+
+    public boolean checkIfAllTargetFieldsOccupied(Long id, Player player) {
+        Collection<Field> fieldsOfBoard = getAllFields(id);
+        int count = 0;
+        for (Field field : fieldsOfBoard) {
+            if (field instanceof GoalField && ((GoalField) field).getPlayer() == player && field.getOccupant() != null) {
+                count++;
+            }
+        }
+        return count == 4;
     }
 
     /**
@@ -131,19 +205,120 @@ public abstract class Board implements Serializable {
 
 
     public ArrayList<Field> getPossibleFields(Card card, Field field) {
-        return this.graphFields.getPossibleFields(card, field, graphFields);
+        ArrayList<Integer> moveValues = getMoveValues(card);
+        ArrayList<Field> possibleFields = new ArrayList<>();
 
+
+        if(field instanceof HomeField && card.getValue() == Value.KING || card.getValue() == Value.ACE){
+            Player playerOfField = ((HomeField) field).getPlayer();
+            for (Field key : this.fields){
+                if(key instanceof FirstField && ((FirstField) key).getPlayer()==playerOfField){
+                    ArrayList<Field> fields = new ArrayList<>();
+                    fields.add(key);
+                    return fields;
+                }
+            }
+        }
+        int level = 0;
+        Queue<Field> queue = new LinkedList<>();
+        queue.add(field);
+        queue.add(null);
+        for(int value : moveValues) {
+            while (!queue.isEmpty() && level < value) {
+                Field temp = queue.poll();
+                if (temp == null) {
+                    level++;
+                    queue.add(null);
+                }
+                else {
+                    List<Field> adjFields = temp.getAdjacentFields();
+                    if (temp instanceof FirstField && ((FirstField) temp).getBlocked()) {
+                        for (Field field1 : adjFields) {
+                            if (field1 instanceof GoalField) {
+                                adjFields.remove(field1);
+                            }
+                        }
+                    }
+                    for (Field f : adjFields) {
+                        if (f instanceof FirstField && ((FirstField) f).getBlocked()) {
+                            assert true;
+                        }
+                        else if (f instanceof GoalField && ((GoalField) f).getPlayer() != field.getOccupant().getPlayer()) {
+                            assert true;
+                        }
+                        else {
+                            queue.add(f);
+                        }
+                    }
+                }
+            }
+            while (!queue.isEmpty()) {
+                if (queue.peek() != null) {
+                    possibleFields.add(queue.poll());
+                }
+                else {
+                    queue.poll();
+                }
+            }
+        }
+
+        return possibleFields;
     }
 
-    public boolean checkIfAllTargetFieldsOccupied(Long id, Player player){
-        Collection<Field> fieldsOfBoard = getAllFields(id);
-         int count = 0;
-         for (Field field : fieldsOfBoard) {
-             if(field instanceof GoalField && ((GoalField) field).getPlayer()==player && field.getOccupant()!=null){
-                 count++;
-             }
-         }
-         return count==4;
-    }
+
+    //needs refactoring
+    public ArrayList<Field> getPossibleFieldsSeven(Card card, Field field, int value){
+        ArrayList<Integer> values = new ArrayList<>();
+        ArrayList<Field> possibleFields = new ArrayList<>();
+        for(int i=1; i<=value;i++) {
+            values.add(i);
+        }
+        int level = 0;
+        Queue<Field> queue = new LinkedList<>();
+        queue.add(field);
+        queue.add(null);
+        for(int moveValue : values) {
+            while (!queue.isEmpty() && level < moveValue) {
+                Field temp = queue.poll();
+                if (temp == null) {
+                    level++;
+                    queue.add(null);
+                }
+                else {
+                    List<Field> adjFields = temp.getAdjacentFields();
+                    if (temp instanceof FirstField && ((FirstField) temp).getBlocked()) {
+                        for (Field field1 : adjFields) {
+                            if (field1 instanceof GoalField) {
+                                adjFields.remove(field1);
+                            }
+                        }
+                    }
+                    for (Field f : adjFields) {
+                        if (f instanceof FirstField && ((FirstField) f).getBlocked()) {
+                            assert true;
+                        }
+                        else if (f instanceof GoalField && ((GoalField) f).getPlayer() != field.getOccupant().getPlayer()) {
+                            assert true;
+                        }
+                        else {
+                            queue.add(f);
+                        }
+                    }
+                }
+            }
+            while (!queue.isEmpty()) {
+                if (queue.peek() != null) {
+                    possibleFields.add(queue.poll());
+                }
+                else {
+                    queue.poll();
+                }
+            }
+        }
+        return possibleFields;
+
+        }
+
 
 }
+

@@ -9,7 +9,7 @@ public class GoalField extends Field {
 
 
 
-    // suppoed to overide getOccupant or ned method?
+    // supposed to override getOccupant or new method?
     public Player getPlayer(){
         return player;
     }
