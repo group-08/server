@@ -26,15 +26,6 @@ public class Player {
     @OneToMany(targetEntity = Figure.class)
     List<Figure> figures;
 
-    private boolean finished;
-
-    public void setFinish(){
-        finished = true;
-    }
-
-    public boolean getFinish(){
-        return finished;
-    }
 
     public void setHand(List<Card> cards) {
         this.hand = cards;

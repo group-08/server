@@ -143,18 +143,19 @@ public class Game implements Serializable {
          */
 
 
-        if(checkIfFinished()){
-            this.players.get(0).setFinish();
-        }
+
     }
 
     public void endGame(){
 
     }
 
-    public Boolean checkIfFinished(){
-        Player currentPlayer = this.players.get(0);
+    public Boolean checkIfFinished(Player currentPlayer){
         return board.checkIfAllTargetFieldsOccupied(id, currentPlayer);
+    }
+    public Boolean checkIfWon(){
+        Player Partner = this.players.get(1);
+        return board.checkIfAllTargetFieldsOccupied(id, Partner);
     }
 
 }
