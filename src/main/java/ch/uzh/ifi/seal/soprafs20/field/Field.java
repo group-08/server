@@ -28,7 +28,7 @@ public abstract class Field {
     }
 
     public void removeAdjacency(Field removeField) {
-        if (!this.adjacencyList.contains(removeField)) {
+        if (this.adjacencyList.contains(removeField)) {
             this.adjacencyList.remove(removeField);
         }
     }
