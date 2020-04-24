@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.board;
 
 import ch.uzh.ifi.seal.soprafs20.User.Player;
+import ch.uzh.ifi.seal.soprafs20.cards.Value;
 import ch.uzh.ifi.seal.soprafs20.field.Field;
 
 import java.io.Serializable;
@@ -108,6 +109,26 @@ public abstract class Board implements Serializable {
         }
         return this;
     }
+
+    public ArrayList<Integer> getMoveValues(Card card){
+        ArrayList<Integer> possibleValues = new ArrayList<>();
+        if(card.getValue()== Value.ACE){
+            possibleValues.add(1);
+            possibleValues.add(11);
+        }
+        else{
+            possibleValues.add(card.getValue().getValue());
+
+        }
+    }
+
+    /**
+     * Get the possible field so we can either automatically move the piece or display all possible fields
+     * @param card the card that was played
+     * @param field field the card is being palyed on
+     * @return List of all possible fields the player on field could land on
+     */
+
 
     public ArrayList<Field> getPossibleFields(Card card, Field field) {
         return this.graphFields.getPossibleFields(card, field, graphFields);
