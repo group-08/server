@@ -39,11 +39,11 @@ public abstract class Board implements Serializable {
         }
 
         // Add the graphs to all the field
-        this.addGraphs(this.fields);
+        this.createGraphs(this.fields);
 
     }
 
-    private void addGraphs(List<Field> fields) {
+    private void createGraphs(List<Field> fields) {
         for(int id=0; id<63;id++){
             Field first = fields.get(id);
             Field second = fields.get(id+1);
