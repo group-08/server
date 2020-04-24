@@ -34,14 +34,14 @@ public abstract class Board implements Serializable {
 
     public Board() {
         // Create all the fields
-        for (int i = 0; i < 64; i++){ // Casual fields
+        for (int i = 0; i <= 63; i++){ // Casual fields
             this.fields.add(new CasualField());
         }
-        for (int i = 64; i < 80; i++){ // Goal field
-            this.fields.add(new CasualField());
+        for (int i = 64; i <= 79; i++){ // Goal field
+            this.fields.add(new GoalField());
         }
-        for (int i = 80; i < 96; i++){ // Home field
-            this.fields.add(new CasualField());
+        for (int i = 80; i <= 95; i++){ // Home field
+            this.fields.add(new HomeField());
         }
 
         // Add the graphs to all the field
