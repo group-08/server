@@ -6,12 +6,10 @@ import ch.uzh.ifi.seal.soprafs20.board.Board;
 import ch.uzh.ifi.seal.soprafs20.board.CasualBoard;
 import ch.uzh.ifi.seal.soprafs20.cards.Card;
 import ch.uzh.ifi.seal.soprafs20.cards.Deck;
-import ch.uzh.ifi.seal.soprafs20.field.Field;
 
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -102,24 +100,26 @@ public class Game implements Serializable {
     }
 
     // BigRound is from 6 cards to 2 cards
-    public void playBigRound() {
+    public void handSize() {
         int cardNum = 6;
         while (cardNum >= 2) {
-            playSmallRound(cardNum);
+            playRound(cardNum);
             cardNum--;
         }
     }
 
-    // SmallRound is if every player played once
-    public void playSmallRound(int cardNum) {
+    // Round is until no player has a card left
+    public void playRound(int cardNum) {
         for (Player player : players) {
             List<Card> cards = this.deck.deal(cardNum);
             player.setHand(cards);
         }
 
+
         this.letPlayersChangeCard();
 
-        for (int i = 0; i < 4; i++) {
+        Player lastPlayer = players.get(players.size()-1);
+        while (!lastPlayer.getHand().isEmpty()) {
             Player currentPlayer = this.getNextPlayer();
             playPlayersMove(currentPlayer);
         }
@@ -138,7 +138,7 @@ public class Game implements Serializable {
     public void play(){
         /*
         while (game not finished) {
-            this.playBigRound();
+            this.handSize();
         }
          */
 
