@@ -53,10 +53,10 @@ public abstract class Board implements Serializable {
         }
 
         // Add the graphs to all the field
-        this.createGraphs(this.fields);
+        this.forwardGraph(this.fields);
     }
 
-    private void createGraphs(List<Field> fields) {
+    private void forwardGraph(List<Field> fields) {
         for(int id=0; id<63;id++){
             Field first = fields.get(id);
             Field second = fields.get(id+1);
@@ -110,6 +110,61 @@ public abstract class Board implements Serializable {
         fields.get(32).addAdjacency(fields.get(72));
         fields.get(48).addAdjacency(fields.get(76));
 
+    }
+
+    public void backwardGraph(List<Field> fields){
+        for(int id=63; id>0;id--){
+            Field first = fields.get(id);
+            Field second = fields.get(id-1);
+            first.addAdjacency(second);
+        }
+
+        for(int id=67; id>64;id--){
+            Field first = fields.get(id);
+            Field second = fields.get(id-1);
+            first.addAdjacency(second);
+        }
+        for(int id=71; id>68;id--){
+            Field first = fields.get(id);
+            Field second = fields.get(id-1);
+            first.addAdjacency(second);
+        }
+        for(int id=77; id>72;id--){
+            Field first = fields.get(id);
+            Field second = fields.get(id-1);
+            first.addAdjacency(second);
+        }
+        for(int id=79; id>76;id--){
+            Field first = fields.get(id);
+            Field second = fields.get(id-1);
+            first.addAdjacency(second);
+        }
+        for(int id=80; id<84;id++){
+            Field first = fields.get(id);
+            Field second = fields.get(0);
+            first.addAdjacency(second);
+        }
+        for(int id=84; id<88;id++){
+            Field first = fields.get(id);
+            Field second = fields.get(16);
+            first.addAdjacency(second);
+        }
+        for(int id=88; id<92;id++){
+            Field first = fields.get(id);
+            Field second = fields.get(32);
+            first.addAdjacency(second);
+        }
+        for(int id=92; id<96;id++){
+            Field first = fields.get(id);
+            Field second = fields.get(48);
+            first.addAdjacency(second);
+        }
+
+        fields.get(0).addAdjacency(fields.get(63));
+        fields.get(64).addAdjacency(fields.get(0));
+        fields.get(68).addAdjacency(fields.get(16));
+        fields.get(72).addAdjacency(fields.get(32));
+        fields.get(76).addAdjacency(fields.get(48));
     }
 
     public Collection<Field> getAllFields(Long id){
