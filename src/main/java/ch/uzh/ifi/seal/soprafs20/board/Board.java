@@ -146,7 +146,15 @@ public abstract class Board implements Serializable {
      * @param figure that has to be sent home
      */
     public void sendFigureHome(Figure figure) {
-        /* sends figure home */
+        Player playerOfFigure = figure.getPlayer();
+        for(Field field : this.fields){
+            if(field instanceof HomeField){
+                if(((HomeField) field).getPlayer()==playerOfFigure && field.getOccupant() == null){
+                    field.setOccupant(figure);
+                    return;
+                }
+            }
+        }
     }
 
 
@@ -209,7 +217,7 @@ public abstract class Board implements Serializable {
         ArrayList<Field> possibleFields = new ArrayList<>();
 
 
-        if(field instanceof HomeField && card.getValue() == Value.KING || card.getValue() == Value.ACE){
+        if(field instanceof HomeField && (card.getValue() == Value.KING || card.getValue() == Value.ACE)){
             Player playerOfField = ((HomeField) field).getPlayer();
             for (Field key : this.fields){
                 if(key instanceof FirstField && ((FirstField) key).getPlayer()==playerOfField){
@@ -261,7 +269,6 @@ public abstract class Board implements Serializable {
                 }
             }
         }
-
         return possibleFields;
     }
 
@@ -317,6 +324,21 @@ public abstract class Board implements Serializable {
         }
         return possibleFields;
 
+        }
+
+        public ArrayList<Field> getPossibleFieldsJack(Card card, Field field){
+            ArrayList<Field> possibleFields = new ArrayList<>();
+            Player playerOnField = field.getOccupant().getPlayer();
+
+            for(Field iterField : this.fields){
+                if(iterField.getOccupant()!=null){
+                    if(iterField.getOccupant().getPlayer()!=playerOnField && (iterField instanceof CasualField
+                    || (iterField instanceof FirstField && !(((FirstField) iterField).getBlocked())))){
+                        possibleFields.add(iterField);
+                    }
+                }
+            }
+            return possibleFields;
         }
 
 
