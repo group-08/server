@@ -42,7 +42,7 @@ public abstract class Field {
     }
 
     public void setOccupant(Figure occupant){
-        return;
+        this.occupant = occupant;
     }
 
     public long getId(){return id;};
