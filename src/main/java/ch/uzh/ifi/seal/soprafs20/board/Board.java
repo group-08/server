@@ -54,6 +54,13 @@ public abstract class Board implements Serializable {
 
         // Add the graphs to all the field
         this.forwardGraph(this.fields);
+
+        // Create Figures
+        for (int i=81; i<=96; i++) {
+            Field field = fields.get(i);
+            Figure figure = new Figure(field);
+            field.setOccupant(figure);
+        }
     }
 
     private void forwardGraph(List<Field> fields) {
@@ -175,6 +182,10 @@ public abstract class Board implements Serializable {
         else{
             return null;
         }
+    }
+
+    public Field getField(int id) {
+        return this.fields.get(id);
     }
 
     public List<Player> getAllPlayers(Long id){
