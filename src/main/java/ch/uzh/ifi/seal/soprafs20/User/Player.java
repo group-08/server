@@ -35,5 +35,9 @@ public class Player {
         return this.hand;
     }
 
+    public void addFigure(Figure figure) {
+        this.figures.add(figure);
+    }
+
 
 }
