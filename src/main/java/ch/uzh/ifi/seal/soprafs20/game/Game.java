@@ -1,11 +1,13 @@
 package ch.uzh.ifi.seal.soprafs20.game;
 
 
+import ch.uzh.ifi.seal.soprafs20.User.Figure;
 import ch.uzh.ifi.seal.soprafs20.User.Player;
 import ch.uzh.ifi.seal.soprafs20.board.Board;
 import ch.uzh.ifi.seal.soprafs20.board.CasualBoard;
 import ch.uzh.ifi.seal.soprafs20.cards.Card;
 import ch.uzh.ifi.seal.soprafs20.cards.Deck;
+import ch.uzh.ifi.seal.soprafs20.field.Field;
 
 
 import javax.persistence.*;
@@ -62,13 +64,23 @@ public class Game implements Serializable {
         // Mix up the players
         Collections.shuffle(this.players);
 
+        // Assign figures to players
+        for (int playerIndex = 0; playerIndex < 4; playerIndex++) {
+            Player player = this.players.get(playerIndex);
+            int firstField = 81+(playerIndex*4);
+            int lastField = firstField+3;
+            for (int figureIndex = firstField; figureIndex<=lastField; figureIndex++) {
+                this.setPlayer(figureIndex, player);
+            }
+        }
+
+
         // Shuffle the cards
         this.deck.shuffle();
 
         // Set the gameState to running
         this.gameState = GameState.RUNNING;
 
-        // Assign figures to players
     }
 
     /**
@@ -86,6 +98,13 @@ public class Game implements Serializable {
 
         // Return the player
         return nextPlayer;
+    }
+
+    private void setPlayer(int id, Player player) {
+        Field field = board.getField(id);
+        Figure figure = field.getFigure();
+        figure.setPlayer(player);
+        player.addFigure(figure);
     }
 
     public void letPlayersChangeCard() {
