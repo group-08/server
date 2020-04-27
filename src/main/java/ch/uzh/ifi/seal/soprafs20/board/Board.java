@@ -280,8 +280,6 @@ public abstract class Board implements Serializable {
 
     public ArrayList<Field> getPossibleFields(Card card, Field field) {
         ArrayList<Integer> moveValues = getMoveValues(card);
-        ArrayList<Field> possibleFields = new ArrayList<>();
-
 
         if(field instanceof HomeField && (card.getValue() == Value.KING || card.getValue() == Value.ACE)){
             Player playerOfField = ((HomeField) field).getPlayer();
@@ -293,104 +291,17 @@ public abstract class Board implements Serializable {
                 }
             }
         }
-        int level = 0;
-        Queue<Field> queue = new LinkedList<>();
-        queue.add(field);
-        queue.add(null);
-        for(int value : moveValues) {
-            while (!queue.isEmpty() && level < value) {
-                Field temp = queue.poll();
-                if (temp == null) {
-                    level++;
-                    queue.add(null);
-                }
-                else {
-                    List<Field> adjFields = temp.getAdjacentFields();
-                    if (temp instanceof FirstField && ((FirstField) temp).getBlocked()) {
-                        for (Field field1 : adjFields) {
-                            if (field1 instanceof GoalField) {
-                                adjFields.remove(field1);
-                            }
-                        }
-                    }
-                    for (Field f : adjFields) {
-                        if (f instanceof FirstField && ((FirstField) f).getBlocked()) {
-                            assert true;
-                        }
-                        else if (f instanceof GoalField && ((GoalField) f).getPlayer() != field.getOccupant().getPlayer()) {
-                            assert true;
-                        }
-                        else {
-                            queue.add(f);
-                        }
-                    }
-                }
-            }
-            while (!queue.isEmpty()) {
-                if (queue.peek() != null) {
-                    possibleFields.add(queue.poll());
-                }
-                else {
-                    queue.poll();
-                }
-            }
-        }
-        return possibleFields;
+        return getFields(field, moveValues);
     }
 
 
-    //needs refactoring
     public ArrayList<Field> getPossibleFieldsSeven(Card card, Field field, int value){
         ArrayList<Integer> values = new ArrayList<>();
-        ArrayList<Field> possibleFields = new ArrayList<>();
         for(int i=1; i<=value;i++) {
             values.add(i);
         }
-        int level = 0;
-        Queue<Field> queue = new LinkedList<>();
-        queue.add(field);
-        queue.add(null);
-        for(int moveValue : values) {
-            while (!queue.isEmpty() && level < moveValue) {
-                Field temp = queue.poll();
-                if (temp == null) {
-                    level++;
-                    queue.add(null);
-                }
-                else {
-                    List<Field> adjFields = temp.getAdjacentFields();
-                    if (temp instanceof FirstField && ((FirstField) temp).getBlocked()) {
-                        for (Field field1 : adjFields) {
-                            if (field1 instanceof GoalField) {
-                                adjFields.remove(field1);
-                            }
-                        }
-                    }
-                    for (Field f : adjFields) {
-                        if (f instanceof FirstField && ((FirstField) f).getBlocked()) {
-                            assert true;
-                        }
-                        else if (f instanceof GoalField && ((GoalField) f).getPlayer() != field.getOccupant().getPlayer()) {
-                            assert true;
-                        }
-                        else {
-                            queue.add(f);
-                        }
-                    }
-                }
-            }
-            while (!queue.isEmpty()) {
-                if (queue.peek() != null) {
-                    possibleFields.add(queue.poll());
-                }
-                else {
-                    queue.poll();
-                }
-            }
-        }
-        return possibleFields;
-
-        }
+        return getFields(field, values);
+    }
 
         public ArrayList<Field> getPossibleFieldsJack(Card card, Field field){
             ArrayList<Field> possibleFields = new ArrayList<>();
@@ -401,6 +312,53 @@ public abstract class Board implements Serializable {
                     if(iterField.getOccupant().getPlayer()!=playerOnField && (iterField instanceof CasualField
                     || (iterField instanceof FirstField && !(((FirstField) iterField).getBlocked())))){
                         possibleFields.add(iterField);
+                    }
+                }
+            }
+            return possibleFields;
+        }
+
+        private ArrayList<Field> getFields(Field fieldToCheck, ArrayList<Integer> valuesToCheck){
+            int level = 0;
+            ArrayList<Field> possibleFields = new ArrayList<>();
+            Queue<Field> queue = new LinkedList<>();
+            queue.add(fieldToCheck);
+            queue.add(null);
+            for(int moveValue : valuesToCheck) {
+                while (!queue.isEmpty() && level < moveValue) {
+                    Field temp = queue.poll();
+                    if (temp == null) {
+                        level++;
+                        queue.add(null);
+                    }
+                    else {
+                        List<Field> adjFields = temp.getAdjacentFields();
+                        if (temp instanceof FirstField && ((FirstField) temp).getBlocked()) {
+                            for (Field field1 : adjFields) {
+                                if (field1 instanceof GoalField) {
+                                    adjFields.remove(field1);
+                                }
+                            }
+                        }
+                        for (Field f : adjFields) {
+                            if (f instanceof FirstField && ((FirstField) f).getBlocked()) {
+                                assert true;
+                            }
+                            else if (f instanceof GoalField && ((GoalField) f).getPlayer() != fieldToCheck.getOccupant().getPlayer()) {
+                                assert true;
+                            }
+                            else {
+                                queue.add(f);
+                            }
+                        }
+                    }
+                }
+                while (!queue.isEmpty()) {
+                    if (queue.peek() != null) {
+                        possibleFields.add(queue.poll());
+                    }
+                    else {
+                        queue.poll();
                     }
                 }
             }
