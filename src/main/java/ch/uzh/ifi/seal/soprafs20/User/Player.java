@@ -31,6 +31,10 @@ public class Player {
         this.hand = cards;
     }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public List<Card> getHand() {
         return this.hand;
     }
