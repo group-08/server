@@ -12,7 +12,6 @@ import ch.uzh.ifi.seal.soprafs20.cards.Card;
 import ch.uzh.ifi.seal.soprafs20.field.*;
 import ch.uzh.ifi.seal.soprafs20.repository.BoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 
 import java.util.*;
@@ -33,11 +32,42 @@ public abstract class Board implements Serializable {
     @OneToMany(targetEntity = Player.class)
     private List<Player> players = new ArrayList<>();
 
+    @Transient
     @Autowired
     private BoardRepository boardRepository;
 
-    protected int version;
 
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(List<Player> players) {
+        this.players = players;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public List<Field> getFields() {
+        return fields;
+    }
+
+    public void setFields(List<Field> fields) {
+        this.fields = fields;
+    }
+
+    public BoardRepository getBoardRepository() {
+        return boardRepository;
+    }
+
+    public void setBoardRepository(BoardRepository boardRepository) {
+        this.boardRepository = boardRepository;
+    }
 
     public Board() {
 
@@ -57,7 +87,7 @@ public abstract class Board implements Serializable {
         this.forwardGraph(this.fields);
 
         // Create Figures
-        for (int i=81; i<=96; i++) {
+        for (int i=80; i<=95; i++) {
             Field field = fields.get(i);
             Figure figure = new Figure(field);
             field.setOccupant(figure);
@@ -270,7 +300,7 @@ public abstract class Board implements Serializable {
                         queue.add(null);
                     }
                     else {
-                        List<Field> adjFields = temp.getAdjacentFields();
+                        List<Field> adjFields = temp.getAdjacencyList();
                         if (temp instanceof FirstField && ((FirstField) temp).getBlocked()) {
                             for (Field field1 : adjFields) {
                                 if (field1 instanceof GoalField) {

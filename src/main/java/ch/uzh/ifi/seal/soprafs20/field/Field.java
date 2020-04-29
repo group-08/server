@@ -27,14 +27,19 @@ public abstract class Field {
         }
     }
 
+
     public void removeAdjacency(Field removeField) {
         if (this.adjacencyList.contains(removeField)) {
             this.adjacencyList.remove(removeField);
         }
     }
 
-    public List<Field> getAdjacentFields() {
+    public List<Field> getAdjacencyList() {
         return this.adjacencyList;
+    }
+
+    public void setAdjacencyList(List<Field> adjacencyList) {
+        this.adjacencyList = adjacencyList;
     }
 
     public Figure getOccupant() {
@@ -46,6 +51,10 @@ public abstract class Field {
     }
 
     public long getId(){return id;};
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public boolean equals(Object v){
         if (v==this){
