@@ -32,6 +32,14 @@ public class Game implements Serializable {
     @OneToMany(targetEntity = Player.class)
     List<Player> players = new ArrayList<>();
 
+    public Board getBoard() {
+        return board;
+    }
+
+    public void setBoard(Board board) {
+        this.board = board;
+    }
+
     @OneToOne
     Board board;
 
