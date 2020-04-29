@@ -27,4 +27,21 @@ public class Player {
     List<Figure> figures;
 
 
+    public void setHand(List<Card> cards) {
+        this.hand = cards;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<Card> getHand() {
+        return this.hand;
+    }
+
+    public void addFigure(Figure figure) {
+        this.figures.add(figure);
+    }
+
+
 }

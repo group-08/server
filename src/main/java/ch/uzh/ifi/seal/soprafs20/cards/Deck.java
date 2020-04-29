@@ -82,6 +82,7 @@ public class Deck implements Serializable {
             createDeck();
         }
         Collections.shuffle(this.cards);
+
     }
 
 
