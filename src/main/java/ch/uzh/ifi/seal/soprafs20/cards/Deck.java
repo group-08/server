@@ -1,12 +1,10 @@
 package ch.uzh.ifi.seal.soprafs20.cards;
 
-import org.springframework.web.bind.annotation.PostMapping;
-
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.*;
-
-import static ch.uzh.ifi.seal.soprafs20.cards.Value.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Entity
 @Table(name = "DECK")
@@ -55,6 +53,7 @@ public class Deck implements Serializable {
     private void createDeck(){
             createDeckNormalPart();
             createJokers();
+            card
     }
 
     ///create normal cards by iterating through the values and suits
