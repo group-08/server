@@ -45,6 +45,31 @@ public class Game implements Serializable {
         this.board = new CasualBoard();
         this.deck = new Deck();
         this.gameState = GameState.PENDING;
+
+        // Make first user the master player and transform users to players.
+    }
+
+    public void startGame(){
+
+        // Mix up the players
+        Collections.shuffle(this.players);
+
+        // Assign figures to players
+        for (int playerIndex = 0; playerIndex < 4; playerIndex++) {
+            Player player = this.players.get(playerIndex);
+            int firstField = 81+(playerIndex*4);
+            int lastField = firstField+3;
+            for (int figureIndex = firstField; figureIndex<=lastField; figureIndex++) {
+                this.setPlayer(figureIndex, player);
+            }
+        }
+
+        // Shuffle the cards
+        this.deck.shuffle();
+
+        // Set the gameState to running
+        this.gameState = GameState.RUNNING;
+
     }
 
     private boolean canAddPlayer() {
@@ -60,28 +85,6 @@ public class Game implements Serializable {
         }
     }
 
-    public void startGame(){
-        // Mix up the players
-        Collections.shuffle(this.players);
-
-        // Assign figures to players
-        for (int playerIndex = 0; playerIndex < 4; playerIndex++) {
-            Player player = this.players.get(playerIndex);
-            int firstField = 81+(playerIndex*4);
-            int lastField = firstField+3;
-            for (int figureIndex = firstField; figureIndex<=lastField; figureIndex++) {
-                this.setPlayer(figureIndex, player);
-            }
-        }
-
-
-        // Shuffle the cards
-        this.deck.shuffle();
-
-        // Set the gameState to running
-        this.gameState = GameState.RUNNING;
-
-    }
 
     /**
      * return the next player and keep moving
