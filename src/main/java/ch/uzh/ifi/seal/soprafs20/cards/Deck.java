@@ -1,5 +1,8 @@
 package ch.uzh.ifi.seal.soprafs20.cards;
 
+import ch.uzh.ifi.seal.soprafs20.repository.DeckRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -17,6 +20,9 @@ public class Deck implements Serializable {
     @OneToMany(targetEntity = Card.class)
     List<Card> cards = new ArrayList<Card>();
 
+
+    @Autowired
+    private DeckRepository deckRepository;
 
     ///number of decks we play with default 2
     private final int numberOfDecks = 2;
@@ -53,7 +59,7 @@ public class Deck implements Serializable {
     private void createDeck(){
             createDeckNormalPart();
             createJokers();
-            card
+            deckRepository.saveAndFlush(cards);
     }
 
     ///create normal cards by iterating through the values and suits
