@@ -33,13 +33,14 @@ public abstract class Board implements Serializable {
     @OneToMany(targetEntity = Player.class)
     private List<Player> players = new ArrayList<>();
 
+    @Autowired
+    private BoardRepository boardRepository;
+
     protected int version;
 
-    private final BoardRepository boardRepository;
 
-    @Autowired
-    public Board(@Qualifier("boardRepository") BoardRepository boardRepository) {
-        this.boardRepository = boardRepository;
+    public Board() {
+
 
         // Create all the fields
         for (int i = 0; i <= 63; i++){ // Casual fields
@@ -119,71 +120,6 @@ public abstract class Board implements Serializable {
 
     }
 
-    public void backwardGraph(List<Field> fields){
-        for(int id=63; id>0;id--){
-            Field first = fields.get(id);
-            Field second = fields.get(id-1);
-            first.addAdjacency(second);
-        }
-
-        for(int id=67; id>64;id--){
-            Field first = fields.get(id);
-            Field second = fields.get(id-1);
-            first.addAdjacency(second);
-        }
-        for(int id=71; id>68;id--){
-            Field first = fields.get(id);
-            Field second = fields.get(id-1);
-            first.addAdjacency(second);
-        }
-        for(int id=77; id>72;id--){
-            Field first = fields.get(id);
-            Field second = fields.get(id-1);
-            first.addAdjacency(second);
-        }
-        for(int id=79; id>76;id--){
-            Field first = fields.get(id);
-            Field second = fields.get(id-1);
-            first.addAdjacency(second);
-        }
-        for(int id=80; id<84;id++){
-            Field first = fields.get(id);
-            Field second = fields.get(0);
-            first.addAdjacency(second);
-        }
-        for(int id=84; id<88;id++){
-            Field first = fields.get(id);
-            Field second = fields.get(16);
-            first.addAdjacency(second);
-        }
-        for(int id=88; id<92;id++){
-            Field first = fields.get(id);
-            Field second = fields.get(32);
-            first.addAdjacency(second);
-        }
-        for(int id=92; id<96;id++){
-            Field first = fields.get(id);
-            Field second = fields.get(48);
-            first.addAdjacency(second);
-        }
-
-        fields.get(0).addAdjacency(fields.get(63));
-        fields.get(64).addAdjacency(fields.get(0));
-        fields.get(68).addAdjacency(fields.get(16));
-        fields.get(72).addAdjacency(fields.get(32));
-        fields.get(76).addAdjacency(fields.get(48));
-    }
-
-    public Collection<Field> getAllFields(Long id){
-        Board boardById = boardRepository.findById(id).orElse(null);
-        if (boardById != null) {
-            return boardById.fields;
-        }
-        else{
-            return null;
-        }
-    }
-
     public Field getField(int id) {
         return this.fields.get(id);
     }
@@ -242,6 +178,8 @@ public abstract class Board implements Serializable {
         if (currentField instanceof FirstField && !(targetField instanceof FirstField)) {
             ((FirstField) currentField).setBlocked(false);
         }
+
+        boardRepository.saveAndFlush(this);
         return this;
     }
 
@@ -260,7 +198,7 @@ public abstract class Board implements Serializable {
     }
 
     public boolean checkIfAllTargetFieldsOccupied(Long id, Player player) {
-        Collection<Field> fieldsOfBoard = getAllFields(id);
+        List<Field> fieldsOfBoard = this.fields;
         int count = 0;
         for (Field field : fieldsOfBoard) {
             if (field instanceof GoalField && ((GoalField) field).getPlayer() == player && field.getOccupant() != null) {
