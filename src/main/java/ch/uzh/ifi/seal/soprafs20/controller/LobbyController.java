@@ -9,6 +9,8 @@ import ch.uzh.ifi.seal.soprafs20.service.GameService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class LobbyController {
 
@@ -20,7 +22,9 @@ public class LobbyController {
     @GetMapping("/lobbies")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    //get all open games Lobbies <List<Game>>
+    public List<Game> getAllLobbies(){
+        return gameService.getAllLobbies();
+    }
 
     @PostMapping("/lobby")
     @ResponseStatus(HttpStatus.CREATED)
@@ -46,17 +50,19 @@ public class LobbyController {
     public void addUser(@PathVariable Long id, @RequestBody UserPostDTO userPostDTO){
         gameService.addUser(id, userPostDTO);
     }
-                        //add a user to a lobby
 
     @DeleteMapping("/lobby{id}")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public void deleteUser(@PathVariable Long id, @RequestBody UserPostDTO userPostDTO){
-        gameService.
+        //To be made later
     }
 
-                        @PostMapping("/lobby{id}/start")
-                        @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody @PathVariable(value="id") Long id){}
+    @PostMapping("/lobby{id}/start")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public void startGame(@PathVariable Long id){
+        gameService.startGame(id);
+    }
 
 }

@@ -39,10 +39,11 @@ public class AuthController {
         catch (IllegalAccessException e) {
             // Wrong password
         }
-
         // convert internal representation of user back to API
         return loginUser;
     }
+
+    @RequestHeader
 
     @PostMapping("/signUp")
     @ResponseStatus(HttpStatus.CREATED)
@@ -56,7 +57,7 @@ public class AuthController {
         User createdUser = userService.createUser(userInput);
 
         // convert internal representation of user back to API
-        //should return location url
+        //should return user
         return DTOMapper.INSTANCE.convertEntityToUserGetDTO(createdUser);
     }
 
@@ -80,7 +81,6 @@ public class AuthController {
             userGetDTOs.add(DTOMapper.INSTANCE.convertEntityToUserGetDTO(user));
         }
         return userGetDTOs;
-        //List with users or userGetDTOs?
     }
 
 

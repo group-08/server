@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional
@@ -76,6 +77,18 @@ public class GameService {
             actualGame.addPlayer(userToBeAdded);
         }
         //We need function to add User; Takes id and User;
+    }
+
+    public void startGame(long id){
+        Game actualGame = gameRepository.findById(id).orElse(null);
+        if (actualGame!=null){
+            actualGame.startGame();
+        }
+
+    }
+
+    public List<Game> getAllLobbies(){
+        return gameRepository.findAll();
     }
 
     /**
