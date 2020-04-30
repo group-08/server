@@ -1,13 +1,14 @@
 package ch.uzh.ifi.seal.soprafs20.cards;
 
+import ch.uzh.ifi.seal.soprafs20.repository.CardRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.DeckRepository;
+import ch.uzh.ifi.seal.soprafs20.service.CardService;
+import ch.uzh.ifi.seal.soprafs20.service.DeckService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,23 +24,24 @@ public class Deck implements Serializable {
     List<Card> cards = new ArrayList<Card>();
 
 
-    @Autowired
-    private DeckRepository deckRepository;
+   private final DeckService deckService;
 
-    Deck(List<Card> cards){
+    public Deck(){
         this.id = UUID.randomUUID().toString();
-        this.cards = createDeck();
+        this.cards = createCards();
 
+        deckService = null;
     }
 
     ///number of decks we play with default 2
     private final int numberOfDecks = 2;
+    
 
     /// deals cards implemented as singleton
     public List<Card> deal(int amount){
 
         if (deckRepository.findAll().isEmpty()) {
-            createDeck();
+            createCards();
         }
         return createHand(amount);
     }
@@ -57,26 +59,29 @@ public class Deck implements Serializable {
             hand.add(topCard);
         }
 
-        Deck currentDeck = (Deck) deckRepository.findAll();
-        currentDeck.cards
 
         return hand;
     }
 
     ///creating the unique deck in two steps
-    private List<Card> createDeck(){
-            createDeckNormalPart();
+    private List<Card> createCards(){
+        List<Card> originalCards = new ArrayList<>()
+            createCardsNormalPart(originalCards);
             createJokers();
-            Deck originalDeck = new Deck(cards);
-            deckRepository.saveAndFlush(originalDeck);
+
             return originalDeck;
+
     }
 
     ///create normal cards by iterating through the values and suits
-    private void createDeckNormalPart(){
+    private void createCardsNormalPart(List<Card> originalCards){
         for(Suit suit : Suit.values()){
             for(Value myValue : Value.values()){
-                cards.add(new NormalCard(suit, myValue));
+                Card newNormalCard = new NormalCard(suit, myValue);
+                originalCards.add(newNormalCard);
+                CardService cardService = new CardService();
+                cardService.addCard();
+
             }
         }
     }
