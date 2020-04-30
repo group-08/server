@@ -1,6 +1,6 @@
 package ch.uzh.ifi.seal.soprafs20.cards;
 
-enum Suit {
+public enum Suit {
     HEARTS,
     SPADES,
     CLUBS,

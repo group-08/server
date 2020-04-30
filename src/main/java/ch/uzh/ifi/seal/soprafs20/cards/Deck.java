@@ -1,11 +1,5 @@
 package ch.uzh.ifi.seal.soprafs20.cards;
 
-import ch.uzh.ifi.seal.soprafs20.repository.CardRepository;
-import ch.uzh.ifi.seal.soprafs20.repository.DeckRepository;
-import ch.uzh.ifi.seal.soprafs20.service.CardService;
-import ch.uzh.ifi.seal.soprafs20.service.DeckService;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -24,15 +18,14 @@ public class Deck implements Serializable {
     List<Card> cards = new ArrayList<Card>();
 
 
-   private final DeckService deckService;
 
     public Deck(){
         this.id = UUID.randomUUID().toString();
-        this.cards = createCards();
+        this.cards = new ArrayList<Card>();
 
-        deckService = null;
     }
 
+/*
     ///number of decks we play with default 2
     private final int numberOfDecks = 2;
     
@@ -67,7 +60,7 @@ public class Deck implements Serializable {
     private List<Card> createCards(){
         List<Card> originalCards = new ArrayList<>()
             createCardsNormalPart(originalCards);
-            createJokers();
+            createJokers(originalCards);
 
             return originalDeck;
 
@@ -79,28 +72,32 @@ public class Deck implements Serializable {
             for(Value myValue : Value.values()){
                 Card newNormalCard = new NormalCard(suit, myValue);
                 originalCards.add(newNormalCard);
-                CardService cardService = new CardService();
-                cardService.addCard();
-
             }
         }
     }
 
     ///creating Joker cards separately
-    private void createJokers(){
+    private void createJokers(List<Card> originalCards){
         int numberOfJokers = 2 * numberOfDecks;
         int iter = 0;
         while (iter < numberOfJokers ){
-            cards.add(new JokerCard());
+            originalCards.add(new JokerCard());
             iter++;
         }
     }
+*/
 
 
 
-    public List<Card> getCards(){
-        return cards;
+    public List<Card> getCardsInDeck() {
+        return this.cards;
     }
 
+    public void setCards(List<Card> cards){
+        this.cards = cards;
+    }
 
+    public String getId(){
+        return this.id;
+    }
 }
