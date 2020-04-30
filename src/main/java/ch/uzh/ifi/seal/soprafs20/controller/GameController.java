@@ -27,11 +27,11 @@ public class GameController {
         return gameService.getPossibleFields(move);
     }
 
-    @PostMapping("/move{id}")
+    @PostMapping("/move")
     @ResponseStatus(HttpStatus.ACCEPTED)
     @ResponseBody
-    public Board move(@RequestBody MovePostDTO move, @PathVariable Long id) {
-        return gameService.moveFigure(move, id); //id is needed to get game
+    public Board move(@RequestBody MovePostDTO move) {
+        return gameService.moveFigure(move); //id is needed to get game
     }
 
     @GetMapping("/game{id}")

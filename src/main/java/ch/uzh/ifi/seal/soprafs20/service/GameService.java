@@ -74,7 +74,7 @@ public class GameService {
         User userToBeAdded = userRepository.findByUsername(userToBeAddedUsername);
         Game actualGame = gameRepository.findById(id).orElse(null);
         if(actualGame!=null) {
-            actualGame.addPlayer(userToBeAdded);
+            actualGame.addPlayerFromUser(userToBeAdded);
         }
         //We need function to add User; Takes id and User;
     }
