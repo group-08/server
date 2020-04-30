@@ -39,6 +39,9 @@ public class Game implements Serializable {
     @OneToOne
     Deck deck;
 
+    @OneToOne
+    User host;
+
     @Enumerated
     WeatherState weatherState;
 
@@ -46,9 +49,8 @@ public class Game implements Serializable {
         this.board = new CasualBoard();
         this.deck = new Deck();
         this.gameState = GameState.PENDING;
-        Player hostPlayer = this.transformUserIntoPlayer(user);
-        this.players.add(hostPlayer);
-        User masterUser = user;
+        this.host = user;
+        this.addPlayerFromUser(host);
     }
 
     /**
@@ -63,7 +65,7 @@ public class Game implements Serializable {
      * Transforms the user into a player and adds him to the game's player list.
      * @param user User that should be added to game
      */
-    public void addPlayer(User user) {
+    public void addPlayerFromUser(User user) {
         if (this.canAddPlayer()) {
             this.players.add(this.transformUserIntoPlayer(user));
         }
