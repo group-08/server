@@ -48,6 +48,7 @@ public class Game implements Serializable {
         this.gameState = GameState.PENDING;
         Player hostPlayer = this.transformUserIntoPlayer(user);
         this.players.add(hostPlayer);
+        User masterUser = user;
     }
 
     /**
