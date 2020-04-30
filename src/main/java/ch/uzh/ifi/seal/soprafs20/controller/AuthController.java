@@ -29,7 +29,7 @@ public class AuthController {
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public UserGetDTO login(@RequestBody UserPostLoginDTO userPostLoginDTO){
+    public User login(@RequestBody UserPostLoginDTO userPostLoginDTO){
         // Login the user
         User loginUser = null;
         try {
@@ -40,6 +40,6 @@ public class AuthController {
         }
 
         // convert internal representation of user back to API
-        return DTOMapper.INSTANCE.convertEntityToUserGetDTO(loginUser);
+        return loginUser;
     }
 }
