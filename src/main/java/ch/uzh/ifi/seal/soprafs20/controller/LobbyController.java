@@ -48,9 +48,12 @@ public class LobbyController {
     }
                         //add a user to a lobby
 
-                        @DeleteMapping("/lobby{id}")
-                        @ResponseStatus(HttpStatus.CREATED)
-                        @ResponseBody
+    @DeleteMapping("/lobby{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public void deleteUser(@PathVariable Long id, @RequestBody UserPostDTO userPostDTO){
+        gameService.
+    }
 
                         @PostMapping("/lobby{id}/start")
                         @ResponseStatus(HttpStatus.OK)
