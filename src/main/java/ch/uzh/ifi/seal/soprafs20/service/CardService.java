@@ -24,4 +24,6 @@ public class CardService {
     public void addCard(Card newCard){
         cardRepository.saveAndFlush(newCard);
     }
+
+
 }

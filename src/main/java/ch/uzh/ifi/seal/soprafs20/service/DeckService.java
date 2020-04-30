@@ -6,12 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.Id;
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -19,18 +16,17 @@ import java.util.List;
 public class DeckService {
 
     private final DeckRepository deckRepository;
+    private final CardService cardService;
 
 
     @Autowired
-    public DeckService(@Qualifier("deckRepository") DeckRepository deckRepository) {
+    public DeckService(@Qualifier("deckRepository") DeckRepository deckRepository, CardService cardService) {
         this.deckRepository = deckRepository;
+        this.cardService = cardService;
     }
 
-    private Deck createDeck(Deck deck){
-        deckRepository.saveAndFlush(deck);
-        return deck;
-    }
-
+    ///number of decks we play with default 2
+    private int numberOfDecks = 2;
 
     private Deck getDeck(){
 
@@ -57,67 +53,123 @@ public class DeckService {
 
     }
 
+    ///empty the deck
+    private void emptyDeck(){
+        this.getDeck().setCards(null);
+    }
+
     private void refillDeck(){
-        getDeck().setCards(null);
-        createCards(getDeck());
-        this.deckRepository.saveAndFlush(getDeck());
+
+        ///empty the deck
+        emptyDeck();
+
+        ///fill the deck with new cards
+        List<Card> allCards = createCards();
+        getDeck().setCards(allCards);
+
+        ////Todo is this necessary?
+        ///safe the newly filled deck
+        safeDeck(getDeck());
     }
 
-    ///number of decks we play with default 2
-    private final int numberOfDecks = 2;
 
 
-    /// deals cards implemented as singleton
-    public List<Card> deal(int amount){
+    private boolean checkIfEnoughCardsLeft(int amountToDraw) {
 
-        return createHand(amount);
+        return amountToDraw <= checkLengthOfTheDeck();
     }
 
+    ///Todo which verison does it here?
     ///drawing cards from the deck eg. poping
-    private List<Card> createHand (int amount){
+    private List<Card> drawCards1 (int amountToDraw){
 
         List<Card> hand = new ArrayList<Card>();
 
         Card topCard;
 
-        ///drawing as many cards from cards as necessary
-        for (int loopVal = 0; loopVal < amount; loopVal++){
-            topCard = getCards().remove(0);
-            topCard = cards.remove(0);
-            hand.add(topCard);
-        }
 
+        ///drawing as many cards from cards as necessary
+        for (int loopVal = 0; loopVal < amountToDraw; loopVal++){
+            topCard = getCards().remove(0);
+            hand.add(topCard); }
 
         return hand;
     }
 
-    ///creating the unique deck in two steps
-    private void createCards(Deck deck){
-        List<Card> originalCards = new ArrayList<>();
-        createCardsNormalPart(originalCards);
-        createJokers(originalCards);
-        deck.setCards(originalCards);
-        deckRepository.saveAndFlush(deck);
 
+    /// second version
+    private List<Card> drawCard2 (int amount){
+
+        List<Card> hand = new ArrayList<Card>();
+
+        Card topCard;
+
+        List<Card> currentCards = getCards();
+
+        ///drawing as many cards from cards as necessary
+        for (int loopVal = 0; loopVal < amount; loopVal++){
+            ///from list instead
+            topCard = currentCards.remove(0);
+            hand.add(topCard);
+        }
+
+        emptyDeck();
+        getDeck().setCards(currentCards);
+
+        return hand;
+    }
+
+
+    private void createDeck(Deck deck){
+        ///create the cards
+        List<Card> allCards = createCards();
+
+        //safe the cards
+        for (Card card : allCards){
+            cardService.addCard(card); }
+
+        //// set the field
+        deck.setCards(allCards);
+
+        ///safe the deck in jpa
+        safeDeck(deck);
+
+    }
+    ///creating the unique deck in two steps
+    private List<Card> createCards(){
+
+        ///creating a list with all cards
+        List<Card> normalCards = createCardsNormalPart();
+        List<Card> jokers = createJokers();
+        List<Card> allCards = new ArrayList<>();
+        allCards.addAll(normalCards);
+        allCards.addAll(jokers);
+        return allCards;
     }
 
     ///create normal cards by iterating through the values and suits
-    private void createCardsNormalPart(List<Card> originalCards){
+    private List<Card> createCardsNormalPart(){
+        List<Card> cards = new ArrayList<Card>();
         for(Suit suit : Suit.values()){
             for(Value myValue : Value.values()){
                 Card newNormalCard = new NormalCard(suit, myValue);
-                originalCards.add(newNormalCard);
+                cards.add(newNormalCard);
             }
         }
+        return cards;
     }
 
     ///creating Joker cards separately
-    private void createJokers(List<Card> originalCards){
+    private List<Card> createJokers(){
+        List<Card> jokers = new ArrayList<>();
         int numberOfJokers = 2 * numberOfDecks;
         int iter = 0;
         while (iter < numberOfJokers ){
-            originalCards.add(new JokerCard());
+            jokers.add(new JokerCard());
             iter++;
         }
+        return jokers;
     }
+
+
 }
