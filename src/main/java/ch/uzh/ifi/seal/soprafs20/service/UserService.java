@@ -88,4 +88,12 @@ public class UserService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(baseErrorMessage, "email", "is"));
         }
     }
+
+    public User getUserById(long id){
+        return userRepository.findById(id).orElse(null);
+    }
+
+    public User getUserByUsername(String username){
+        return userRepository.findByUsername(username);
+    }
 }
