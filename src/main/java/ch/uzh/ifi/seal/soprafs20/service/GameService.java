@@ -25,25 +25,23 @@ import java.util.List;
 @Transactional
 public class GameService {
 
-    private final GameLogRepository gameLogRepository;
+    private UserService userService;
+
+
     private final GameRepository gameRepository;
-    private final UserRepository userRepository;
 
     @Autowired
-    public GameService(@Qualifier("gameLogRepository") GameLogRepository gameLogRepository,
-                       @Qualifier("gameRepository") GameRepository gameRepository,
-                       @Qualifier("userRepository") UserRepository userRepository){
-        this.gameLogRepository = gameLogRepository;
+    public GameService(@Qualifier("gameRepository") GameRepository gameRepository){
         this.gameRepository = gameRepository;
-        this.userRepository = userRepository;
     }
 
 
 
     public ArrayList<Field> getPossibleFields(MovePostDTO move){
-        GameLog game = gameLogRepository.getOne(move.getId());
-        int lastIndex = game.getBoards().size()-1;
-        Board actualBoard = game.getBoards().get(lastIndex);
+
+        Game actualGame = gameRepository.findById(move.getId()).orElse(null);
+        assert actualGame != null;
+        Board actualBoard = actualGame.getBoard();
         Card card = move.getCard();
         Figure figure = move.getFigure();
         Field field = figure.getField();
@@ -53,9 +51,9 @@ public class GameService {
     }
 
     public Board moveFigure(MovePostDTO move) {
-        GameLog game = gameLogRepository.getOne(move.getId());
-        int lastIndex = game.getBoards().size()-1;
-        Board actualBoard = game.getBoards().get(lastIndex);
+        Game actualGame = gameRepository.findById(move.getId()).orElse(null);
+        assert actualGame != null;
+        Board actualBoard = actualGame.getBoard();
         Figure figure = move.getFigure();
         Field targetField = move.getTargetField();
         return actualBoard.move(figure, targetField);
@@ -71,12 +69,11 @@ public class GameService {
 
     public void addUser(Long id, UserPostDTO userToBeAddedDTO){
         String userToBeAddedUsername = userToBeAddedDTO.getUsername();
-        User userToBeAdded = userRepository.findByUsername(userToBeAddedUsername);
+        User userToBeAdded = userService.getUserByUsername(userToBeAddedUsername);
         Game actualGame = gameRepository.findById(id).orElse(null);
         if(actualGame!=null) {
             actualGame.addPlayerFromUser(userToBeAdded);
         }
-        //We need function to add User; Takes id and User;
     }
 
     public void startGame(long id){
@@ -90,6 +87,16 @@ public class GameService {
     public List<Game> getAllLobbies(){
         return gameRepository.findAll();
     }
+
+    public User getUserByToken(String token){
+        return userService.getUserByToken(token);
+    }
+
+    public void createLobby(User userOwner, String gameName){
+        Game game = new Game(userOwner, gameName);
+    }
+
+
 
     /**
     public void deleteUser(Long id, UserPostDTO userToBeDeletedDTO){

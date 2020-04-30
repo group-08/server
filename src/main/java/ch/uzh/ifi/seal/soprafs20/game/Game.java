@@ -42,11 +42,15 @@ public class Game implements Serializable {
     @OneToOne
     User host;
 
+    @OneToOne
+    String name;
+
     @Enumerated
     WeatherState weatherState;
 
-    Game(User user){
+    public Game(User user, String name){
         this.board = new CasualBoard();
+        this.name = name;
         this.deck = new Deck();
         this.gameState = GameState.PENDING;
         this.host = user;

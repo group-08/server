@@ -26,15 +26,16 @@ public class LobbyController {
         return gameService.getAllLobbies();
     }
 
-    @PostMapping("/lobby")
+    @PostMapping("/lobbies")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public void createLobby(@RequestBody LobbyPostCreateDTO lobbyPostCreateDTO){
-        lobbyPostCreateDTO.getName();
-        // I need a user!
-        // I need a function create Lobby or something!
+    public void createLobby(@RequestBody LobbyPostCreateDTO lobbyPostCreateDTO,
+                            @RequestHeader String token){
+        String lobbyName = lobbyPostCreateDTO.getName();
+        User userCreatingLobby = gameService.getUserByToken(token);
+        gameService.createLobby(userCreatingLobby, lobbyName);
     }
-    // no return, create a lobby
+
 
     @GetMapping("/lobby{id}")
     @ResponseStatus(HttpStatus.OK)
