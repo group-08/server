@@ -298,6 +298,8 @@ public class GameService {
 
     public void createLobby(User userOwner, String gameName){
         Game game = new Game(userOwner, gameName);
+        game = this.gameRepository.save(game);
+        this.gameRepository.flush();
     }
 
     /*
