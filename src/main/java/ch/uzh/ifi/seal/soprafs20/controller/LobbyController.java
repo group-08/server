@@ -63,7 +63,7 @@ public class LobbyController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public void startGame(@PathVariable Long id){
-        gameService.startGame(id);
+        gameService.setUpGame(id);
     }
 
 }

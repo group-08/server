@@ -227,7 +227,7 @@ public abstract class Board implements Serializable {
         return possibleValues;
     }
 
-    public boolean checkIfAllTargetFieldsOccupied(Long id, Player player) {
+    public boolean checkIfAllTargetFieldsOccupied(Player player) {
         List<Field> fieldsOfBoard = this.fields;
         int count = 0;
         for (Field field : fieldsOfBoard) {
