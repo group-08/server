@@ -4,7 +4,6 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 @Table(name = "DECK")
@@ -20,7 +19,6 @@ public class Deck implements Serializable {
 
 
     public Deck(){
-        this.id = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
         this.cards = new ArrayList<Card>();
 
     }
