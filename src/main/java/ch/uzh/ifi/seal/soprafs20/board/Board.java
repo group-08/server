@@ -1,13 +1,13 @@
 package ch.uzh.ifi.seal.soprafs20.board;
 
-import ch.uzh.ifi.seal.soprafs20.User.Player;
+import ch.uzh.ifi.seal.soprafs20.user.Player;
 import ch.uzh.ifi.seal.soprafs20.cards.Value;
 import ch.uzh.ifi.seal.soprafs20.field.Field;
 
 import java.io.Serializable;
 import javax.persistence.*;
 
-import ch.uzh.ifi.seal.soprafs20.User.Figure;
+import ch.uzh.ifi.seal.soprafs20.user.Figure;
 import ch.uzh.ifi.seal.soprafs20.cards.Card;
 import ch.uzh.ifi.seal.soprafs20.field.*;
 import ch.uzh.ifi.seal.soprafs20.repository.BoardRepository;
@@ -227,7 +227,7 @@ public abstract class Board implements Serializable {
         return possibleValues;
     }
 
-    public boolean checkIfAllTargetFieldsOccupied(Long id, Player player) {
+    public boolean checkIfAllTargetFieldsOccupied(Player player) {
         List<Field> fieldsOfBoard = this.fields;
         int count = 0;
         for (Field field : fieldsOfBoard) {

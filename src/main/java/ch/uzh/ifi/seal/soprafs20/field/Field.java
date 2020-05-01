@@ -1,7 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.field;
 
 
-import ch.uzh.ifi.seal.soprafs20.User.Figure;
+import ch.uzh.ifi.seal.soprafs20.user.Figure;
 
 import javax.persistence.*;
 import java.util.ArrayList;

@@ -1,7 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.rest.mapper;
 
 
-import ch.uzh.ifi.seal.soprafs20.User.User;
+import ch.uzh.ifi.seal.soprafs20.user.User;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostDTO;
 import org.mapstruct.*;

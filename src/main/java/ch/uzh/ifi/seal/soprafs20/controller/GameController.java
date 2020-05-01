@@ -1,10 +1,8 @@
 package ch.uzh.ifi.seal.soprafs20.controller;
 
 
-import ch.uzh.ifi.seal.soprafs20.User.Figure;
 import ch.uzh.ifi.seal.soprafs20.board.Board;
 import ch.uzh.ifi.seal.soprafs20.field.Field;
-import ch.uzh.ifi.seal.soprafs20.game.Game;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.MovePostDTO;
 import ch.uzh.ifi.seal.soprafs20.service.GameService;
 import org.springframework.http.HttpStatus;
@@ -21,7 +19,7 @@ public class GameController {
     GameController(GameService gameService){this.gameService = gameService;}
 
     @PostMapping("/game")
-    @ResponseStatus(HttpStatus.ACCEPTED)
+    @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public ArrayList<Field> getPossibleFields(@RequestBody MovePostDTO move){
         return gameService.getPossibleFields(move);
@@ -31,9 +29,23 @@ public class GameController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     @ResponseBody
     public Board move(@RequestBody MovePostDTO move) {
-        return gameService.moveFigure(move);
+        return gameService.moveFigure(move); //id is needed to get game
     }
 
+    @GetMapping("/game/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public Board getBoard() {
+        return null;
+    }
+    //get current game with id
+
+    @PostMapping("/game/{id}/exchange")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public void exchangeCard() {
+
+    }
 
 
 

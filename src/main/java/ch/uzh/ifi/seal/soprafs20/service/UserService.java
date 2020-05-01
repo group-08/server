@@ -1,7 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.service;
 
-import ch.uzh.ifi.seal.soprafs20.User.UserStatus;
-import ch.uzh.ifi.seal.soprafs20.User.User;
+import ch.uzh.ifi.seal.soprafs20.user.UserStatus;
+import ch.uzh.ifi.seal.soprafs20.user.User;
 import ch.uzh.ifi.seal.soprafs20.repository.UserRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostLoginDTO;
 import org.slf4j.Logger;
@@ -52,19 +52,6 @@ public class UserService {
         return newUser;
     }
 
-    public User login(UserPostLoginDTO loginUser) throws IllegalAccessException {
-        // Get the user trying to login
-        User user = userRepository.findByEmail(loginUser.getEmail());
-
-        // Check the password
-        if (!user.checkPassword(loginUser.getPassword())) {
-           throw new IllegalAccessException();
-        }
-
-        // return the user
-        return user;
-    }
-
     /**
      * This is a helper method that will check the uniqueness criteria of the username and the name
      * defined in the User entity. The method will do nothing if the input is unique and throw an error otherwise.
@@ -88,4 +75,20 @@ public class UserService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(baseErrorMessage, "email", "is"));
         }
     }
+
+    public User getUserById(long id){
+        return userRepository.findById(id).orElse(null);
+    }
+
+
+    public User getUserByToken(String token){
+        return userRepository.findByToken(token);
+    }
+
+    public User getUserByUsername(String username){
+        return userRepository.findByUsername(username);
+    }
 }
+
+
+

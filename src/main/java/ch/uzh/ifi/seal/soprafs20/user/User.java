@@ -1,6 +1,4 @@
-package ch.uzh.ifi.seal.soprafs20.User;
-
-import ch.uzh.ifi.seal.soprafs20.User.UserStatus;
+package ch.uzh.ifi.seal.soprafs20.user;
 
 import javax.persistence.*;
 import java.io.Serializable;

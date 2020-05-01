@@ -1,9 +1,8 @@
-package ch.uzh.ifi.seal.soprafs20.User;
+package ch.uzh.ifi.seal.soprafs20.user;
 
 import ch.uzh.ifi.seal.soprafs20.cards.Card;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity

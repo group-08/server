@@ -1,4 +1,4 @@
-package ch.uzh.ifi.seal.soprafs20.User;
+package ch.uzh.ifi.seal.soprafs20.user;
 
 enum Colour {
     BLUE,
