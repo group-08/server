@@ -33,10 +33,10 @@ public class Game implements Serializable {
     @OneToMany(targetEntity = Player.class, cascade = CascadeType.ALL)
     List<Player> players = new ArrayList<>();
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     Board board;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     Deck deck;
 
     @OneToOne
@@ -46,6 +46,8 @@ public class Game implements Serializable {
 
     @Enumerated
     WeatherState weatherState;
+
+    public Game(){}
 
     public Game(User user, String name){
         this.board = new CasualBoard();
@@ -81,9 +83,9 @@ public class Game implements Serializable {
      * @param player Player to assign to figure
      */
     public void setPlayer(int id, Player player) {
-        if (board.getField(id).getFigure() != null) {
+        if (board.getField(id).getOccupant() != null) {
             Field field = board.getField(id);
-            Figure figure = field.getFigure();
+            Figure figure = field.getOccupant();
             figure.setPlayer(player);
             player.addFigure(figure);
         } else {

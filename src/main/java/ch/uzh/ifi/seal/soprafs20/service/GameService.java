@@ -291,7 +291,7 @@ public class GameService {
     }
 
     public boolean checkIfUserExists(String tokenOfUser){
-        return userService.getUserByToken(tokenOfUser) == null;
+        return userService.getUserByToken(tokenOfUser) != null;
     }
 
     public List<Game> getAllLobbies(){
@@ -304,7 +304,7 @@ public class GameService {
 
     public void createLobby(User userOwner, String gameName){
         Game game = new Game(userOwner, gameName);
-        game = gameRepository.saveAndFlush(game);
+        gameRepository.saveAndFlush(game);
     }
 
     public Game getGameById(Long id){

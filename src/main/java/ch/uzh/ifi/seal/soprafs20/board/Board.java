@@ -19,23 +19,22 @@ import java.util.*;
 
 @Entity
 @Table(name = "BOARD")
-public abstract class Board implements Serializable {
+public class Board implements Serializable {
 
     @GeneratedValue
     @Id
     private long id;
 
-    @OneToMany(targetEntity = Field.class)
+    @OneToMany(targetEntity = Field.class, cascade = CascadeType.ALL)
     private List<Field> fields = new ArrayList<>();
-    ;
 
-    @OneToMany(targetEntity = Player.class)
+
+    @OneToMany(targetEntity = Player.class, cascade = CascadeType.ALL)
     private List<Player> players = new ArrayList<>();
 
     @Transient
     @Autowired
     private BoardRepository boardRepository;
-
 
     public List<Player> getPlayers() {
         return players;
@@ -70,8 +69,6 @@ public abstract class Board implements Serializable {
     }
 
     public Board() {
-
-
         // Create all the fields
         for (int i = 0; i <= 63; i++){ // Casual fields
             this.fields.add(new CasualField());
