@@ -153,7 +153,7 @@ public class GameService {
      * (TO DO)Let's to players change a card.
      * @param gameId ID of game you want to let players exchange cards.
      */
-    public void letPlayersChangeCard(long gameId, User userChangingCard) {
+    public void letPlayersChangeCard(long gameId) {
         Game game = gameRepository.findById(gameId).orElse(null);
 
         assert game != null;
