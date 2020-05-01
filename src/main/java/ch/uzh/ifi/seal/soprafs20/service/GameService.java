@@ -30,10 +30,11 @@ public class GameService {
     private final GameRepository gameRepository;
 
     @Autowired
-    public GameService(@Qualifier("gameRepository") GameRepository gameRepository,
-                       UserService userService){
+    public GameService(@Qualifier("gameRepository") GameRepository gameRepository, UserService userService){
+
         this.userService = userService;
         this.gameRepository = gameRepository;
+
     }
 
     /**
