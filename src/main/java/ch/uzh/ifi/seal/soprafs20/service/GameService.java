@@ -30,7 +30,9 @@ public class GameService {
     private final GameRepository gameRepository;
 
     @Autowired
-    public GameService(@Qualifier("gameRepository") GameRepository gameRepository){
+    public GameService(@Qualifier("gameRepository") GameRepository gameRepository,
+                       UserService userService){
+        this.userService = userService;
         this.gameRepository = gameRepository;
     }
 
@@ -150,8 +152,9 @@ public class GameService {
      * (TO DO)Let's to players change a card.
      * @param gameId ID of game you want to let players exchange cards.
      */
-    public void letPlayersChangeCard(long gameId) {
+    public void letPlayersChangeCard(long gameId, User userChangingCard) {
         Game game = gameRepository.findById(gameId).orElse(null);
+
         assert game != null;
         // Let partners change one card
     }
@@ -265,10 +268,6 @@ public class GameService {
     }
 
 
-
-
-
-
     public void updateGame(long id, Board board, Card card){
 
     }
@@ -298,6 +297,9 @@ public class GameService {
         Game game = new Game(userOwner, gameName);
     }
 
+    public Game getGameById(Long id){
+        return gameRepository.findById(id).orElse(null);
+    }
     /*
     public void deleteUser(Long id, UserPostDTO userToBeDeletedDTO){
         String userToBeAddedUsername = userToBeDeletedDTO.getUsername();

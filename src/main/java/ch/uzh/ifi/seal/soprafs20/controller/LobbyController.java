@@ -30,7 +30,7 @@ public class LobbyController {
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public void createLobby(@RequestBody LobbyPostCreateDTO lobbyPostCreateDTO,
-                            @RequestHeader String token){
+                            @RequestHeader("X-Token") String token){
         String lobbyName = lobbyPostCreateDTO.getName();
         User userCreatingLobby = gameService.getUserByToken(token);
         gameService.createLobby(userCreatingLobby, lobbyName);
