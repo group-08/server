@@ -61,6 +61,9 @@ public class UserService {
            throw new IllegalAccessException();
         }
 
+        // Set the status to online
+        user.setStatus(UserStatus.ONLINE);
+
         // return the user
         return user;
     }
