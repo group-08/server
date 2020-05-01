@@ -65,7 +65,8 @@ public class AuthController {
     @PostMapping("/logout")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ResponseBody
-    public void logout() {
+    public void logout(@RequestHeader String token) {
+        authService.logout(token);
         // TODO require token from user
         // TODO remove (invalidate) token
         // TODO Set status to offline
