@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.controller;
 
 
+import ch.uzh.ifi.seal.soprafs20.rest.dto.GameGetDTO;
 import ch.uzh.ifi.seal.soprafs20.user.User;
 import ch.uzh.ifi.seal.soprafs20.game.Game;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.LobbyPostCreateDTO;
@@ -22,7 +23,7 @@ public class LobbyController {
     @GetMapping("/lobbies")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public List<Game> getAllLobbies(@RequestHeader("X-Token") String token){
+    public List<GameGetDTO> getAllLobbies(@RequestHeader("X-Token") String token){
         if(gameService.checkIfUserExists(token)) {
             return gameService.getAllLobbies();
         }

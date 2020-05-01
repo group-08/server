@@ -2,6 +2,8 @@ package ch.uzh.ifi.seal.soprafs20.service;
 
 
 import ch.uzh.ifi.seal.soprafs20.game.GameState;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.GameGetDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.user.Figure;
 import ch.uzh.ifi.seal.soprafs20.user.Player;
 import ch.uzh.ifi.seal.soprafs20.user.User;
@@ -294,8 +296,15 @@ public class GameService {
         return userService.getUserByToken(tokenOfUser) != null;
     }
 
-    public List<Game> getAllLobbies(){
-        return gameRepository.findAll();
+    public List<GameGetDTO> getAllLobbies(){
+
+
+        List<Game> allGames = gameRepository.findAll();
+        List<GameGetDTO> games = new ArrayList<>();
+        for(Game game : allGames){
+            games.add(DTOMapper.INSTANCE.convertEntityToGameGetDTO(game));
+        }
+        return games;
     }
 
     public User getUserByToken(String token){
