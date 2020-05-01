@@ -52,22 +52,6 @@ public class UserService {
         return newUser;
     }
 
-    public User login(UserPostLoginDTO loginUser) throws IllegalAccessException {
-        // Get the user trying to login
-        User user = userRepository.findByEmail(loginUser.getEmail());
-
-        // Check the password
-        if (!user.checkPassword(loginUser.getPassword())) {
-           throw new IllegalAccessException();
-        }
-
-        // Set the status to online
-        user.setStatus(UserStatus.ONLINE);
-
-        // return the user
-        return user;
-    }
-
     /**
      * This is a helper method that will check the uniqueness criteria of the username and the name
      * defined in the User entity. The method will do nothing if the input is unique and throw an error otherwise.
