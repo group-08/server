@@ -31,6 +31,7 @@ public class DeckService {
     private Deck getDeck(){
 
         return (Deck) this.deckRepository.findAll();
+        ///by id
     }
 
 ////maybe done
@@ -41,6 +42,7 @@ public class DeckService {
 /////maybe done
     private void shuffleDeck(){
 
+        ///safe
         Collections.shuffle(getCards());
     }
 
@@ -115,6 +117,8 @@ public class DeckService {
 
         emptyDeck();
         getDeck().setCards(currentCards);
+
+        safeDeck(getDeck());
 
         return hand;
     }
