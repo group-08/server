@@ -12,7 +12,7 @@ public class Deck implements Serializable {
 
     @Id
     @GeneratedValue
-    private String id;
+    private Long id;
 
     @OneToMany(targetEntity = Card.class)
     List<Card> cards = new ArrayList<Card>();
@@ -20,7 +20,7 @@ public class Deck implements Serializable {
 
 
     public Deck(){
-        this.id = UUID.randomUUID().toString();
+        this.id = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
         this.cards = new ArrayList<Card>();
 
     }
@@ -97,7 +97,7 @@ public class Deck implements Serializable {
         this.cards = cards;
     }
 
-    public String getId(){
+    public Long getId(){
         return this.id;
     }
 }

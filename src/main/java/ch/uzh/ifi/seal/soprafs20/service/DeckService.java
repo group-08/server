@@ -19,6 +19,7 @@ public class DeckService {
     private final CardService cardService;
 
 
+
     @Autowired
     public DeckService(@Qualifier("deckRepository") DeckRepository deckRepository, CardService cardService) {
         this.deckRepository = deckRepository;
@@ -28,26 +29,30 @@ public class DeckService {
     ///number of decks we play with default 2
     private int numberOfDecks = 2;
 
-    private Deck getDeck(){
+    ///default for 4 players if we change this we would ned a player list somewhere which has than a length
+    private int numberOfPlayers = 4;
 
-        return (Deck) this.deckRepository.findAll();
+    private Deck getDeck(long Id){
+        
+        List<Long> IdIterable = new ArrayList<>();
+        return (Deck) this.deckRepository.findAllById(IdIterable);
         ///by id
     }
 
 ////maybe done
-    private List<Card> getCards(){
+    private List<Card> getCards(Long  Id){
 
-        return getDeck().getCardsInDeck();
+        return getDeck(Id).getCardsInDeck();
     }
 /////maybe done
-    private void shuffleDeck(){
+    private void shuffleDeck(Long  Id){
 
         ///safe
-        Collections.shuffle(getCards());
+        Collections.shuffle(getCards(Id));
     }
 
-    private int checkLengthOfTheDeck(){
-        return getDeck().getCardsInDeck().size();
+    private int checkLengthOfTheDeck(Long Id){
+        return getDeck(Id).getCardsInDeck().size() * numberOfPlayers;
     }
 
     private void safeDeck(Deck deck){
@@ -56,69 +61,61 @@ public class DeckService {
     }
 
     ///empty the deck
-    private void emptyDeck(){
-        this.getDeck().setCards(null);
+    private void emptyDeck(Long Id){
+        this.getDeck(Id).setCards(null);
     }
 
-    private void refillDeck(){
+    private void refillDeck(Long Id){
 
         ///empty the deck
-        emptyDeck();
+        emptyDeck(Id);
 
         ///fill the deck with new cards
         List<Card> allCards = createCards();
-        getDeck().setCards(allCards);
+        getDeck(Id).setCards(allCards);
 
-        ////Todo is this necessary?
+        ///shuffle the Deck
+        shuffleDeck(Id);
+
         ///safe the newly filled deck
-        safeDeck(getDeck());
+        safeDeck(getDeck(Id));
     }
 
 
 
-    private boolean checkIfEnoughCardsLeft(int amountToDraw) {
+    private boolean checkIfEnoughCardsLeft(Long Id, int amountToDraw) {
 
-        return amountToDraw <= checkLengthOfTheDeck();
+        return amountToDraw <= checkLengthOfTheDeck(Id);
     }
 
-    ///Todo which verison does it here?
-    ///drawing cards from the deck eg. poping
-    private List<Card> drawCards1 (int amountToDraw){
 
-        List<Card> hand = new ArrayList<Card>();
-
-        Card topCard;
-
-
-        ///drawing as many cards from cards as necessary
-        for (int loopVal = 0; loopVal < amountToDraw; loopVal++){
-            topCard = getCards().remove(0);
-            hand.add(topCard); }
-
-        return hand;
-    }
 
 
     /// second version
-    private List<Card> drawCard2 (int amount){
+    private List<Card> drawCards (int amountToDraw, Long  Id){
+
+        ///if not enough cards refill the deck
+        if(!checkIfEnoughCardsLeft(Id, amountToDraw)){
+            refillDeck(Id);
+        };
 
         List<Card> hand = new ArrayList<Card>();
 
         Card topCard;
 
-        List<Card> currentCards = getCards();
+        List<Card> currentCards = getCards(Id);
 
         ///drawing as many cards from cards as necessary
-        for (int loopVal = 0; loopVal < amount; loopVal++){
+        for (int loopVal = 0; loopVal < amountToDraw; loopVal++){
             ///from list instead
             topCard = currentCards.remove(0);
             hand.add(topCard);
         }
 
-        emptyDeck();
-        getDeck().setCards(currentCards);
+        emptyDeck(Id);
+        getDeck(Id).setCards(currentCards);
 
-        safeDeck(getDeck());
+        safeDeck(getDeck(Id));
 
         return hand;
     }
@@ -134,6 +131,10 @@ public class DeckService {
 
         //// set the field
         deck.setCards(allCards);
+
+        ///
+
+        shuffleDeck(deck.getId());
 
         ///safe the deck in jpa
         safeDeck(deck);
