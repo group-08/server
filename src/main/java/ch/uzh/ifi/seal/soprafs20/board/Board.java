@@ -1,13 +1,13 @@
 package ch.uzh.ifi.seal.soprafs20.board;
 
-import ch.uzh.ifi.seal.soprafs20.User.Player;
+import ch.uzh.ifi.seal.soprafs20.user.Player;
 import ch.uzh.ifi.seal.soprafs20.cards.Value;
 import ch.uzh.ifi.seal.soprafs20.field.Field;
 
 import java.io.Serializable;
 import javax.persistence.*;
 
-import ch.uzh.ifi.seal.soprafs20.User.Figure;
+import ch.uzh.ifi.seal.soprafs20.user.Figure;
 import ch.uzh.ifi.seal.soprafs20.cards.Card;
 import ch.uzh.ifi.seal.soprafs20.field.*;
 import ch.uzh.ifi.seal.soprafs20.repository.BoardRepository;

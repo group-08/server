@@ -1,7 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.controller;
 
 
-import ch.uzh.ifi.seal.soprafs20.User.User;
+import ch.uzh.ifi.seal.soprafs20.user.User;
 import ch.uzh.ifi.seal.soprafs20.game.Game;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.LobbyPostCreateDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostDTO;

@@ -1,9 +1,9 @@
 package ch.uzh.ifi.seal.soprafs20.game;
 
 
-import ch.uzh.ifi.seal.soprafs20.User.Figure;
-import ch.uzh.ifi.seal.soprafs20.User.Player;
-import ch.uzh.ifi.seal.soprafs20.User.User;
+import ch.uzh.ifi.seal.soprafs20.user.Figure;
+import ch.uzh.ifi.seal.soprafs20.user.Player;
+import ch.uzh.ifi.seal.soprafs20.user.User;
 import ch.uzh.ifi.seal.soprafs20.board.Board;
 import ch.uzh.ifi.seal.soprafs20.board.CasualBoard;
 import ch.uzh.ifi.seal.soprafs20.cards.Card;
@@ -42,7 +42,6 @@ public class Game implements Serializable {
     @OneToOne
     User host;
 
-    @OneToOne
     String name;
 
     @Enumerated

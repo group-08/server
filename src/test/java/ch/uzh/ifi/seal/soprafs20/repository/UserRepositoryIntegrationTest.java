@@ -1,6 +1,6 @@
 package ch.uzh.ifi.seal.soprafs20.repository;
 
-import ch.uzh.ifi.seal.soprafs20.User.*;
+import ch.uzh.ifi.seal.soprafs20.user.*;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

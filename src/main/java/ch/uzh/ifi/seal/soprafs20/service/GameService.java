@@ -1,16 +1,13 @@
 package ch.uzh.ifi.seal.soprafs20.service;
 
 
-import ch.uzh.ifi.seal.soprafs20.User.Figure;
-import ch.uzh.ifi.seal.soprafs20.User.User;
+import ch.uzh.ifi.seal.soprafs20.user.Figure;
+import ch.uzh.ifi.seal.soprafs20.user.User;
 import ch.uzh.ifi.seal.soprafs20.board.Board;
 import ch.uzh.ifi.seal.soprafs20.cards.Card;
-import ch.uzh.ifi.seal.soprafs20.entity.GameLog;
 import ch.uzh.ifi.seal.soprafs20.field.Field;
 import ch.uzh.ifi.seal.soprafs20.game.Game;
-import ch.uzh.ifi.seal.soprafs20.repository.GameLogRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
-import ch.uzh.ifi.seal.soprafs20.repository.UserRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.MovePostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostDTO;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.field;
 
 
-import ch.uzh.ifi.seal.soprafs20.User.Player;
+import ch.uzh.ifi.seal.soprafs20.user.Player;
 
 public class FirstField extends Field {
 

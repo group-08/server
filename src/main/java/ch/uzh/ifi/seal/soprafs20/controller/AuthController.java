@@ -1,6 +1,6 @@
 package ch.uzh.ifi.seal.soprafs20.controller;
 
-import ch.uzh.ifi.seal.soprafs20.User.User;
+import ch.uzh.ifi.seal.soprafs20.user.User;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostLoginDTO;
@@ -9,7 +9,6 @@ import ch.uzh.ifi.seal.soprafs20.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.annotation.Repeatable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,9 +42,7 @@ public class AuthController {
         return loginUser;
     }
 
-    @RequestHeader
-
-    @PostMapping("/signUp")
+    @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public UserGetDTO createUser(@RequestBody UserPostDTO userPostDTO) {
@@ -64,40 +61,9 @@ public class AuthController {
     @PostMapping("/logout")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ResponseBody
-
-    //no return value
-    //is there a logout function?
-
-    @GetMapping("/users")
-    @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    public List<UserGetDTO> getAllUsers() {
-        // fetch all users in the internal representation
-        List<User> users = userService.getUsers();
-        List<UserGetDTO> userGetDTOs = new ArrayList<>();
-
-        // convert each user to the API representation
-        for (User user : users) {
-            userGetDTOs.add(DTOMapper.INSTANCE.convertEntityToUserGetDTO(user));
-        }
-        return userGetDTOs;
+    public void logout() {
+        //no return value
+        //is there a logout function?
     }
 
-
-    @GetMapping("/user/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    public User getUserById(@PathVariable Long id){
-        return userService.getUserById(id);
-        //somewhere has to be a token
-    }
-
-
-    // return user with that id
-
-    @PutMapping("/user/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ResponseBody
-    //updates user
-    //returns nothing
 }
