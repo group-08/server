@@ -31,10 +31,8 @@ public class GameService {
 
     @Autowired
     public GameService(@Qualifier("gameRepository") GameRepository gameRepository, UserService userService){
-
         this.userService = userService;
         this.gameRepository = gameRepository;
-
     }
 
     /**
@@ -296,7 +294,7 @@ public class GameService {
 
     public void createLobby(User userOwner, String gameName){
         Game game = new Game(userOwner, gameName);
-        game = this.gameRepository.saveAndFlush(game);
+        game = gameRepository.saveAndFlush(game);
     }
 
     public Game getGameById(Long id){
