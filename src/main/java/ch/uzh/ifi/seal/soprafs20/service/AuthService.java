@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.service;
 
 import ch.uzh.ifi.seal.soprafs20.repository.UserRepository;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostLoginDTO;
 import ch.uzh.ifi.seal.soprafs20.user.User;
 import ch.uzh.ifi.seal.soprafs20.user.UserStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +38,19 @@ import java.util.UUID;
         }
 
         // Actually login the user
-        public User login(User user) {
-            User loginUser = this.userRepository.findByUsername(user.getUsername());
+        public User login(UserPostLoginDTO loginPostUser) throws IllegalAccessException{
+            // Get the user trying to login
+            User loginUser = this.userRepository.findByEmail(loginPostUser.getEmail());
+
+            // Check the password
+            if (!loginUser.checkPassword(loginPostUser.getPassword())) {
+                throw new IllegalAccessException();
+            }
+
+            // Update a token and set user online
             loginUser.setToken(UUID.randomUUID().toString());
             loginUser.setStatus(UserStatus.ONLINE);
+
             return loginUser;
         }
 
