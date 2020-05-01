@@ -50,6 +50,7 @@ import java.util.UUID;
             // Update a token and set user online
             loginUser.setToken(UUID.randomUUID().toString());
             loginUser.setStatus(UserStatus.ONLINE);
+            loginUser = this.userRepository.saveAndFlush(loginUser);
 
             return loginUser;
         }
