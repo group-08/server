@@ -6,7 +6,7 @@ import ch.uzh.ifi.seal.soprafs20.board.Board;
 import ch.uzh.ifi.seal.soprafs20.cards.Card;
 import ch.uzh.ifi.seal.soprafs20.entity.GameLog;
 import ch.uzh.ifi.seal.soprafs20.field.Field;
-import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
+import ch.uzh.ifi.seal.soprafs20.repository.GameLogRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.MovePostDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -19,17 +19,17 @@ import java.util.ArrayList;
 @Transactional
 public class GameService {
 
-    private final GameRepository gameRepository;
+    private final GameLogRepository gameLogRepository;
 
     @Autowired
-    public GameService(@Qualifier("gameRepository") GameRepository gameRepository){
-        this.gameRepository = gameRepository;
+    public GameService(@Qualifier("gameLogRepository") GameLogRepository gameLogRepository){
+        this.gameLogRepository = gameLogRepository;
     }
 
 
 
     public ArrayList<Field> getPossibleFields(MovePostDTO move){
-        GameLog game = gameRepository.getOne(move.getId());
+        GameLog game = gameLogRepository.getOne(move.getId());
         int lastIndex = game.getBoards().size()-1;
         Board actualBoard = game.getBoards().get(lastIndex);
         Card card = move.getCard();
@@ -41,7 +41,7 @@ public class GameService {
     }
 
     public Board moveFigure(MovePostDTO move) {
-        GameLog game = gameRepository.getOne(move.getId());
+        GameLog game = gameLogRepository.getOne(move.getId());
         int lastIndex = game.getBoards().size()-1;
         Board actualBoard = game.getBoards().get(lastIndex);
         Figure figure = move.getFigure();

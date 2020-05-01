@@ -20,6 +20,10 @@ public class Figure {
     @OneToOne(targetEntity = Field.class)
     Field field;
 
+    public Figure(Field field) {
+        this.field = field;
+    }
+
     public void moveToNewField(Field targetField){
         try {
             this.field = targetField;
@@ -38,5 +42,10 @@ public class Figure {
 
     public Player getPlayer() { return this.player; }
 
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
     public Field getField() { return this.field; }
+
 }
