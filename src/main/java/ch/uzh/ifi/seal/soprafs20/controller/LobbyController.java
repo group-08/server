@@ -22,9 +22,13 @@ public class LobbyController {
     @GetMapping("/lobbies")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public List<Game> getAllLobbies(){
-        // TODO require token
-        return gameService.getAllLobbies();
+    public List<Game> getAllLobbies(@RequestHeader("X-Token") String token){
+        if(gameService.checkIfUserExists(token)) {
+            return gameService.getAllLobbies();
+        }
+        else{
+            return null; //throw exception?
+        }
     }
 
     @PostMapping("/lobbies")
@@ -49,9 +53,9 @@ public class LobbyController {
     @PostMapping("/lobby/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public void addUser(@PathVariable Long id, @RequestBody UserPostDTO userPostDTO){
-        // TODO require token (which can be used to add the user since users can only add themesleves
-        gameService.addUser(id, userPostDTO);
+    public void addUser(@PathVariable Long id, @RequestHeader("X-Token") String token){
+        // TODO require token (which can be used to add the user since users can only add themesleves // should be done!
+        gameService.addUser(id, token);
     }
 
     @DeleteMapping("/lobby/{id}")
@@ -66,9 +70,11 @@ public class LobbyController {
     @PostMapping("/lobby/{id}/start")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public void startGame(@PathVariable Long id){
-        // TODO require token and check gamemaster can only start game
-        gameService.setUpGame(id);
+    public void startGame(@PathVariable Long id, @RequestHeader("X-Token") String token){
+        if(gameService.checkToken(id, token)) {
+            gameService.setUpGame(id);
+        }
+        //else return error
     }
 
 }

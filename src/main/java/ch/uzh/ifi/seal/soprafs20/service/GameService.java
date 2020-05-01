@@ -275,13 +275,23 @@ public class GameService {
         return gameRepository.findById(id).orElse(null);
     }
 
-    public void addUser(Long gameId, UserPostDTO userToBeAddedDTO){
-        String userToBeAddedUsername = userToBeAddedDTO.getUsername();
-        User userToBeAdded = userService.getUserByUsername(userToBeAddedUsername);
+    public void addUser(Long gameId, String tokenOfUser){
+        User userToBeAdded = userService.getUserByToken(tokenOfUser);
         Game actualGame = gameRepository.findById(gameId).orElse(null);
         if(actualGame!=null) {
             this.addPlayerFromUser(gameId, userToBeAdded);
         }
+    }
+
+    public boolean checkToken(Long gameId, String tokenToCheck){
+        Game actualGameToCheck = gameRepository.getOne(gameId);
+        User Host = actualGameToCheck.getHost();
+        User UserBelongingToToken = userService.getUserByToken(tokenToCheck);
+        return Host==UserBelongingToToken;
+    }
+
+    public boolean checkIfUserExists(String tokenOfUser){
+        return userService.getUserByToken(tokenOfUser) == null;
     }
 
     public List<Game> getAllLobbies(){
