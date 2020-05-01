@@ -32,20 +32,22 @@ public class DeckService {
     ///default for 4 players if we change this we would ned a player list somewhere which has than a length
     private int numberOfPlayers = 4;
 
-    private Deck getDeck(long Id){
+    public Deck getDeck(long Id){
         
         List<Long> IdIterable = new ArrayList<>();
         return (Deck) this.deckRepository.findAllById(IdIterable);
         ///by id
     }
 
+
+
 ////maybe done
-    private List<Card> getCards(Long  Id){
+    public List<Card> getCards(Long  Id){
 
         return getDeck(Id).getCardsInDeck();
     }
 /////maybe done
-    private void shuffleDeck(Long  Id){
+    public void shuffleDeck(Long  Id){
 
         ///safe
         Collections.shuffle(getCards(Id));
@@ -83,21 +85,18 @@ public class DeckService {
 
 
 
-    private boolean checkIfEnoughCardsLeft(Long Id, int amountToDraw) {
+    public void checkIfEnoughCardsLeft( int amountToDraw, Long Id) {
 
-        return amountToDraw <= checkLengthOfTheDeck(Id);
+        if( ! (amountToDraw * numberOfPlayers <= checkLengthOfTheDeck(Id))){
+            refillDeck(Id); }
     }
 
 
 
 
     /// second version
-    private List<Card> drawCards (int amountToDraw, Long  Id){
+    public List<Card> drawCards (int amountToDraw, Long  Id){
 
-        ///if not enough cards refill the deck
-        if(!checkIfEnoughCardsLeft(Id, amountToDraw)){
-            refillDeck(Id);
-        };
 
         List<Card> hand = new ArrayList<Card>();
 
@@ -121,7 +120,7 @@ public class DeckService {
     }
 
 
-    private void createDeck(Deck deck){
+    public void createDeck(Deck deck){
         ///create the cards
         List<Card> allCards = createCards();
 
@@ -132,7 +131,7 @@ public class DeckService {
         //// set the field
         deck.setCards(allCards);
 
-        ///
+        ///shuffle the deck
 
         shuffleDeck(deck.getId());
 
