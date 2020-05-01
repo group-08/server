@@ -1,5 +1,6 @@
 package ch.uzh.ifi.seal.soprafs20.controller;
 
+import ch.uzh.ifi.seal.soprafs20.service.AuthService;
 import ch.uzh.ifi.seal.soprafs20.user.User;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostDTO;
@@ -20,9 +21,11 @@ import java.util.List;
 @RestController
 public class AuthController {
 
+    private final AuthService authService;
     private final UserService userService;
 
-    AuthController(UserService userService) {
+    AuthController(AuthService authService, UserService userService) {
+        this.authService = authService;
         this.userService = userService;
     }
 
@@ -33,10 +36,11 @@ public class AuthController {
         // Login the user
         User loginUser = null;
         try {
-            loginUser = userService.login(userPostLoginDTO);
+            loginUser = authService.login(userPostLoginDTO);
         }
         catch (IllegalAccessException e) {
             // Wrong password
+            // TODO return an 403 error
         }
         // convert internal representation of user back to API
         return loginUser;
@@ -61,9 +65,11 @@ public class AuthController {
     @PostMapping("/logout")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ResponseBody
-    public void logout() {
-        //no return value
-        //is there a logout function?
+    public void logout(@RequestHeader String token) {
+        authService.logout(token);
+        // TODO require token from user
+        // TODO remove (invalidate) token
+        // TODO Set status to offline
     }
 
 }

@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.controller;
 
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostDTO;
+import ch.uzh.ifi.seal.soprafs20.service.AuthService;
 import ch.uzh.ifi.seal.soprafs20.service.UserService;
 import ch.uzh.ifi.seal.soprafs20.user.User;
 import ch.uzh.ifi.seal.soprafs20.user.UserStatus;
@@ -38,6 +39,9 @@ public class AuthControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private AuthService authService;
 
     @MockBean
     private UserService userService;
