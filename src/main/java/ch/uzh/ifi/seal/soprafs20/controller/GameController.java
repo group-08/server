@@ -3,6 +3,8 @@ package ch.uzh.ifi.seal.soprafs20.controller;
 
 import ch.uzh.ifi.seal.soprafs20.board.Board;
 import ch.uzh.ifi.seal.soprafs20.field.Field;
+import ch.uzh.ifi.seal.soprafs20.game.Game;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.ExchangePostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.MovePostDTO;
 import ch.uzh.ifi.seal.soprafs20.service.GameService;
 import org.springframework.http.HttpStatus;
@@ -35,15 +37,17 @@ public class GameController {
     @GetMapping("/game/{id}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Board getBoard() {
-        return null;
+    public Game getGame(@PathVariable Long id) {
+        return gameService.getGameById(id);
     }
     //get current game with id
 
     @PostMapping("/game/{id}/exchange")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public void exchangeCard() {
+    public Game exchangeCard(@RequestBody ExchangePostDTO exchangePostDTO) {
+
+
 
     }
 
