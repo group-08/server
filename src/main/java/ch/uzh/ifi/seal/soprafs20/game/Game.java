@@ -30,7 +30,7 @@ public class Game implements Serializable {
     @Enumerated
     GameState gameState;
 
-    @OneToMany(targetEntity = Player.class)
+    @OneToMany(targetEntity = Player.class, cascade = CascadeType.ALL)
     List<Player> players = new ArrayList<>();
 
     @OneToOne

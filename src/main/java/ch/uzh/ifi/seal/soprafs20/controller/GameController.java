@@ -46,9 +46,7 @@ public class GameController {
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public Game exchangeCard(@RequestBody ExchangePostDTO exchangePostDTO) {
-
-
-
+        return null;
     }
 
 
