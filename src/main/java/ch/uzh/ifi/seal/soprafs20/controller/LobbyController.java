@@ -38,7 +38,7 @@ public class LobbyController {
     }
 
 
-    @GetMapping("/lobby{id}")
+    @GetMapping("/lobby/{id}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public Game getLobbyById(@PathVariable Long id){
@@ -46,24 +46,28 @@ public class LobbyController {
     }
 
 
-    @PostMapping("/lobby{id}")
+    @PostMapping("/lobby/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public void addUser(@PathVariable Long id, @RequestBody UserPostDTO userPostDTO){
+        // TODO require token (which can be used to add the user since users can only add themesleves
         gameService.addUser(id, userPostDTO);
     }
 
-    @DeleteMapping("/lobby{id}")
+    @DeleteMapping("/lobby/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public void deleteUser(@PathVariable Long id, @RequestBody UserPostDTO userPostDTO){
-        //To be made later
+        // TODO require token
+        // TODO not userPostDTO object but probably just a string or something
+        // TODO be made later
     }
 
-    @PostMapping("/lobby{id}/start")
+    @PostMapping("/lobby/{id}/start")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public void startGame(@PathVariable Long id){
+        // TODO require token and check gamemaster can only start game
         gameService.setUpGame(id);
     }
 
