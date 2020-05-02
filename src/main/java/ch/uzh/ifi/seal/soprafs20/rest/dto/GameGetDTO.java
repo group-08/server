@@ -1,7 +1,9 @@
 package ch.uzh.ifi.seal.soprafs20.rest.dto;
 
 import ch.uzh.ifi.seal.soprafs20.game.GameState;
+import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.user.Player;
+import ch.uzh.ifi.seal.soprafs20.user.User;
 
 import java.util.List;
 
@@ -12,6 +14,8 @@ public class GameGetDTO {
     private Long id;
 
     private GameState gameState;
+
+    private User host;
 
     private List<Player> players;
 
@@ -47,4 +51,11 @@ public class GameGetDTO {
         this.players = players;
     }
 
+    public void setHost(User host) {
+        this.host = host;
+    }
+
+    public UserGetDTO getHost() {
+        return DTOMapper.INSTANCE.convertEntityToUserGetDTO(host);
+    }
 }

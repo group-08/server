@@ -1,6 +1,8 @@
 package ch.uzh.ifi.seal.soprafs20.game;
 
 
+import ch.uzh.ifi.seal.soprafs20.rest.dto.UserGetDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.service.BoardService;
 import ch.uzh.ifi.seal.soprafs20.user.Figure;
 import ch.uzh.ifi.seal.soprafs20.user.Player;
@@ -140,7 +142,7 @@ public class Game implements Serializable {
     }
 
     public User getHost() {
-        return host;
+        return this.host;
     }
 
     public void setHost(User host) {
