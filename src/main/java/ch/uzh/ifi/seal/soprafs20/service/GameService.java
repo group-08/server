@@ -29,12 +29,15 @@ public class GameService {
 
     private UserService userService;
 
+    private BoardService boardService;
+
     private final GameRepository gameRepository;
 
     @Autowired
-    public GameService(@Qualifier("gameRepository") GameRepository gameRepository, UserService userService){
+    public GameService(@Qualifier("gameRepository") GameRepository gameRepository, UserService userService, BoardService boardService){
         this.userService = userService;
         this.gameRepository = gameRepository;
+        this.boardService = boardService;
     }
 
     /**
@@ -66,7 +69,7 @@ public class GameService {
         Board actualBoard = actualGame.getBoard();
         Figure figure = move.getFigure();
         Field targetField = move.getTargetField();
-        return actualBoard.move(figure, targetField);
+        return boardService.move(move.getId(), figure, targetField);
     }
 
     /**
@@ -244,7 +247,7 @@ public class GameService {
         Game game = gameRepository.findById(gameId).orElse(null);
         assert game != null;
         Board board = game.getBoard();
-        return board.checkIfAllTargetFieldsOccupied(currentPlayer);
+        return boardService.checkIfAllTargetFieldsOccupied(gameId, currentPlayer);
     }
 
     /**
