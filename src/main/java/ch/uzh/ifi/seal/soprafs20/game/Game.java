@@ -59,7 +59,7 @@ public class Game implements Serializable {
 
 
         Player hostPlayer = new Player();
-        hostPlayer.setUser(host);
+        hostPlayer.setUser(this.host);
         this.players.add(hostPlayer);
     }
 
