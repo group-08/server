@@ -1,6 +1,6 @@
 package ch.uzh.ifi.seal.soprafs20.game;
 
-enum WeatherState {
+public enum WeatherState {
     RAINY,
     SUNNY,
     SNOWY,

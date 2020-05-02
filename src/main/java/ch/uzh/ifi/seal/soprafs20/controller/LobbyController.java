@@ -25,10 +25,11 @@ public class LobbyController {
     @ResponseBody
     public List<GameGetDTO> getAllLobbies(@RequestHeader("X-Token") String token){
         if(gameService.checkIfUserExists(token)) {
-            return gameService.getAllLobbies();
+        List<GameGetDTO> allGames = gameService.getAllLobbies();
+        return allGames;
         }
         else{
-            return null; //throw exception?
+           return null; //throw exception?
         }
     }
 
