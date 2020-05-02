@@ -47,7 +47,7 @@ public class LobbyController {
     @GetMapping("/lobby/{id}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Game getLobbyById(@PathVariable Long id){
+    public GameGetDTO getLobbyById(@PathVariable Long id){
         return gameService.getLobbyById(id);
     }
 

@@ -275,8 +275,9 @@ public class GameService {
 
     }
 
-    public Game getLobbyById(long id){
-        return gameRepository.findById(id).orElse(null);
+    public GameGetDTO getLobbyById(long id){
+        Game game = gameRepository.findById(id).orElse(null);
+        return DTOMapper.INSTANCE.convertEntityToGameGetDTO(game);
     }
 
     public void addUser(Long gameId, String tokenOfUser){
