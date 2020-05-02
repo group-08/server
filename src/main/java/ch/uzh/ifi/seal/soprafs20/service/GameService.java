@@ -4,6 +4,7 @@ package ch.uzh.ifi.seal.soprafs20.service;
 import ch.uzh.ifi.seal.soprafs20.game.GameState;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.GameGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
+import ch.uzh.ifi.seal.soprafs20.user.Colour;
 import ch.uzh.ifi.seal.soprafs20.user.Figure;
 import ch.uzh.ifi.seal.soprafs20.user.Player;
 import ch.uzh.ifi.seal.soprafs20.user.User;
@@ -32,6 +33,7 @@ public class GameService {
     private BoardService boardService;
 
     private final GameRepository gameRepository;
+
 
     @Autowired
     public GameService(@Qualifier("gameRepository") GameRepository gameRepository, UserService userService, BoardService boardService){
@@ -109,6 +111,11 @@ public class GameService {
         return player;
     }
 
+    public void setColourOfPlayer(Player player, Colour colour) {
+        player.setColour(colour);
+
+    }
+
     /**
      * (TO DO)Prepares the game, fills game with bots, mixes players, assign colour and figures to players, shuffles deck and
      * sets the gameState to running
@@ -123,7 +130,10 @@ public class GameService {
         // Mix up the players
         Collections.shuffle(game.getPlayers());
 
-        // TODO: Assign colour to players
+        this.setColourOfPlayer(game.getPlayer(0), Colour.BLUE);
+        this.setColourOfPlayer(game.getPlayer(1), Colour.GREEN);
+        this.setColourOfPlayer(game.getPlayer(2), Colour.YELLOW);
+        this.setColourOfPlayer(game.getPlayer(3), Colour.RED);
 
         // Assign figures to players
         for (int playerIndex = 0; playerIndex < 4; playerIndex++) {
@@ -181,9 +191,7 @@ public class GameService {
      *      * @param gameId ID of game you want to play.
      */
     public void playGame(long gameId){
-        // while (game not finished) {
-            this.sixToTwoRound(gameId);
-        //}
+        this.sixToTwoRound(gameId);
     }
 
     /**
@@ -191,7 +199,6 @@ public class GameService {
      * @param gameId ID of game you want to play the big round
      */
     public void sixToTwoRound(long gameId) {
-
         int cardNum = 6;
         while (cardNum >= 2) {
             this.playRound(gameId, cardNum);
@@ -200,7 +207,7 @@ public class GameService {
     }
 
     /**
-     * (TO DO)Distributes the correct amount of cards, let's player exchange cards, let's player make their moves until nobody
+     * Distributes the correct amount of cards, let's player exchange cards, let's player make their moves until nobody
      * has cards left
      * @param cardNum the amount of cards to be distributed
      * @param gameId ID of game you want to play a round
@@ -212,11 +219,23 @@ public class GameService {
 
         this.letPlayersChangeCard(gameId);
 
-        Player lastPlayer = game.getPlayer(game.getPlayers().size()-1);
-        while (!lastPlayer.getHand().isEmpty()) {
+        while (this.checkIfCardsLeft(gameId)) {
             Player currentPlayer = game.getNextPlayer();
             this.playPlayersMove(gameId, currentPlayer);
         }
+    }
+
+    public boolean checkIfCardsLeft(long gameId)   {
+        Game game = gameRepository.findById(gameId).orElse(null);
+        assert game != null;
+        boolean check = true;
+        for (Player player : game.getPlayers()) {
+            if (player.getHand() != null) {
+                check = false;
+                break;
+            }
+        }
+        return check;
     }
 
     /**

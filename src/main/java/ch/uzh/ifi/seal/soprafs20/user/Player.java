@@ -48,5 +48,14 @@ public class Player {
         this.figures.add(figure);
     }
 
+    public void setColour(Colour colour) {
+        this.colour = colour;
+    }
+
+    public Colour getColour() {
+        return this.colour;
+    }
+
 
 }
+
