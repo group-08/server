@@ -30,8 +30,7 @@ public class GameService {
     private UserService userService;
     private DeckService deckService;
 
-    private BoardService boardService;
-
+    private final BoardService boardService;
     private final GameRepository gameRepository;
 
     @Autowired
