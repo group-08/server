@@ -28,6 +28,7 @@ import java.util.List;
 public class GameService {
 
     private UserService userService;
+    private DeckService deckService;
 
     private BoardService boardService;
 
@@ -135,8 +136,9 @@ public class GameService {
             }
         }
 
-        // Shuffle the cards
-        game.getDeck().shuffle();
+        /// fill the deck with cards and shuffle those
+        deckService.createDeck(game.getDeck());
+
 
         // Set the gameState to running
         game.setGameState(GameState.RUNNING);
@@ -170,8 +172,12 @@ public class GameService {
     public void distributeCards(long gameId, int cardNum) {
         Game game = gameRepository.findById(gameId).orElse(null);
         assert game != null;
+        ///this function checks if the deck contains enough cards. if not it refills the deck
+        deckService.checkIfEnoughCardsLeft( cardNum, game.getDeck().getId());
         for (Player player : game.getPlayers()) {
-            List<Card> cards = game.getDeck().deal(cardNum);
+
+            ///changed this to use the functionality of the deck service
+            List<Card> cards = deckService.drawCards(cardNum, game.getDeck().getId());
             player.setHand(cards);
         }
     }

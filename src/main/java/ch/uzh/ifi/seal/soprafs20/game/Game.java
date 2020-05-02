@@ -10,6 +10,11 @@ import ch.uzh.ifi.seal.soprafs20.board.CasualBoard;
 import ch.uzh.ifi.seal.soprafs20.cards.Card;
 import ch.uzh.ifi.seal.soprafs20.cards.Deck;
 import ch.uzh.ifi.seal.soprafs20.field.Field;
+import ch.uzh.ifi.seal.soprafs20.repository.CardRepository;
+import ch.uzh.ifi.seal.soprafs20.repository.DeckRepository;
+import ch.uzh.ifi.seal.soprafs20.service.CardService;
+import ch.uzh.ifi.seal.soprafs20.service.DeckService;
+import org.springframework.stereotype.Repository;
 
 
 import javax.persistence.*;
@@ -48,7 +53,6 @@ public class Game implements Serializable {
     @Enumerated
     WeatherState weatherState;
 
-    public Game(){}
 
     public Game(User user, String name){
         this.board = new CasualBoard();

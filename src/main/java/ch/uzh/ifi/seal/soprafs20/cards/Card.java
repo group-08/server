@@ -8,7 +8,7 @@ import java.io.Serializable;
 public abstract class Card implements Serializable {
     //Has to be abstract
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     public abstract String toString();
