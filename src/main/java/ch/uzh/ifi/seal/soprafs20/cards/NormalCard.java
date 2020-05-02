@@ -17,6 +17,7 @@ public class NormalCard extends Card {
         this.value = value;
     }
 
+
     public String toString(){
 
        return String.format("Suit: %s Value: %s", this.suit, this.value);

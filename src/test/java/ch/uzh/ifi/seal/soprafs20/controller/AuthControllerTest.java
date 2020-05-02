@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.controller;
 
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostLoginDTO;
 import ch.uzh.ifi.seal.soprafs20.service.AuthService;
 import ch.uzh.ifi.seal.soprafs20.service.UserService;
 import ch.uzh.ifi.seal.soprafs20.user.User;
@@ -72,6 +73,35 @@ public class AuthControllerTest {
         // then
         mockMvc.perform(postRequest)
                 .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id", is(user.getId().intValue())))
+                .andExpect(jsonPath("$.email", is(user.getEmail())))
+                .andExpect(jsonPath("$.username", is(user.getUsername())))
+                .andExpect(jsonPath("$.status", is(user.getStatus().toString())));
+    }
+
+    @Test
+    public void loginUser_valid() throws Exception{
+        User user = new User();
+        user.setId(1L);
+        user.setEmail("test@user.tld");
+        user.setUsername("testUsername");
+        user.setPassword("password");
+        user.setToken("1");
+        user.setStatus(UserStatus.ONLINE);
+
+        UserPostLoginDTO userPostLoginDTO = new UserPostLoginDTO();
+        userPostLoginDTO.setEmail("test@user.tld");
+        userPostLoginDTO.setPassword("password");
+
+
+        given(authService.login(Mockito.any())).willReturn(user);
+
+        MockHttpServletRequestBuilder postRequest = post("/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(userPostLoginDTO));
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(user.getId().intValue())))
                 .andExpect(jsonPath("$.email", is(user.getEmail())))
                 .andExpect(jsonPath("$.username", is(user.getUsername())))

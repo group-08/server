@@ -42,6 +42,10 @@ public class Figure {
         return this.id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Player getPlayer() { return this.player; }
 
     public void setPlayer(Player player) {
