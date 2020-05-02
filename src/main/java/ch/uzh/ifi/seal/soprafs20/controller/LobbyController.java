@@ -56,7 +56,6 @@ public class LobbyController {
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public void addUser(@PathVariable Long id, @RequestHeader("X-Token") String token){
-        // TODO require token (which can be used to add the user since users can only add themesleves // should be done!
         gameService.addUser(id, token);
     }
 
