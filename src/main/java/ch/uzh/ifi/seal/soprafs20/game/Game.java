@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.game;
 
 
+import ch.uzh.ifi.seal.soprafs20.service.BoardService;
 import ch.uzh.ifi.seal.soprafs20.user.Figure;
 import ch.uzh.ifi.seal.soprafs20.user.Player;
 import ch.uzh.ifi.seal.soprafs20.user.User;
@@ -55,6 +56,7 @@ public class Game implements Serializable {
         this.deck = new Deck();
         this.gameState = GameState.PENDING;
         this.host = user;
+
 
         Player hostPlayer = new Player();
         hostPlayer.setUser(host);

@@ -1,7 +1,6 @@
 package ch.uzh.ifi.seal.soprafs20.board;
 
 import ch.uzh.ifi.seal.soprafs20.user.Player;
-import ch.uzh.ifi.seal.soprafs20.cards.Value;
 import ch.uzh.ifi.seal.soprafs20.field.Field;
 
 import java.io.Serializable;
@@ -136,6 +135,10 @@ public class Board implements Serializable {
         return fields;
     }
 
+    public Field getField(int fieldId) {
+        return this.fields.get(fieldId);
+    }
+
     public void setFields(List<Field> fields) {
         this.fields = fields;
     }
@@ -148,133 +151,18 @@ public class Board implements Serializable {
         this.boardRepository = boardRepository;
     }
 
-    public Field getField(int id) {
-        return this.fields.get(id);
-    }
 
-    public List<Player> getAllPlayers(Long id){
-        Board boardByID = boardRepository.findById(id).orElse(null);
-        if(boardByID!=null){
-            return boardByID.players;
-        }
-        else{
-            return null;
-        }
-    }
 
-    /**
-     * Takes a Figure and gets Figures current Field
-     * @param figure figure you want the current field of
-     * @return the current field of the figure
-     */
-    public Field getCurrentField(Figure figure) {
-        return figure.getField();
-    }
 
-    private ArrayList<Integer> getMoveValues(Card card){
-        ArrayList<Integer> possibleValues = new ArrayList<>();
-        if(card.getValue()== Value.ACE){
-            possibleValues.add(1);
-            possibleValues.add(11);
-        }
-        else{
-            possibleValues.add(card.getValue().getValue());
-        }
 
-        return possibleValues;
-    }
 
-    /**
-     * Get the possible field so we can either automatically move the piece or display all possible fields
-     * @param card the card that was played
-     * @param field field the card is being palyed on
-     * @return List of all possible fields the player on field could land on
-     */
-    public ArrayList<Field> getPossibleFields(Card card, Field field) {
-        ArrayList<Integer> moveValues = getMoveValues(card);
 
-        if(field instanceof HomeField && (card.getValue() == Value.KING || card.getValue() == Value.ACE)){
-            Player playerOfField = ((HomeField) field).getPlayer();
-            for (Field key : this.fields){
-                if(key instanceof FirstField && ((FirstField) key).getPlayer()==playerOfField){
-                    ArrayList<Field> fields = new ArrayList<>();
-                    fields.add(key);
-                    return fields;
-                }
-            }
-        }
-        return getFields(field, moveValues);
-    }
 
-    public ArrayList<Field> getPossibleFieldsSeven(Card card, Field field, int value){
-        ArrayList<Integer> values = new ArrayList<>();
-        for(int i=1; i<=value;i++) {
-            values.add(i);
-        }
-        return getFields(field, values);
-    }
 
-    public ArrayList<Field> getPossibleFieldsJack(Card card, Field field){
-            ArrayList<Field> possibleFields = new ArrayList<>();
-            Player playerOnField = field.getOccupant().getPlayer();
 
-            for(Field iterField : this.fields){
-                if(iterField.getOccupant()!=null){
-                    if(iterField.getOccupant().getPlayer()!=playerOnField && (iterField instanceof CasualField
-                    || (iterField instanceof FirstField && !(((FirstField) iterField).getBlocked())))){
-                        possibleFields.add(iterField);
-                    }
-                }
-            }
-            return possibleFields;
-        }
 
-        private ArrayList<Field> getFields(Field fieldToCheck, ArrayList<Integer> valuesToCheck){
-            int level = 0;
-            ArrayList<Field> possibleFields = new ArrayList<>();
-            Queue<Field> queue = new LinkedList<>();
-            queue.add(fieldToCheck);
-            queue.add(null);
-            for(int moveValue : valuesToCheck) {
-                while (!queue.isEmpty() && level < moveValue) {
-                    Field temp = queue.poll();
-                    if (temp == null) {
-                        level++;
-                        queue.add(null);
-                    }
-                    else {
-                        List<Field> adjFields = temp.getAdjacencyList();
-                        if (temp instanceof FirstField && ((FirstField) temp).getBlocked()) {
-                            for (Field field1 : adjFields) {
-                                if (field1 instanceof GoalField) {
-                                    adjFields.remove(field1);
-                                }
-                            }
-                        }
-                        for (Field f : adjFields) {
-                            if (f instanceof FirstField && ((FirstField) f).getBlocked()) {
-                                assert true;
-                            }
-                            else if (f instanceof GoalField && ((GoalField) f).getPlayer() != fieldToCheck.getOccupant().getPlayer()) {
-                                assert true;
-                            }
-                            else {
-                                queue.add(f);
-                            }
-                        }
-                    }
-                }
-                while (!queue.isEmpty()) {
-                    if (queue.peek() != null) {
-                        possibleFields.add(queue.poll());
-                    }
-                    else {
-                        queue.poll();
-                    }
-                }
-            }
-            return possibleFields;
-        }
+
+
 
 
 }

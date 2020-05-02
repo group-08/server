@@ -49,12 +49,11 @@ public class GameService {
 
         Game actualGame = gameRepository.findById(move.getId()).orElse(null);
         assert actualGame != null;
-        Board actualBoard = actualGame.getBoard();
         Card card = move.getCard();
         Figure figure = move.getFigure();
         Field currentField = figure.getField();
 
-        return actualBoard.getPossibleFields(card, currentField);
+        return boardService.getPossibleFields(move.getId(), card, currentField);
 
     }
 
