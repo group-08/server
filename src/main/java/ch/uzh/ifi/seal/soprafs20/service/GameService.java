@@ -313,9 +313,10 @@ public class GameService {
         return userService.getUserByToken(token);
     }
 
-    public void createLobby(User userOwner, String gameName){
+    public GameGetDTO createLobby(User userOwner, String gameName){
         Game game = new Game(userOwner, gameName);
         gameRepository.saveAndFlush(game);
+        return DTOMapper.INSTANCE.convertEntityToGameGetDTO(game);
     }
 
     public Game getGameById(Long id){
