@@ -289,10 +289,10 @@ public class GameService {
     }
 
     public boolean checkToken(Long gameId, String tokenToCheck){
-        Game actualGameToCheck = gameRepository.getOne(gameId);
+        Game actualGameToCheck = gameRepository.findById(gameId).get();
         User Host = actualGameToCheck.getHost();
         User UserBelongingToToken = userService.getUserByToken(tokenToCheck);
-        return Host==UserBelongingToToken;
+        return Host == UserBelongingToToken;
     }
 
     public boolean checkIfUserExists(String tokenOfUser){

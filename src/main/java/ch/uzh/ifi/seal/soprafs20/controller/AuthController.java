@@ -32,7 +32,7 @@ public class AuthController {
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public User login(@RequestBody UserPostLoginDTO userPostLoginDTO){
+    public User login(@RequestBody UserPostLoginDTO userPostLoginDTO) throws Exception {
         // Login the user
         User loginUser = null;
         try {
@@ -40,7 +40,8 @@ public class AuthController {
         }
         catch (IllegalAccessException e) {
             // Wrong password
-            // TODO return an 403 error
+            // TODO return proper 403
+            throw new Exception("Wrong password");
         }
         // convert internal representation of user back to API
         return loginUser;

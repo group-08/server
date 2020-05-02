@@ -75,7 +75,5 @@ public class LobbyController {
         if(gameService.checkToken(id, token)) {
             gameService.setUpGame(id);
         }
-        //else return error
     }
-
 }
