@@ -136,7 +136,7 @@ public class GameService {
         }
 
         // Shuffle the cards
-        game.getDeck().shuffle();
+        // game.getDeck().shuffle();
 
         // Set the gameState to running
         game.setGameState(GameState.RUNNING);
