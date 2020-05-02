@@ -36,37 +36,6 @@ public class Board implements Serializable {
     @Autowired
     private BoardRepository boardRepository;
 
-    public List<Player> getPlayers() {
-        return players;
-    }
-
-    public void setPlayers(List<Player> players) {
-        this.players = players;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public List<Field> getFields() {
-        return fields;
-    }
-
-    public void setFields(List<Field> fields) {
-        this.fields = fields;
-    }
-
-    public BoardRepository getBoardRepository() {
-        return boardRepository;
-    }
-
-    public void setBoardRepository(BoardRepository boardRepository) {
-        this.boardRepository = boardRepository;
-    }
 
     public Board() {
         // Create all the fields
@@ -147,6 +116,38 @@ public class Board implements Serializable {
 
     }
 
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(List<Player> players) {
+        this.players = players;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public List<Field> getFields() {
+        return fields;
+    }
+
+    public void setFields(List<Field> fields) {
+        this.fields = fields;
+    }
+
+    public BoardRepository getBoardRepository() {
+        return boardRepository;
+    }
+
+    public void setBoardRepository(BoardRepository boardRepository) {
+        this.boardRepository = boardRepository;
+    }
+
     public Field getField(int id) {
         return this.fields.get(id);
     }
@@ -170,47 +171,6 @@ public class Board implements Serializable {
         return figure.getField();
     }
 
-    /**
-     * Sends the figure home
-     * @param figure that has to be sent home
-     */
-    public void sendFigureHome(Figure figure) {
-        Player playerOfFigure = figure.getPlayer();
-        for(Field field : this.fields){
-            if(field instanceof HomeField){
-                if(((HomeField) field).getPlayer()==playerOfFigure && field.getOccupant() == null){
-                    field.setOccupant(figure);
-                    return;
-                }
-            }
-        }
-    }
-
-
-    public Board move(Figure figure, Field targetField) {
-        Field currentField = this.getCurrentField(figure);
-        if (targetField.getOccupant() != null) {
-            Figure occupant = targetField.getOccupant();
-            this.sendFigureHome(occupant);
-            currentField.setOccupant(null);
-            targetField.setOccupant(figure);
-        }
-        else {
-            currentField.setOccupant(null);
-            targetField.setOccupant(figure);
-        }
-        if (targetField instanceof FirstField && currentField instanceof HomeField) {
-            ((FirstField) targetField).setBlocked(true);
-        }
-        if (currentField instanceof FirstField && !(targetField instanceof FirstField)) {
-            ((FirstField) currentField).setBlocked(false);
-        }
-
-        boardRepository.saveAndFlush(this);
-        return this;
-    }
-
-
     private ArrayList<Integer> getMoveValues(Card card){
         ArrayList<Integer> possibleValues = new ArrayList<>();
         if(card.getValue()== Value.ACE){
@@ -224,25 +184,12 @@ public class Board implements Serializable {
         return possibleValues;
     }
 
-    public boolean checkIfAllTargetFieldsOccupied(Player player) {
-        List<Field> fieldsOfBoard = this.fields;
-        int count = 0;
-        for (Field field : fieldsOfBoard) {
-            if (field instanceof GoalField && ((GoalField) field).getPlayer() == player && field.getOccupant() != null) {
-                count++;
-            }
-        }
-        return count == 4;
-    }
-
     /**
      * Get the possible field so we can either automatically move the piece or display all possible fields
      * @param card the card that was played
      * @param field field the card is being palyed on
      * @return List of all possible fields the player on field could land on
      */
-
-
     public ArrayList<Field> getPossibleFields(Card card, Field field) {
         ArrayList<Integer> moveValues = getMoveValues(card);
 
@@ -259,7 +206,6 @@ public class Board implements Serializable {
         return getFields(field, moveValues);
     }
 
-
     public ArrayList<Field> getPossibleFieldsSeven(Card card, Field field, int value){
         ArrayList<Integer> values = new ArrayList<>();
         for(int i=1; i<=value;i++) {
@@ -268,7 +214,7 @@ public class Board implements Serializable {
         return getFields(field, values);
     }
 
-        public ArrayList<Field> getPossibleFieldsJack(Card card, Field field){
+    public ArrayList<Field> getPossibleFieldsJack(Card card, Field field){
             ArrayList<Field> possibleFields = new ArrayList<>();
             Player playerOnField = field.getOccupant().getPlayer();
 
