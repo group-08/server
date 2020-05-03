@@ -56,7 +56,7 @@ public class GameController {
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public Game exchangeCard(@RequestBody ExchangePostDTO exchangePostDTO,
-                             @RequestHeader("X-Token") String token) {
+                             @RequestHeader("X-Token") String token, @PathVariable String id) {
         User userExchangingCard = gameService.getUserByToken(token);
         long gameId = exchangePostDTO.getId();
         Card cardToExchange = exchangePostDTO.getCard();
