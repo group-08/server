@@ -3,6 +3,7 @@ package ch.uzh.ifi.seal.soprafs20.rest.mapper;
 
 import ch.uzh.ifi.seal.soprafs20.game.Game;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.GameGetDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.GameGetDTO2;
 import ch.uzh.ifi.seal.soprafs20.user.User;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostDTO;
@@ -40,7 +41,19 @@ public interface DTOMapper {
     @Mapping(source = "gameState", target = "gameState")
     @Mapping(source = "players", target = "players")
     @Mapping(source = "exchangeCard", target = "exchangeCard")
+    @Mapping(source = "host", target = "host")
     GameGetDTO convertEntityToGameGetDTO(Game game);
+
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "name", target = "name")
+    @Mapping(source = "gameState", target = "gameState")
+    @Mapping(source = "players", target = "players")
+    @Mapping(source = "exchangeCard", target = "exchangeCard")
+    @Mapping(source = "host", target = "host")
+    @Mapping(source = "board", target = "board")
+    @Mapping(source = "cardNum", target = "cardNum")
+    @Mapping(source = "weatherState", target = "weatherState")
+    GameGetDTO2 convertEntityToGameGetDTO2(Game game);
 
 
 

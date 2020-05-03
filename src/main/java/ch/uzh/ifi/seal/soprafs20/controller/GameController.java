@@ -7,7 +7,9 @@ import ch.uzh.ifi.seal.soprafs20.field.Field;
 import ch.uzh.ifi.seal.soprafs20.game.Game;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.ExchangePostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.GameGetDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.GameGetDTO2;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.MovePostDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.service.GameService;
 import ch.uzh.ifi.seal.soprafs20.user.User;
 import org.springframework.http.HttpStatus;
@@ -40,8 +42,9 @@ public class GameController {
     @GetMapping("/game/{id}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Game getGame(@PathVariable Long id) {
-        return gameService.getGameById(id);
+    public GameGetDTO2 getGame(@PathVariable Long id) {
+        GameGetDTO2 gameNoDeck = DTOMapper.INSTANCE.convertEntityToGameGetDTO2(gameService.getGameById(id));
+        return gameNoDeck;
     }
     //get current game with id
 
