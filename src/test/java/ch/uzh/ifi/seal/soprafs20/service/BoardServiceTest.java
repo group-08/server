@@ -124,6 +124,7 @@ class BoardServiceTest {
         assertEquals(field1.getId() + 10, possibleFieldsTEN.get(0).getId());
         assertEquals(2, possibleFieldsTWO.size());
         assertEquals(1, possibleFieldsTWO_diffPlayer.size());
+
     }
 
     @Test

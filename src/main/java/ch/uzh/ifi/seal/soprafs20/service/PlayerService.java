@@ -50,8 +50,8 @@ public class PlayerService {
 
     public void removeFromHand(long playerId, Card card){
 
-        Player actualPlayer = playerRepository.findById(playerId).get();
-
+        Player actualPlayer = playerRepository.findById(playerId).orElse(null);
+        assert actualPlayer != null;
         List<Card> hand = actualPlayer.getHand();
         hand.remove(card);
         actualPlayer.setHand(hand);
@@ -65,9 +65,7 @@ public class PlayerService {
 
     public void removeAllFromHand(long playerId) {
         Player player = playerRepository.getOne(playerId);
-        for (Card card : player.getHand()) {
-            this.removeFromHand(playerId, card);
-        }
+        player.setHand(null);
     }
 
     public boolean checkIfCanPlay(long gameId, long playerId) {
