@@ -67,7 +67,6 @@ public class GameService {
     public Board moveFigure(MovePostDTO move) {
         Game actualGame = gameRepository.findById(move.getId()).orElse(null);
         assert actualGame != null;
-        Board actualBoard = actualGame.getBoard();
         Figure figure = move.getFigure();
         Field targetField = move.getTargetField();
         return boardService.move(move.getId(), figure, targetField);
@@ -125,8 +124,6 @@ public class GameService {
         Game game = gameRepository.findById(gameId).orElse(null);
         assert game != null;
 
-        // TODO: fill not full game with bots
-
         // Mix up the players
         Collections.shuffle(game.getPlayers());
 
@@ -148,17 +145,11 @@ public class GameService {
         // Shuffle the cards
         // game.getDeck().shuffle();
 
+        this.distributeCards(gameId, game.getCardNum());
+
         // Set the gameState to running
         game.setGameState(GameState.RUNNING);
 
-    }
-
-    /**
-     * Starts the game.
-     * @param gameId game you want to start
-     */
-    public void startGame(long gameId) {
-        this.playGame(gameId);
     }
 
     /**
@@ -186,45 +177,6 @@ public class GameService {
         }
     }
 
-    /**
-     * (TO DO)Initalizes the sixToTwo Round and loops it until there's a winner.
-     *      * @param gameId ID of game you want to play.
-     */
-    public void playGame(long gameId){
-        this.sixToTwoRound(gameId);
-    }
-
-    /**
-     * Sets number of cards to be distributed as 6, and loops a playRound counting down until cardNum is 2
-     * @param gameId ID of game you want to play the big round
-     */
-    public void sixToTwoRound(long gameId) {
-        int cardNum = 6;
-        while (cardNum >= 2) {
-            this.playRound(gameId, cardNum);
-            cardNum--;
-        }
-    }
-
-    /**
-     * Distributes the correct amount of cards, let's player exchange cards, let's player make their moves until nobody
-     * has cards left
-     * @param cardNum the amount of cards to be distributed
-     * @param gameId ID of game you want to play a round
-     */
-    public void playRound(long gameId, int cardNum) {
-        Game game = gameRepository.findById(gameId).orElse(null);
-        assert game != null;
-        this.distributeCards(gameId, cardNum);
-
-        this.letPlayersChangeCard(gameId);
-
-        while (this.checkIfCardsLeft(gameId)) {
-            Player currentPlayer = game.getNextPlayer();
-            this.playPlayersMove(gameId, currentPlayer);
-        }
-    }
-
     public boolean checkIfCardsLeft(long gameId)   {
         Game game = gameRepository.findById(gameId).orElse(null);
         assert game != null;
@@ -238,21 +190,37 @@ public class GameService {
         return check;
     }
 
-    /**
-     * (TO DO)Let's a player play one move.
-     * @param currentPlayer player that has the turn
-     * @param gameId ID of game you want to play a move
-     */
-    public void playPlayersMove(long gameId, Player currentPlayer) {
+    public Board playPlayersMove(MovePostDTO move) {
+        // get the game from gameId
+        long gameId = move.getId();
         Game game = gameRepository.findById(gameId).orElse(null);
         assert game != null;
-        //Choose figure and card
-        //Get all possible moves
-        //Choose move
-        //Perform move
-        //Check if current Player finished
-        //If so, Check if won, and either end game or continue with partner
-        //If not, continue playing
+
+        // set currentPlayer, partner, and rotate players
+        Player currentPlayer = game.getNextPlayer();
+        Player partner = game.getPlayer(1);
+;
+        //remove card from player (wait for nick and flurin)
+
+        // move figure
+        this.moveFigure(move);
+
+        // check if player is finished and if partner is finished
+        if (checkIfPlayerFinished(gameId, currentPlayer)) {
+            if (checkIfPlayerFinished(gameId, partner)) {
+                game.setGameState(GameState.FINISHED);
+            } else {
+                // take over partners figures
+            }
+        }
+
+        // check if game still running and no cards left, distribute new cards
+        if (game.getGameState() == GameState.RUNNING && !checkIfCardsLeft(gameId)) {
+            distributeCards(gameId, game.getCardNum());
+            game.decreaseCardNum();
+            this.letPlayersChangeCard(gameId);
+        }
+        return game.getBoard();
     }
 
     /**
@@ -264,35 +232,10 @@ public class GameService {
     public Boolean checkIfPlayerFinished(long gameId, Player currentPlayer){
         Game game = gameRepository.findById(gameId).orElse(null);
         assert game != null;
-        Board board = game.getBoard();
         return boardService.checkIfAllTargetFieldsOccupied(gameId, currentPlayer);
     }
 
-    /**
-     * Checks if team of current player has won.
-     * @param gameId ID of game you want to check if someone won
-     * @return boolean if true
-     */
-    public Boolean checkIfWon(long gameId){
-        Game game = gameRepository.findById(gameId).orElse(null);
-        assert game != null;
-        Player currentPlayer = game.getPlayer(3);
-        Player partner = game.getPlayer(1);
-        return checkIfPlayerFinished(gameId, currentPlayer) && checkIfPlayerFinished(gameId, partner);
-    }
 
-    /**
-     * (TO DO)Should stop all the loops and declare a winner.
-     * @param gameId ID of Game that should be ended
-     */
-    public void endGame(long gameId){
-        // end all playing loops and declare winnder
-    }
-
-
-    public void updateGame(long id, Board board, Card card){
-
-    }
 
     public GameGetDTO getLobbyById(long id){
         Game game = gameRepository.findById(id).orElse(null);

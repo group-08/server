@@ -32,7 +32,7 @@ public class GameController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     @ResponseBody
     public Board move(@RequestBody MovePostDTO move) {
-        return gameService.moveFigure(move); //id is needed to get game
+        return gameService.playPlayersMove(move); //id is needed to get game
     }
 
     @GetMapping("/game/{id}")

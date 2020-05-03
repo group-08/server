@@ -41,6 +41,8 @@ public class Game implements Serializable {
 
     @OneToOne(cascade = CascadeType.ALL)
     Deck deck;
+    
+    int cardNum;
 
     @OneToOne
     User host;
@@ -58,6 +60,7 @@ public class Game implements Serializable {
         this.deck = new Deck();
         this.gameState = GameState.PENDING;
         this.host = user;
+        int cardNum = 6;
 
 
         Player hostPlayer = new Player();
@@ -79,6 +82,18 @@ public class Game implements Serializable {
 
         // Return the player
         return nextPlayer;
+    }
+
+    public void decreaseCardNum() {
+        if (cardNum > 2) {
+            this.cardNum--;
+        } else {
+            cardNum = 6;
+        }
+    }
+
+    public int getCardNum() {
+        return this.cardNum;
     }
 
     /**
