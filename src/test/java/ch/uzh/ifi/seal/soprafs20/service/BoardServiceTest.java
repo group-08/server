@@ -87,17 +87,17 @@ class BoardServiceTest {
         Field field1 = testGame.getBoard().getField(1);
         field1.setOccupant(figure1);
 
-        Field field0_samePlayer_as_GoalField = testGame.getBoard().getField(0);
+        Field field0_samePlayer_as_GoalField = testGame.getBoard().getField(1);
         field0_samePlayer_as_GoalField.setOccupant(figure1);
 
-        Field field63_not_samePlayer_as_GoalField = testGame.getBoard().getField(63);
+        Field field63_not_samePlayer_as_GoalField = testGame.getBoard().getField(64);
         field63_not_samePlayer_as_GoalField.setOccupant(figure2);
 
         // get all the goalFields of first player
-        GoalField goalField1 = (GoalField) testGame.getBoard().getField(64);
-        GoalField goalField2 = (GoalField) testGame.getBoard().getField(65);
-        GoalField goalField3 = (GoalField) testGame.getBoard().getField(66);
-        GoalField goalField4 = (GoalField) testGame.getBoard().getField(67);
+        GoalField goalField1 = (GoalField) testGame.getBoard().getField(65);
+        GoalField goalField2 = (GoalField) testGame.getBoard().getField(66);
+        GoalField goalField3 = (GoalField) testGame.getBoard().getField(67);
+        GoalField goalField4 = (GoalField) testGame.getBoard().getField(68);
 
         //set the player 1 to fields
         goalField1.setPlayer(testPlayer1);
