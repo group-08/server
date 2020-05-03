@@ -57,7 +57,7 @@ public class GameController {
         User userExchangingCard = gameService.getUserByToken(token);
         long gameId = exchangePostDTO.getId();
         Card cardToExchange = exchangePostDTO.getCard();
-        Game updatedGame = gameService.exchangeCard(gameId, userExchangingCard.getId(),cardToExchange);
+        Game updatedGame = gameService.letPlayersChangeCard(gameId, userExchangingCard.getId(),cardToExchange);
         return updatedGame;
     }
 
