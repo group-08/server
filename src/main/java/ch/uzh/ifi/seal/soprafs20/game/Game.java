@@ -1,6 +1,8 @@
 package ch.uzh.ifi.seal.soprafs20.game;
 
 
+import ch.uzh.ifi.seal.soprafs20.rest.dto.UserGetDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.service.BoardService;
 import ch.uzh.ifi.seal.soprafs20.service.PlayerService;
 import ch.uzh.ifi.seal.soprafs20.user.Figure;
@@ -45,6 +47,8 @@ public class Game implements Serializable {
 
     @OneToOne(cascade = CascadeType.ALL)
     Deck deck;
+    
+    int cardNum;
 
     @OneToOne
     User host;
@@ -56,6 +60,9 @@ public class Game implements Serializable {
 
     PlayerService playerService;
 
+    public Game() {
+
+    }
 
     public Game(User user, String name){
         this.board = new CasualBoard();
@@ -63,10 +70,11 @@ public class Game implements Serializable {
         this.deck = new Deck();
         this.gameState = GameState.PENDING;
         this.host = user;
+        this.cardNum = 6;
 
 
         Player hostPlayer = new Player();
-        hostPlayer.setUser(host);
+        hostPlayer.setUser(this.host);
         this.players.add(hostPlayer);
     }
 
@@ -74,11 +82,11 @@ public class Game implements Serializable {
      * Gets the next player in the players list and adds it to the end of the list
      * @return the next player
      */
-    public Player getNextPlayer(long gameId){
+    public Player getNextPlayer(){
         // Get player on top of the array
         Player nextPlayer = this.players.get(0);
 
-        while (!playerService.checkIfCanPlay(gameId, nextPlayer.getId())) {
+        while (!playerService.checkIfCanPlay(this.id, nextPlayer.getId())) {
             playerService.removeAllFromHand(nextPlayer.getId());
             this.players.remove(nextPlayer);
             this.players.add(nextPlayer);
@@ -87,6 +95,18 @@ public class Game implements Serializable {
 
         // Return the player
         return nextPlayer;
+    }
+
+    public void decreaseCardNum() {
+        if (cardNum > 2) {
+            this.cardNum--;
+        } else {
+            cardNum = 6;
+        }
+    }
+
+    public int getCardNum() {
+        return this.cardNum;
     }
 
     /**
@@ -150,7 +170,7 @@ public class Game implements Serializable {
     }
 
     public User getHost() {
-        return host;
+        return this.host;
     }
 
     public void setHost(User host) {

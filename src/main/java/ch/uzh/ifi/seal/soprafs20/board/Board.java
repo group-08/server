@@ -136,7 +136,7 @@ public class Board implements Serializable {
     }
 
     public Field getField(int fieldId) {
-        return this.fields.get(fieldId);
+        return this.fields.get(fieldId - 1); // Minus one so we respect the bounds
     }
 
     public void setFields(List<Field> fields) {
