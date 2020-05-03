@@ -25,17 +25,17 @@ public class GameController {
 
     GameController(GameService gameService){this.gameService = gameService;}
 
-    @PostMapping("/game")
+    @GetMapping("/game/{id}/possible")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public ArrayList<Field> getPossibleFields(@RequestBody MovePostDTO move) {
+    public ArrayList<Field> getPossibleFields(@RequestBody MovePostDTO move, @PathVariable String id) {
         return gameService.getPossibleFields(move);
     }
 
-    @PostMapping("/move")
+    @PostMapping("/game/{id}/move")
     @ResponseStatus(HttpStatus.ACCEPTED)
     @ResponseBody
-    public Board move(@RequestBody MovePostDTO move) {
+    public Board move(@RequestBody MovePostDTO move, @PathVariable String id) {
         return gameService.playPlayersMove(move); //id is needed to get game
     }
 
