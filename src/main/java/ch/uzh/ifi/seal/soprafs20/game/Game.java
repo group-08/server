@@ -2,6 +2,7 @@ package ch.uzh.ifi.seal.soprafs20.game;
 
 
 import ch.uzh.ifi.seal.soprafs20.service.BoardService;
+import ch.uzh.ifi.seal.soprafs20.service.PlayerService;
 import ch.uzh.ifi.seal.soprafs20.user.Figure;
 import ch.uzh.ifi.seal.soprafs20.user.Player;
 import ch.uzh.ifi.seal.soprafs20.user.User;
@@ -53,6 +54,8 @@ public class Game implements Serializable {
     @Enumerated
     WeatherState weatherState;
 
+    PlayerService playerService;
+
 
     public Game(User user, String name){
         this.board = new CasualBoard();
@@ -71,13 +74,16 @@ public class Game implements Serializable {
      * Gets the next player in the players list and adds it to the end of the list
      * @return the next player
      */
-    public Player getNextPlayer(){
+    public Player getNextPlayer(long gameId){
         // Get player on top of the array
         Player nextPlayer = this.players.get(0);
 
-        // Append the player at the back again
-        this.players.remove(nextPlayer);
-        this.players.add(nextPlayer);
+        while (!playerService.checkIfCanPlay(gameId, nextPlayer.getId())) {
+            playerService.removeAllFromHand(nextPlayer.getId());
+            this.players.remove(nextPlayer);
+            this.players.add(nextPlayer);
+            nextPlayer = this.players.get(0);
+        }
 
         // Return the player
         return nextPlayer;

@@ -46,5 +46,9 @@ public class Player {
         return this.figures;
     }
 
+    public long getId() {
+        return this.id;
+    }
+
 
 }
