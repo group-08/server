@@ -18,5 +18,7 @@ public class GoalField extends Field{
         return player;
     }
 
+    public void setPlayer(Player player){this.player = player;}
+
 }
 
