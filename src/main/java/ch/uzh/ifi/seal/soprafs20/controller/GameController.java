@@ -45,7 +45,8 @@ public class GameController {
     //get current game with id
 
 
-    /** TODO: Frontend check when to exchange!*/
+    /** TODO: Frontend check when to exchange!
+     *        show card after swap!*/
     //switching cards
     @PostMapping("/game/{id}/exchange")
     @ResponseStatus(HttpStatus.CREATED)
