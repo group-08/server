@@ -31,16 +31,50 @@ public class GameService {
 
     private UserService userService;
     private DeckService deckService;
+    private PlayerService playerService;
 
     private final BoardService boardService;
     private final GameRepository gameRepository;
 
 
     @Autowired
-    public GameService(@Qualifier("gameRepository") GameRepository gameRepository, UserService userService, BoardService boardService){
+    public GameService(@Qualifier("gameRepository") GameRepository gameRepository,
+                       UserService userService, BoardService boardService,PlayerService playerService, DeckService deckService){
         this.userService = userService;
         this.gameRepository = gameRepository;
         this.boardService = boardService;
+        this.playerService = playerService;
+        this.deckService = deckService;
+    }
+
+    /**
+     * Gets the next player in the players list and adds it to the end of the list
+     * @return the next player
+     */
+    public Player getNextPlayer(long gameId){
+        Game game = gameRepository.findById(gameId).orElse(null);
+        assert game != null;
+        List<Player> players = game.getPlayers();
+
+        // Get player on top of the array
+        Player nextPlayer = players.get(0);
+
+        while (!playerService.checkIfCanPlay(gameId, nextPlayer.getId()) && this.checkIfCardsLeft(gameId)) {
+            playerService.removeAllFromHand(nextPlayer.getId());
+            players.remove(nextPlayer);
+            players.add(nextPlayer);
+            nextPlayer = players.get(0);
+        }
+
+        players.remove(nextPlayer);
+        players.add(nextPlayer);
+
+        this.gameRepository.save(game);
+
+        // Return the player
+        return nextPlayer;
+
+
     }
 
     /**
@@ -75,6 +109,7 @@ public class GameService {
         assert actualGame != null;
         Figure figure = move.getFigure();
         Field targetField = move.getTargetField();
+        this.gameRepository.save(actualGame);
         return boardService.move(move.getId(), figure, targetField);
     }
 
@@ -103,6 +138,7 @@ public class GameService {
         else {
             throw new ArrayIndexOutOfBoundsException("Game is already full.");
         }
+        this.gameRepository.save(game);
     }
 
     /**
@@ -118,7 +154,6 @@ public class GameService {
 
     public void setColourOfPlayer(Player player, Colour colour) {
         player.setColour(colour);
-
     }
 
     /**
@@ -150,16 +185,16 @@ public class GameService {
 
 
         /// fill the deck with cards and shuffle those
-        deckService.createDeck(game.getDeck());
+        this.deckService.createDeck(game.getDeck());
 
 
-        // Shuffle the cards
-        // game.getDeck().shuffle();
-
-        // this.distributeCards(gameId, game.getCardNum());
+        this.distributeCards(gameId, game.getCardNum());
+        game.setExchangeCard(true);
 
         // Set the gameState to running
         game.setGameState(GameState.RUNNING);
+
+        this.gameRepository.save(game);
 
     }
 
@@ -167,11 +202,13 @@ public class GameService {
      * (TO DO)Let's to players change a card.
      * @param gameId ID of game you want to let players exchange cards.
      */
-    public void letPlayersChangeCard(long gameId) {
+    public Game letPlayersChangeCard(long gameId, long userId, Card card) {
         Game game = gameRepository.findById(gameId).orElse(null);
-
         assert game != null;
-        // Let partners change one card
+        playerService.exchange(gameId, userId, card);
+        game.setExchangeCard(false);
+        this.gameRepository.save(game);
+        return game;
     }
 
     /**
@@ -190,6 +227,8 @@ public class GameService {
             List<Card> cards = deckService.drawCards(cardNum, game.getDeck().getId());
             player.setHand(cards);
         }
+
+        this.gameRepository.save(game);
     }
 
     public boolean checkIfCardsLeft(long gameId)   {
@@ -212,10 +251,11 @@ public class GameService {
         assert game != null;
 
         // set currentPlayer, partner, and rotate players
-        Player currentPlayer = game.getNextPlayer();
+        Player currentPlayer = this.getNextPlayer(gameId);
         Player partner = game.getPlayer(1);
 
-        //remove card from player (wait for nick and flurin)
+        //remove card from player
+        playerService.removeFromHand(currentPlayer.getId(), move.getCard());
 
         // move figure
         this.moveFigure(move);
@@ -233,8 +273,10 @@ public class GameService {
         if (game.getGameState() == GameState.RUNNING && !checkIfCardsLeft(gameId)) {
             distributeCards(gameId, game.getCardNum());
             game.decreaseCardNum();
-            this.letPlayersChangeCard(gameId);
+            game.setExchangeCard(true);
         }
+
+        this.gameRepository.save(game);
         return game.getBoard();
     }
 
@@ -249,8 +291,6 @@ public class GameService {
         assert game != null;
         return boardService.checkIfAllTargetFieldsOccupied(gameId, currentPlayer);
     }
-
-
 
     public GameGetDTO getLobbyById(long id){
         Game game = gameRepository.findById(id).orElse(null);

@@ -1,17 +1,14 @@
 package ch.uzh.ifi.seal.soprafs20.rest.dto;
 
 import ch.uzh.ifi.seal.soprafs20.board.Board;
-import ch.uzh.ifi.seal.soprafs20.field.Field;
 import ch.uzh.ifi.seal.soprafs20.game.GameState;
 import ch.uzh.ifi.seal.soprafs20.game.WeatherState;
-import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.user.Player;
 import ch.uzh.ifi.seal.soprafs20.user.User;
 
 import java.util.List;
 
-public class GameGetDTO {
-
+public class GameGetDTO2 {
     private String name;
 
     private Long id;
@@ -28,36 +25,14 @@ public class GameGetDTO {
 
     private int cardNum;
 
-    public WeatherState getWeatherState() {
-        return weatherState;
-    }
-
-    public void setWeatherState(WeatherState weatherState) {
-        this.weatherState = weatherState;
-    }
-
-    public int getCardNum() {
-        return cardNum;
-    }
-
-    public void setCardNum(int cardNum) {
-        this.cardNum = cardNum;
-    }
-
-    public boolean getExchangeCard() {
-        return this.exchangeCard;
-    }
-
-    public void setExchangeCard(boolean exchange) {
-        this.exchangeCard = exchange;
-    }
+    private Board board;
 
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
-         this.name = name;
+        this.name = name;
     }
 
     public Long getId() {
@@ -76,6 +51,14 @@ public class GameGetDTO {
         this.gameState = gameState;
     }
 
+    public User getHost() {
+        return host;
+    }
+
+    public void setHost(User host) {
+        this.host = host;
+    }
+
     public List<Player> getPlayers() {
         return players;
     }
@@ -84,11 +67,35 @@ public class GameGetDTO {
         this.players = players;
     }
 
-    public void setHost(User host) {
-        this.host = host;
+    public boolean isExchangeCard() {
+        return exchangeCard;
     }
 
-    public UserGetDTO getHost() {
-        return DTOMapper.INSTANCE.convertEntityToUserGetDTO(host);
+    public void setExchangeCard(boolean exchangeCard) {
+        this.exchangeCard = exchangeCard;
+    }
+
+    public WeatherState getWeatherState() {
+        return weatherState;
+    }
+
+    public void setWeatherState(WeatherState weatherState) {
+        this.weatherState = weatherState;
+    }
+
+    public int getCardNum() {
+        return cardNum;
+    }
+
+    public void setCardNum(int cardNum) {
+        this.cardNum = cardNum;
+    }
+
+    public Board getBoard() {
+        return board;
+    }
+
+    public void setBoard(Board board) {
+        this.board = board;
     }
 }

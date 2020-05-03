@@ -4,6 +4,7 @@ package ch.uzh.ifi.seal.soprafs20.game;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.service.BoardService;
+import ch.uzh.ifi.seal.soprafs20.service.PlayerService;
 import ch.uzh.ifi.seal.soprafs20.user.Figure;
 import ch.uzh.ifi.seal.soprafs20.user.Player;
 import ch.uzh.ifi.seal.soprafs20.user.User;
@@ -54,6 +55,8 @@ public class Game implements Serializable {
 
     String name;
 
+    boolean exchangeCard;
+
     @Enumerated
     WeatherState weatherState;
 
@@ -65,7 +68,8 @@ public class Game implements Serializable {
         this.deck = new Deck();
         this.gameState = GameState.PENDING;
         this.host = user;
-        int cardNum = 6;
+        this.cardNum = 6;
+        this.exchangeCard=false;
 
 
         Player hostPlayer = new Player();
@@ -73,21 +77,6 @@ public class Game implements Serializable {
         this.players.add(hostPlayer);
     }
 
-    /**
-     * Gets the next player in the players list and adds it to the end of the list
-     * @return the next player
-     */
-    public Player getNextPlayer(){
-        // Get player on top of the array
-        Player nextPlayer = this.players.get(0);
-
-        // Append the player at the back again
-        this.players.remove(nextPlayer);
-        this.players.add(nextPlayer);
-
-        // Return the player
-        return nextPlayer;
-    }
 
     public void decreaseCardNum() {
         if (cardNum > 2) {
@@ -115,6 +104,14 @@ public class Game implements Serializable {
         } else {
             // throw error
         }
+    }
+
+    public void setExchangeCard(boolean exchange) {
+        this.exchangeCard = exchange;
+    }
+
+    public boolean getExchangeCard() {
+        return this.exchangeCard;
     }
 
     public List<Player> getPlayers() {

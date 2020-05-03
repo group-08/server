@@ -124,6 +124,82 @@ class BoardServiceTest {
         assertEquals(field1.getId() + 10, possibleFieldsTEN.get(0).getId());
         assertEquals(2, possibleFieldsTWO.size());
         assertEquals(1, possibleFieldsTWO_diffPlayer.size());
+
+    }
+
+    @Test
+    public void getPossibleFieldsFOUR(){
+        // create 2 users
+        testUser1 = new User();
+        testUser1.setId(1L);
+        testUser1.setEmail("test@Name.tld");
+        testUser1.setUsername("testUsername");
+
+        testUser2 = new User();
+        testUser2.setId(2L);
+        testUser2.setEmail("test@Name");
+        testUser2.setUsername("test2");
+
+        // create 2 players
+        Player testPlayer1 = new Player();
+        testPlayer1.setUser(testUser1);
+
+        Player testPlayer2 = new Player();
+        testPlayer2.setUser(testUser2);
+
+        //create game
+        Game testGame = new Game(testUser1, "testGame");
+
+        Mockito.when(gameRepository.findById(Mockito.any())).thenReturn(java.util.Optional.of(testGame));
+
+        //create figures with different players
+        Figure figure1 = new Figure();
+        figure1.setPlayer(testPlayer1);
+
+        Figure figure2 = new Figure();
+        figure2.setPlayer(testPlayer2);
+
+        //give fields ids
+        long id = 1;
+        for (Field fieldSetId : testGame.getBoard().getFields()) {
+            fieldSetId.setId(id);
+            id++;
+        }
+
+        //create fields with figures that belong to different players
+        Field field2 = testGame.getBoard().getField(2);
+        field2.setOccupant(figure1);
+
+        Field field1_samePlayer_as_GoalField = testGame.getBoard().getField(1);
+        field1_samePlayer_as_GoalField.setOccupant(figure1);
+
+        Field field63_not_samePlayer_as_GoalField = testGame.getBoard().getField(64);
+        field63_not_samePlayer_as_GoalField.setOccupant(figure2);
+
+        // get all the goalFields of first player
+        GoalField goalField1 = (GoalField) testGame.getBoard().getField(65);
+        GoalField goalField2 = (GoalField) testGame.getBoard().getField(66);
+        GoalField goalField3 = (GoalField) testGame.getBoard().getField(67);
+        GoalField goalField4 = (GoalField) testGame.getBoard().getField(68);
+
+        //set the player 1 to fields
+        goalField1.setPlayer(testPlayer1);
+        goalField2.setPlayer(testPlayer1);
+        goalField3.setPlayer(testPlayer1);
+        goalField4.setPlayer(testPlayer1);
+
+        Card cardFOUR = new NormalCard(Suit.CLUBS, Value.FOUR);
+
+        List<Field> possibleFieldsFOUR = boardService.getPossibleFields(1L, cardFOUR, field1_samePlayer_as_GoalField);
+
+        Field field61 = testGame.getBoard().getField(61);
+        Field field68 = testGame.getBoard().getField(68);
+        Field field5 = testGame.getBoard().getField(5);
+
+        assertEquals(3, possibleFieldsFOUR.size());
+        assertTrue(possibleFieldsFOUR.contains(field61));
+        assertTrue(possibleFieldsFOUR.contains(field68));
+        assertTrue(possibleFieldsFOUR.contains(field5));
     }
 
     @Test

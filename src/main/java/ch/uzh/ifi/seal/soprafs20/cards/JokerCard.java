@@ -1,11 +1,13 @@
 package ch.uzh.ifi.seal.soprafs20.cards;
 
 
+import javax.persistence.Entity;
 import javax.persistence.Enumerated;
+import javax.persistence.Table;
 
-
+@Entity
+@Table( name = "JokerCard")
 public class JokerCard extends Card {
-
 
     @Enumerated
     private Value value = null;

@@ -127,7 +127,8 @@ public class BoardService {
      * @return List of all possible fields the player on field could land on
      */
     public ArrayList<Field> getPossibleFields(long gameId, Card card, Field field) {
-        Game actualGame = gameRepository.findById(gameId).get();
+        Game actualGame = gameRepository.findById(gameId).orElse(null);
+        assert actualGame != null;
         Board board = actualGame.getBoard();
         ArrayList<Integer> moveValues = getMoveValues(card);
 
@@ -141,7 +142,72 @@ public class BoardService {
                 }
             }
         }
+        if (card.getValue() == Value.FOUR) {
+            ArrayList<Field> forwardFour = getFieldsBoard(field, moveValues);
+            ArrayList<Field> backwardFour = getPossibleFieldsFour(card, field, board);
+            forwardFour.addAll(backwardFour);
+            return forwardFour;
+        }
         return this.getFieldsBoard(field, moveValues);
+    }
+
+    public ArrayList<Field> getPossibleFieldsFour(Card card, Field field, Board gameBoard){
+        int level = 0;
+        List<Field> fields = gameBoard.getFields();
+        ArrayList<Field> possibleFields = new ArrayList<>();
+        int moveValue = card.getValue().getValue();
+        Player player = field.getOccupant().getPlayer();
+        Queue<Field> queue = new LinkedList<>();
+        queue.add(field);
+        queue.add(null);
+        if (field instanceof GoalField){
+            return possibleFields;
+        }
+        while(!(queue.isEmpty()) && level < moveValue) {
+            Field temp = queue.poll();
+            if (temp==null){
+                level++;
+                queue.add(null);
+            }
+            else {
+                for(Field boardField : fields){
+                    if(boardField.getAdjacencyList().contains(temp)) {
+                        if(boardField instanceof HomeField){
+                            assert true;
+                        }
+                        else if (boardField instanceof FirstField) {
+                            if (((FirstField) boardField).getBlocked()) {
+                                assert true;
+                            }
+                            else {
+                                queue.add(boardField);
+                            }
+                        }
+                        else{
+                            queue.add(boardField);
+                        }
+                    }
+                    if(temp instanceof FirstField){
+                        for(Field pField : temp.getAdjacencyList()){
+                            if(pField instanceof GoalField){
+                                if(((GoalField) pField).getPlayer()==player){
+                                    queue.add(pField);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        while (!queue.isEmpty()) {
+            if (queue.peek() != null) {
+                possibleFields.add(queue.poll());
+            }
+            else {
+                queue.poll();
+            }
+        }
+        return possibleFields;
     }
 
     public ArrayList<Field> getPossibleFieldsSeven(Card card, Field field, int value){
@@ -204,7 +270,8 @@ public class BoardService {
     public ArrayList<Field> getPossibleFieldsJack(long gameId, Card card, Field field){
         ArrayList<Field> possibleFields = new ArrayList<>();
         Player playerOnField = field.getOccupant().getPlayer();
-        Game actualGame = gameRepository.findById(gameId).get();
+        Game actualGame = gameRepository.findById(gameId).orElse(null);
+        assert actualGame != null;
         Board board = actualGame.getBoard();
 
         for(Field iterField : board.getFields()){

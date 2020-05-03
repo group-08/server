@@ -10,8 +10,8 @@ import java.util.List;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name="descriminatorColumn")
-@Table(name="AbstractCatalog")
+@DiscriminatorColumn(name="FieldType")
+@Table(name="Field")
 public abstract class Field implements Serializable {
     @Id
     @GeneratedValue

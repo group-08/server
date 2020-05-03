@@ -33,9 +33,7 @@ public class DeckService {
     private int numberOfPlayers = 4;
 
     public Deck getDeck(long Id){
-        
-        List<Long> IdIterable = new ArrayList<>();
-        return (Deck) this.deckRepository.findAllById(IdIterable);
+        return deckRepository.findById(Id).orElse(null);
         ///by id
     }
 
@@ -47,7 +45,7 @@ public class DeckService {
         return getDeck(Id).getCardsInDeck();
     }
 /////maybe done
-    public void shuffleDeck(Long  Id){
+    public void shuffleDeck(Long Id){
 
         ///safe
         Collections.shuffle(getCards(Id));
@@ -124,6 +122,9 @@ public class DeckService {
         ///create the cards
         List<Card> allCards = createCards();
 
+        // Shuffle the cards
+        Collections.shuffle(allCards);
+
         //safe the cards
         for (Card card : allCards){
             cardService.addCard(card); }
@@ -132,6 +133,7 @@ public class DeckService {
         deck.setCards(allCards);
 
         ///shuffle the deck
+        safeDeck(deck);
 
         shuffleDeck(deck.getId());
 
