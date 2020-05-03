@@ -151,7 +151,7 @@ public class GameService {
         // Shuffle the cards
         // game.getDeck().shuffle();
 
-        this.distributeCards(gameId, game.getCardNum());
+        // this.distributeCards(gameId, game.getCardNum());
 
         // Set the gameState to running
         game.setGameState(GameState.RUNNING);
