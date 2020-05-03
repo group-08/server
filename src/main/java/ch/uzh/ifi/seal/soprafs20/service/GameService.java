@@ -29,15 +29,19 @@ public class GameService {
 
     private UserService userService;
     private DeckService deckService;
+    //for exchange function
+    private PlayerService playerService;
 
     private final BoardService boardService;
     private final GameRepository gameRepository;
 
     @Autowired
-    public GameService(@Qualifier("gameRepository") GameRepository gameRepository, UserService userService, BoardService boardService){
+    public GameService(@Qualifier("gameRepository") GameRepository gameRepository,
+                       UserService userService, BoardService boardService,PlayerService playerService){
         this.userService = userService;
         this.gameRepository = gameRepository;
         this.boardService = boardService;
+        this.playerService = playerService;
     }
 
     /**
