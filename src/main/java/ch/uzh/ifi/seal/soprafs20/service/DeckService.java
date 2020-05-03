@@ -33,7 +33,7 @@ public class DeckService {
     private int numberOfPlayers = 4;
 
     public Deck getDeck(long Id){
-        return deckRepository.findById(Id).get();
+        return deckRepository.findById(Id).orElse(null);
         ///by id
     }
 
