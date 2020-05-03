@@ -223,7 +223,7 @@ public class GameService {
 
         Player lastPlayer = game.getPlayer(game.getPlayers().size()-1);
         while (!lastPlayer.getHand().isEmpty()) {
-            Player currentPlayer = game.getNextPlayer();
+            Player currentPlayer = game.getNextPlayer(gameId);
             this.playPlayersMove(gameId, currentPlayer);
         }
     }
