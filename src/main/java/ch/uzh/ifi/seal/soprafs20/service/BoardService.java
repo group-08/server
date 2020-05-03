@@ -127,7 +127,8 @@ public class BoardService {
      * @return List of all possible fields the player on field could land on
      */
     public ArrayList<Field> getPossibleFields(long gameId, Card card, Field field) {
-        Board board = this.getBoard(gameId);
+        Game actualGame = gameRepository.findById(gameId).get();
+        Board board = actualGame.getBoard();
         ArrayList<Integer> moveValues = getMoveValues(card);
 
         if(field instanceof HomeField && (card.getValue() == Value.KING || card.getValue() == Value.ACE)){
@@ -201,7 +202,8 @@ public class BoardService {
     public ArrayList<Field> getPossibleFieldsJack(long gameId, Card card, Field field){
         ArrayList<Field> possibleFields = new ArrayList<>();
         Player playerOnField = field.getOccupant().getPlayer();
-        Board board = this.getBoard(gameId);
+        Game actualGame = gameRepository.findById(gameId).get();
+        Board board = actualGame.getBoard();
 
         for(Field iterField : board.getFields()){
             if(iterField.getOccupant()!=null){
