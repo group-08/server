@@ -141,6 +141,12 @@ public class BoardService {
                 }
             }
         }
+        if (card.getValue() == Value.FOUR) {
+            ArrayList<Field> forwardFour = getFieldsBoard(field, moveValues);
+            ArrayList<Field> backwardFour = getPossibleFieldsFour(card, field);
+            forwardFour.addAll(backwardFour);
+            return forwardFour;
+        }
         return this.getFieldsBoard(field, moveValues);
     }
 
