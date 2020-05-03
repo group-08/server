@@ -19,6 +19,16 @@ public class GameGetDTO {
 
     private List<Player> players;
 
+    private boolean exchangeCard;
+
+    public boolean getExchangeCard() {
+        return this.exchangeCard;
+    }
+
+    public void setExchangeCard(boolean exchange) {
+        this.exchangeCard = exchange;
+    }
+
     public String getName() {
         return name;
     }
