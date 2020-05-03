@@ -46,8 +46,8 @@ public class GameGetDTO {
         this.cardNum = cardNum;
     }
 
-    public BoardGetDTO getBoard() {
-        BoardGetDTO boardGetDTO = DTOMapper.INSTANCE.convertEntityToBoardGetDTO(board);
+    public Board getBoard() {
+        return this.board;
     }
 
     public void setBoard(Board board) {
