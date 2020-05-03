@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.service;
 
 
+import ch.uzh.ifi.seal.soprafs20.cards.Value;
 import ch.uzh.ifi.seal.soprafs20.game.GameState;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.GameGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
@@ -55,8 +56,13 @@ public class GameService {
         Figure figure = move.getFigure();
         Field currentField = figure.getField();
 
-        return boardService.getPossibleFields(move.getId(), card, currentField);
-
+        if (card.getValue() == Value.SEVEN) {
+            return boardService.getPossibleFieldsSeven(card, currentField, 7);
+        } else if (card.getValue() == Value.JACK) {
+            return boardService.getPossibleFieldsJack(move.getId(), card, currentField);
+        } else {
+            return boardService.getPossibleFields(move.getId(), card, currentField);
+        }
     }
 
     /**
