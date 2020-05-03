@@ -21,9 +21,6 @@ import java.util.List;
 @DataJpaTest
 public class PlayerRepositoryIntegrationTest {
 
-    @Mock
-
-
     @Autowired
     private TestEntityManager entityManager;
 
@@ -46,8 +43,6 @@ public class PlayerRepositoryIntegrationTest {
 
         // create testCard
         NormalCard testCardTWO = new NormalCard(Suit.CLUBS, Value.TWO);
-
-
 
         // Assign Cards to players hand
         List<Card> hand = new ArrayList<>();
