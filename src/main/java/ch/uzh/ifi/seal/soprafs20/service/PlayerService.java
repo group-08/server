@@ -63,7 +63,15 @@ public class PlayerService {
         removeFromHand(playerId,card);
     }
 
-    public boolean checkIfCanPlay(long gameId, Player player) {
+    public void removeAllFromHand(long playerId) {
+        Player player = playerRepository.getOne(playerId);
+        for (Card card : player.getHand()) {
+            this.removeFromHand(playerId, card);
+        }
+    }
+
+    public boolean checkIfCanPlay(long gameId, long playerId) {
+        Player player = playerRepository.getOne(playerId);
         boolean canPlay = false;
         for (Card card : player.getHand()) {
             for (Figure figure : player.getFigures()) {
