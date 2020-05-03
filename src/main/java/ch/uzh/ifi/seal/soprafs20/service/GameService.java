@@ -48,6 +48,36 @@ public class GameService {
     }
 
     /**
+     * Gets the next player in the players list and adds it to the end of the list
+     * @return the next player
+     */
+    public Player getNextPlayer(long gameId){
+        Game game = gameRepository.findById(gameId).orElse(null);
+        assert game != null;
+        List<Player> players = game.getPlayers();
+
+        // Get player on top of the array
+        Player nextPlayer = players.get(0);
+
+        while (!playerService.checkIfCanPlay(gameId, nextPlayer.getId())) {
+            playerService.removeAllFromHand(nextPlayer.getId());
+            players.remove(nextPlayer);
+            players.add(nextPlayer);
+            nextPlayer = players.get(0);
+        }
+
+        players.remove(nextPlayer);
+        players.add(nextPlayer);
+
+        this.gameRepository.save(game);
+
+        // Return the player
+        return nextPlayer;
+
+
+    }
+
+    /**
      * Lets board compute all possible fields that can be reached from field with a specific card
      * @param move MovePostDTO that contains all information for the move (currentField and Card to play)
      * @return all possible targetFields that the player can move to from the specific field with the specific card
@@ -214,7 +244,7 @@ public class GameService {
         assert game != null;
 
         // set currentPlayer, partner, and rotate players
-        Player currentPlayer = game.getNextPlayer();
+        Player currentPlayer = this.getNextPlayer(gameId);
         Player partner = game.getPlayer(1);
 ;
         //remove card from player (wait for nick and flurin)
@@ -237,6 +267,8 @@ public class GameService {
             game.decreaseCardNum();
             this.letPlayersChangeCard(gameId);
         }
+
+
         return game.getBoard();
     }
 

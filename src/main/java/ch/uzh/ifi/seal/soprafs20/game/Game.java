@@ -58,8 +58,6 @@ public class Game implements Serializable {
     @Enumerated
     WeatherState weatherState;
 
-    PlayerService playerService;
-
     public Game() {
 
     }
@@ -78,24 +76,6 @@ public class Game implements Serializable {
         this.players.add(hostPlayer);
     }
 
-    /**
-     * Gets the next player in the players list and adds it to the end of the list
-     * @return the next player
-     */
-    public Player getNextPlayer(){
-        // Get player on top of the array
-        Player nextPlayer = this.players.get(0);
-
-        while (!playerService.checkIfCanPlay(this.id, nextPlayer.getId())) {
-            playerService.removeAllFromHand(nextPlayer.getId());
-            this.players.remove(nextPlayer);
-            this.players.add(nextPlayer);
-            nextPlayer = this.players.get(0);
-        }
-
-        // Return the player
-        return nextPlayer;
-    }
 
     public void decreaseCardNum() {
         if (cardNum > 2) {
