@@ -1,5 +1,15 @@
 package ch.uzh.ifi.seal.soprafs20.service;
 
+import ch.uzh.ifi.seal.soprafs20.board.Board;
+import ch.uzh.ifi.seal.soprafs20.repository.BoardRepository;
+import ch.uzh.ifi.seal.soprafs20.repository.UserRepository;
+import ch.uzh.ifi.seal.soprafs20.user.User;
+import org.junit.jupiter.api.BeforeEach;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import ch.uzh.ifi.seal.soprafs20.board.Board;
@@ -42,12 +52,12 @@ class BoardServiceTest {
     private User testUser;
 
     @BeforeEach
-    public void setup(){
+    public void setup() {
         MockitoAnnotations.initMocks(this);
     }
 
     @Test
-    public void getPossibleFields_Test(){
+    public void getPossibleFields_Test() {
 
         testUser = new User();
         testUser.setId(1L);
@@ -69,10 +79,7 @@ class BoardServiceTest {
 
         Card card = new NormalCard(Suit.CLUBS, Value.FIVE);
 
-        List<Field> possibleFields = boardService.getPossibleFields(1L,card, field);
+        List<Field> possibleFields = boardService.getPossibleFields(1L, card, field);
 
     }
-
-
-
 }
