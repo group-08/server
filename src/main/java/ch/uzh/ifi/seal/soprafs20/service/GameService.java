@@ -59,7 +59,7 @@ public class GameService {
         // Get player on top of the array
         Player nextPlayer = players.get(0);
 
-        while (!playerService.checkIfCanPlay(gameId, nextPlayer.getId())) {
+        while (!playerService.checkIfCanPlay(gameId, nextPlayer.getId()) && this.checkIfCardsLeft(gameId)) {
             playerService.removeAllFromHand(nextPlayer.getId());
             players.remove(nextPlayer);
             players.add(nextPlayer);
@@ -109,6 +109,7 @@ public class GameService {
         assert actualGame != null;
         Figure figure = move.getFigure();
         Field targetField = move.getTargetField();
+        this.gameRepository.save(actualGame);
         return boardService.move(move.getId(), figure, targetField);
     }
 
@@ -137,6 +138,7 @@ public class GameService {
         else {
             throw new ArrayIndexOutOfBoundsException("Game is already full.");
         }
+        this.gameRepository.save(game);
     }
 
     /**
@@ -152,7 +154,6 @@ public class GameService {
 
     public void setColourOfPlayer(Player player, Colour colour) {
         player.setColour(colour);
-
     }
 
     /**
@@ -186,12 +187,14 @@ public class GameService {
         deckService.createDeck(game.getDeck());
 
         // Shuffle the cards
-        // game.getDeck().shuffle();
+        deckService.shuffleDeck(gameId);
 
-        // this.distributeCards(gameId, game.getCardNum());
+        this.distributeCards(gameId, game.getCardNum());
 
         // Set the gameState to running
         game.setGameState(GameState.RUNNING);
+
+        this.gameRepository.save(game);
 
     }
 
@@ -222,6 +225,8 @@ public class GameService {
             List<Card> cards = deckService.drawCards(cardNum, game.getDeck().getId());
             player.setHand(cards);
         }
+
+        this.gameRepository.save(game);
     }
 
     public boolean checkIfCardsLeft(long gameId)   {
@@ -247,7 +252,8 @@ public class GameService {
         Player currentPlayer = this.getNextPlayer(gameId);
         Player partner = game.getPlayer(1);
 ;
-        //remove card from player (wait for nick and flurin)
+        //remove card from player
+        playerService.removeFromHand(currentPlayer.getId(), move.getCard());
 
         // move figure
         this.moveFigure(move);
@@ -268,7 +274,7 @@ public class GameService {
             this.letPlayersChangeCard(gameId);
         }
 
-
+        this.gameRepository.save(game);
         return game.getBoard();
     }
 
