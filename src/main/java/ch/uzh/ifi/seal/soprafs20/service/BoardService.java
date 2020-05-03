@@ -145,11 +145,13 @@ public class BoardService {
     }
 
     public ArrayList<Field> getPossibleFieldsSeven(Card card, Field field, int value){
-        ArrayList<Integer> values = new ArrayList<>();
+        ArrayList<Field> possibleFields = new ArrayList<>();
         for(int i=1; i<=value;i++) {
-            values.add(i);
+            ArrayList<Integer> values = new ArrayList<>();
+            values.add(value);
+            possibleFields.addAll(this.getFieldsBoard(field, values));
         }
-        return this.getFieldsBoard(field, values);
+        return possibleFields;
     }
 
     public ArrayList<Field> getFieldsBoard(Field fieldToCheck, ArrayList<Integer> valuesToCheck){
