@@ -5,6 +5,7 @@ import ch.uzh.ifi.seal.soprafs20.rest.dto.UserGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -21,12 +22,15 @@ public class Player {
     @Column
     Colour colour;
 
-    @OneToMany(targetEntity = Card.class)
+    @OneToMany(targetEntity = Card.class, cascade = CascadeType.ALL)
     List<Card> hand;
 
-    @OneToMany(targetEntity = Figure.class)
+    @OneToMany(targetEntity = Figure.class, cascade = CascadeType.ALL)
     List<Figure> figures;
 
+    public Player() {
+        this.figures = new ArrayList<Figure>();
+    }
 
     public void setHand(List<Card> cards) {
         this.hand = cards;
