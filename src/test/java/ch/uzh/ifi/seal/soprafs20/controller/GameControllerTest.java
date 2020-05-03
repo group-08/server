@@ -75,7 +75,7 @@ public class GameControllerTest {
         given(gameService.getPossibleFields(Mockito.any())).willReturn(fields);
 
 
-        MockHttpServletRequestBuilder postRequest = post("/game").contentType(MediaType.APPLICATION_JSON)
+        MockHttpServletRequestBuilder postRequest = post("/game/1/possible").contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(move))
                 .header("X-Token", "1");
 
