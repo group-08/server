@@ -25,7 +25,7 @@ public class GameController {
 
     GameController(GameService gameService){this.gameService = gameService;}
 
-    @GetMapping("/game/{id}/possible")
+    @PostMapping("/game/{id}/possible")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public ArrayList<Field> getPossibleFields(@RequestBody MovePostDTO move, @PathVariable String id) {

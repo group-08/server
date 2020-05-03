@@ -188,9 +188,6 @@ public class GameService {
         this.deckService.createDeck(game.getDeck());
 
 
-        // Shuffle the cards
-        this.deckService.shuffleDeck(gameId);
-
         this.distributeCards(gameId, game.getCardNum());
         game.setExchangeCard(true);
 
