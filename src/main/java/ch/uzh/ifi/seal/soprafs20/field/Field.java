@@ -4,21 +4,23 @@ package ch.uzh.ifi.seal.soprafs20.field;
 import ch.uzh.ifi.seal.soprafs20.user.Figure;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table( name = "FIELD")
-public abstract class Field {
-
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name="descriminatorColumn")
+@Table(name="AbstractCatalog")
+public abstract class Field implements Serializable {
     @Id
     @GeneratedValue
     private long id;
 
-    @OneToOne(targetEntity = Figure.class)
+    @OneToOne(targetEntity = Figure.class, cascade = CascadeType.ALL)
     private Figure occupant;
 
-    @OneToMany(targetEntity = Field.class)
+    @ManyToMany(targetEntity = Field.class, cascade = CascadeType.ALL)
     private List<Field> adjacencyList = new ArrayList<>();
 
     public void addAdjacency(Field adjacentField){
@@ -50,12 +52,7 @@ public abstract class Field {
         this.occupant = occupant;
     }
 
-    public long getId(){return id;};
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
+    /*
     public boolean equals(Object v){
         if (v==this){
             return true;
@@ -74,15 +71,11 @@ public abstract class Field {
         result = (int) (31 * result + id);
         return result;
     }
+    */
 
-    @OneToOne(mappedBy = "field", optional = false)
-    private Figure figure;
+    public long getId(){return id;};
 
-    public Figure getFigure() {
-        return figure;
-    }
-
-    public void setFigure(Figure figure) {
-        this.figure = figure;
+    public void setId(long id) {
+        this.id = id;
     }
 }

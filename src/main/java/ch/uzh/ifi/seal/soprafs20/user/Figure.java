@@ -20,6 +20,8 @@ public class Figure {
     @OneToOne(targetEntity = Field.class)
     Field field;
 
+    public Figure() {}
+
     public Figure(Field field) {
         this.field = field;
     }

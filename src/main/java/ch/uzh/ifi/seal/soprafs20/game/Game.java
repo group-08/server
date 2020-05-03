@@ -1,6 +1,9 @@
 package ch.uzh.ifi.seal.soprafs20.game;
 
 
+import ch.uzh.ifi.seal.soprafs20.rest.dto.UserGetDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
+import ch.uzh.ifi.seal.soprafs20.service.BoardService;
 import ch.uzh.ifi.seal.soprafs20.user.Figure;
 import ch.uzh.ifi.seal.soprafs20.user.Player;
 import ch.uzh.ifi.seal.soprafs20.user.User;
@@ -35,14 +38,16 @@ public class Game implements Serializable {
     @Enumerated
     GameState gameState;
 
-    @OneToMany(targetEntity = Player.class)
+    @OneToMany(targetEntity = Player.class, cascade = CascadeType.ALL)
     List<Player> players = new ArrayList<>();
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     Board board;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     Deck deck;
+    
+    int cardNum;
 
     @OneToOne
     User host;
@@ -52,6 +57,7 @@ public class Game implements Serializable {
     @Enumerated
     WeatherState weatherState;
 
+    public Game(){}
 
     public Game(User user, String name){
         this.board = new CasualBoard();
@@ -59,9 +65,11 @@ public class Game implements Serializable {
         this.deck = new Deck();
         this.gameState = GameState.PENDING;
         this.host = user;
+        int cardNum = 6;
+
 
         Player hostPlayer = new Player();
-        hostPlayer.setUser(host);
+        hostPlayer.setUser(this.host);
         this.players.add(hostPlayer);
     }
 
@@ -81,15 +89,27 @@ public class Game implements Serializable {
         return nextPlayer;
     }
 
+    public void decreaseCardNum() {
+        if (cardNum > 2) {
+            this.cardNum--;
+        } else {
+            cardNum = 6;
+        }
+    }
+
+    public int getCardNum() {
+        return this.cardNum;
+    }
+
     /**
      * (TO DO)Given a Field id and a player, this function assigns the player to the figure on the field. Needed for setup.
      * @param id Field id
      * @param player Player to assign to figure
      */
     public void setPlayer(int id, Player player) {
-        if (board.getField(id).getFigure() != null) {
+        if (board.getField(id).getOccupant() != null) {
             Field field = board.getField(id);
-            Figure figure = field.getFigure();
+            Figure figure = field.getOccupant();
             figure.setPlayer(player);
             player.addFigure(figure);
         } else {
@@ -119,5 +139,49 @@ public class Game implements Serializable {
 
     public void setGameState(GameState state) {
         this.gameState = state;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public GameState getGameState() {
+        return gameState;
+    }
+
+    public void setPlayers(List<Player> players) {
+        this.players = players;
+    }
+
+    public void setDeck(Deck deck) {
+        this.deck = deck;
+    }
+
+    public User getHost() {
+        return this.host;
+    }
+
+    public void setHost(User host) {
+        this.host = host;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public WeatherState getWeatherState() {
+        return weatherState;
+    }
+
+    public void setWeatherState(WeatherState weatherState) {
+        this.weatherState = weatherState;
     }
 }

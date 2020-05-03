@@ -1,6 +1,6 @@
 package ch.uzh.ifi.seal.soprafs20.user;
 
-enum Colour {
+public enum Colour {
     BLUE,
     YELLOW,
     GREEN,
