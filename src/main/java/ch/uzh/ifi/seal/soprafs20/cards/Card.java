@@ -4,7 +4,9 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table( name = "CARD")
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name="CardType")
+@Table(name="Card")
 public abstract class Card implements Serializable {
     //Has to be abstract
     @Id

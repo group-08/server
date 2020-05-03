@@ -2,8 +2,8 @@ package ch.uzh.ifi.seal.soprafs20.cards;
 
 import javax.persistence.*;
 
-import static ch.uzh.ifi.seal.soprafs20.cards.Value.values;
-
+@Entity
+@Table( name = "NormalCard")
 public class NormalCard extends Card {
 
     @Enumerated
