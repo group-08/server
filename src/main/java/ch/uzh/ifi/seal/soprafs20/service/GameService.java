@@ -190,6 +190,7 @@ public class GameService {
         deckService.shuffleDeck(gameId);
 
         this.distributeCards(gameId, game.getCardNum());
+        game.setExchangeCard(true);
 
         // Set the gameState to running
         game.setGameState(GameState.RUNNING);
@@ -202,11 +203,13 @@ public class GameService {
      * (TO DO)Let's to players change a card.
      * @param gameId ID of game you want to let players exchange cards.
      */
-    public void letPlayersChangeCard(long gameId) {
+    public Game letPlayersChangeCard(long gameId, long userId, Card card) {
         Game game = gameRepository.findById(gameId).orElse(null);
-
         assert game != null;
-        // Let partners change one card
+        playerService.exchange(gameId, userId, card);
+        game.setExchangeCard(false);
+        this.gameRepository.save(game);
+        return game;
     }
 
     /**
@@ -271,7 +274,7 @@ public class GameService {
         if (game.getGameState() == GameState.RUNNING && !checkIfCardsLeft(gameId)) {
             distributeCards(gameId, game.getCardNum());
             game.decreaseCardNum();
-            this.letPlayersChangeCard(gameId);
+            game.setExchangeCard(true);
         }
 
         this.gameRepository.save(game);
