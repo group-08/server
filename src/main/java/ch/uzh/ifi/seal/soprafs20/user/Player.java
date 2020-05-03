@@ -42,5 +42,9 @@ public class Player {
         this.figures.add(figure);
     }
 
+    public List<Figure> getFigures() {
+        return this.figures;
+    }
+
 
 }

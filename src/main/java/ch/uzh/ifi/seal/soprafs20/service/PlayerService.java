@@ -2,9 +2,11 @@ package ch.uzh.ifi.seal.soprafs20.service;
 
 
 import ch.uzh.ifi.seal.soprafs20.cards.Card;
+import ch.uzh.ifi.seal.soprafs20.cards.Value;
 import ch.uzh.ifi.seal.soprafs20.game.Game;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
+import ch.uzh.ifi.seal.soprafs20.user.Figure;
 import ch.uzh.ifi.seal.soprafs20.user.Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -19,12 +21,15 @@ public class PlayerService {
 
     private PlayerRepository playerRepository;
     private GameRepository gameRepository;
+    private BoardService boardService;
 
     @Autowired
     public PlayerService(@Qualifier("playerRepository") PlayerRepository playerRepository,
-                         @Qualifier("gameRepository") GameRepository gameRepository){
+                         @Qualifier("gameRepository") GameRepository gameRepository,
+                         @Qualifier("boardService") BoardService boardService){
         this.playerRepository=playerRepository;
         this.gameRepository = gameRepository;
+        this.boardService = boardService;
     }
 
     public void addGiftedCard(long gameId, long playerId, Card card){
@@ -58,4 +63,25 @@ public class PlayerService {
         removeFromHand(playerId,card);
     }
 
+    public boolean checkIfCanPlay(long gameId, Player player) {
+        boolean canPlay = false;
+        for (Card card : player.getHand()) {
+            for (Figure figure : player.getFigures()) {
+                if (card.getValue() == Value.SEVEN) {
+                    if (boardService.getPossibleFieldsSeven(card, figure.getField(), 7) != null) {
+                        canPlay = true;
+                    }
+                } else if (card.getValue() == Value.JACK) {
+                    if (boardService.getPossibleFieldsJack(gameId, card, figure.getField()) != null) {
+                        canPlay = true;
+                    }
+                } else {
+                    if (boardService.getPossibleFields(gameId, card, figure.getField()) != null) {
+                        canPlay = true;
+                    }
+                }
+            }
+        }
+        return canPlay;
+    }
 }
