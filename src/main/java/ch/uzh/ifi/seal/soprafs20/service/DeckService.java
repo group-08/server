@@ -33,7 +33,6 @@ public class DeckService {
     private int numberOfPlayers = 4;
 
     public Deck getDeck(long Id){
-
         return deckRepository.findById(Id).get();
         ///by id
     }
@@ -131,6 +130,7 @@ public class DeckService {
         deck.setCards(allCards);
 
         ///shuffle the deck
+        safeDeck(deck);
 
         shuffleDeck(deck.getId());
 
