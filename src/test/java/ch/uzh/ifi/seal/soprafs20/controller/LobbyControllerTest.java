@@ -88,8 +88,11 @@ public class LobbyControllerTest {
         LobbyPostCreateDTO lobbyPostCreateDTO = new LobbyPostCreateDTO();
         lobbyPostCreateDTO.setName("Allo");
 
+        GameGetDTO gameGetDTO = new GameGetDTO();
+        gameGetDTO.setName(lobbyPostCreateDTO.getName());
+
         given(gameService.getUserByToken(Mockito.anyString())).willReturn(user);
-        Mockito.doNothing().when(gameService).createLobby(Mockito.any(), Mockito.anyString());
+        given(gameService.createLobby(Mockito.any(), Mockito.anyString())).willReturn(gameGetDTO);
 
         MockHttpServletRequestBuilder postRequest = post("/lobbies").contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(lobbyPostCreateDTO))
@@ -111,7 +114,7 @@ public class LobbyControllerTest {
         lobby.setWeatherState(WeatherState.CASUAL);
         lobby.setBoard(null);
 
-        given(gameService.getLobbyById(1)).willReturn(lobby);
+        given(gameService.getLobbyById(1)).willReturn(DTOMapper.INSTANCE.convertEntityToGameGetDTO(lobby));
 
         MockHttpServletRequestBuilder getRequest = get("/lobby/{id}", "1")
                 .contentType(MediaType.APPLICATION_JSON)
