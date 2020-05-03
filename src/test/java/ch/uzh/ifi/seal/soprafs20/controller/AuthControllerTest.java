@@ -1,8 +1,10 @@
 package ch.uzh.ifi.seal.soprafs20.controller;
 
-import ch.uzh.ifi.seal.soprafs20.user.*;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostDTO;
+import ch.uzh.ifi.seal.soprafs20.service.AuthService;
 import ch.uzh.ifi.seal.soprafs20.service.UserService;
+import ch.uzh.ifi.seal.soprafs20.user.User;
+import ch.uzh.ifi.seal.soprafs20.user.UserStatus;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -32,38 +34,48 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * This is a WebMvcTest which allows to test the UserController i.e. GET/POST request without actually sending them over the network.
  * This tests if the UserController works.
  */
-@WebMvcTest(UserController.class)
-public class UserControllerTest {
+@WebMvcTest(AuthController.class)
+public class AuthControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
+    private AuthService authService;
+
+    @MockBean
     private UserService userService;
 
     @Test
-    public void givenUsers_whenGetUsers_thenReturnJsonArray() throws Exception {
+    public void createUser_validInput_userCreated() throws Exception {
         // given
         User user = new User();
-        user.setUsername("firstname.lastname");
-        user.setEmail("firstname@lastname.ch");
-        user.setStatus(UserStatus.OFFLINE);
+        user.setId(1L);
+        user.setEmail("test@user.tld");
+        user.setUsername("testUsername");
+        user.setPassword("password");
+        user.setToken("1");
+        user.setStatus(UserStatus.ONLINE);
 
-        List<User> allUsers = Collections.singletonList(user);
+        UserPostDTO userPostDTO = new UserPostDTO();
+        userPostDTO.setEmail("test@user.tld");
+        userPostDTO.setUsername("testUsername");
+        userPostDTO.setPassword("password");
 
-        // this mocks the UserService -> we define above what the userService should return when getUsers() is called
-        given(userService.getUsers()).willReturn(allUsers);
+        given(userService.createUser(Mockito.any())).willReturn(user);
 
-        // when
-        MockHttpServletRequestBuilder getRequest = get("/users").contentType(MediaType.APPLICATION_JSON);
+        // when/then -> do the request + validate the result
+        MockHttpServletRequestBuilder postRequest = post("/signup")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(userPostDTO));
 
         // then
-        mockMvc.perform(getRequest)
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].email", is(user.getEmail())))
-                .andExpect(jsonPath("$[0].username", is(user.getUsername())))
-                .andExpect(jsonPath("$[0].status", is(user.getStatus().toString())));
+        mockMvc.perform(postRequest)
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id", is(user.getId().intValue())))
+                .andExpect(jsonPath("$.email", is(user.getEmail())))
+                .andExpect(jsonPath("$.username", is(user.getUsername())))
+                .andExpect(jsonPath("$.status", is(user.getStatus().toString())));
     }
 
     /**

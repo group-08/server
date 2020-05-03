@@ -1,10 +1,9 @@
 package ch.uzh.ifi.seal.soprafs20.controller;
 
-import ch.uzh.ifi.seal.soprafs20.User.User;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserGetDTO;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.service.UserService;
+import ch.uzh.ifi.seal.soprafs20.user.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,18 +39,26 @@ public class UserController {
         return userGetDTOs;
     }
 
-    @PostMapping("/users")
-    @ResponseStatus(HttpStatus.CREATED)
+
+    @GetMapping("/user/{id}")
+    @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public UserGetDTO createUser(@RequestBody UserPostDTO userPostDTO) {
-        // convert API user to internal representation
-        User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
-        userInput.setPassword(userPostDTO.getPassword());
-
-        // create user
-        User createdUser = userService.createUser(userInput);
-
-        // convert internal representation of user back to API
-        return DTOMapper.INSTANCE.convertEntityToUserGetDTO(createdUser);
+    public User getUserById(@PathVariable Long id){
+        return userService.getUserById(id);
+        //somewhere has to be a token
     }
+
+
+    // return user with that id
+
+    @PutMapping("/user/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseBody
+    public void updateUser() {
+
+    }
+    //updates user
+    //returns nothing
+
+
 }

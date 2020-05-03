@@ -1,4 +1,4 @@
-package ch.uzh.ifi.seal.soprafs20.User;
+package ch.uzh.ifi.seal.soprafs20.user;
 
 
 import javax.persistence.*;
@@ -19,6 +19,8 @@ public class Figure {
 
     @OneToOne(targetEntity = Field.class)
     Field field;
+
+    public Figure() {}
 
     public Figure(Field field) {
         this.field = field;
