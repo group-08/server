@@ -58,9 +58,7 @@ public class Game implements Serializable {
     @Enumerated
     WeatherState weatherState;
 
-    public Game() {
-
-    }
+    public Game(){}
 
     public Game(User user, String name){
         this.board = new CasualBoard();

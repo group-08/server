@@ -183,8 +183,10 @@ public class GameService {
             }
         }
 
+
         /// fill the deck with cards and shuffle those
         deckService.createDeck(game.getDeck());
+
 
         // Shuffle the cards
         deckService.shuffleDeck(gameId);
@@ -251,7 +253,7 @@ public class GameService {
         // set currentPlayer, partner, and rotate players
         Player currentPlayer = this.getNextPlayer(gameId);
         Player partner = game.getPlayer(1);
-;
+
         //remove card from player
         playerService.removeFromHand(currentPlayer.getId(), move.getCard());
 
