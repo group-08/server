@@ -28,8 +28,6 @@ public class GameGetDTO {
 
     private int cardNum;
 
-    private Board board;
-
     public WeatherState getWeatherState() {
         return weatherState;
     }
@@ -44,14 +42,6 @@ public class GameGetDTO {
 
     public void setCardNum(int cardNum) {
         this.cardNum = cardNum;
-    }
-
-    public Board getBoard() {
-        return this.board;
-    }
-
-    public void setBoard(Board board) {
-        this.board = board;
     }
 
     public boolean getExchangeCard() {
