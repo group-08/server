@@ -284,6 +284,11 @@ public class GameService {
 
     }
 
+    public Game exchangeCard(long gameId, long playerId, Card cardToSwap){
+        playerService.exchange(gameId, playerId, cardToSwap);
+        return gameRepository.findById(gameId).get();
+    }
+
     public Game getLobbyById(long id){
         return gameRepository.findById(id).orElse(null);
     }
