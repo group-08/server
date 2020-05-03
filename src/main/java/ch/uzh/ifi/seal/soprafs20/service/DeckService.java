@@ -33,9 +33,8 @@ public class DeckService {
     private int numberOfPlayers = 4;
 
     public Deck getDeck(long Id){
-        
-        List<Long> IdIterable = new ArrayList<>();
-        return (Deck) this.deckRepository.findAllById(IdIterable);
+
+        return deckRepository.findById(Id).get();
         ///by id
     }
 
