@@ -22,8 +22,8 @@ public class BoardGetDTO {
         this.id = id;
     }
 
-    public List<FieldGetDTO> getFields() {
-        return DTOMapper.INSTANCE.fields;
+    public List<Field> getFields() {
+        return fields;
     }
 
     public void setFields(List<Field> fields) {
