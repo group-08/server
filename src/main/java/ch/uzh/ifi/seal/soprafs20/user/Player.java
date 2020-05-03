@@ -1,6 +1,8 @@
 package ch.uzh.ifi.seal.soprafs20.user;
 
 import ch.uzh.ifi.seal.soprafs20.cards.Card;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.UserGetDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 
 import javax.persistence.*;
 import java.util.List;
@@ -34,6 +36,10 @@ public class Player {
         this.user = user;
     }
 
+    public UserGetDTO getUser() {
+        return DTOMapper.INSTANCE.convertEntityToUserGetDTO(this.user);
+    }
+
     public List<Card> getHand() {
         return this.hand;
     }
@@ -42,5 +48,15 @@ public class Player {
         this.figures.add(figure);
     }
 
+    public void setColour(Colour colour) {
+        this.colour = colour;
+    }
+
+    public Colour getColour() {
+        return this.colour;
+    }
+
+
 
 }
+

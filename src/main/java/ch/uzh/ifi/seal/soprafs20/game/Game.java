@@ -1,6 +1,8 @@
 package ch.uzh.ifi.seal.soprafs20.game;
 
 
+import ch.uzh.ifi.seal.soprafs20.rest.dto.UserGetDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.service.BoardService;
 import ch.uzh.ifi.seal.soprafs20.user.Figure;
 import ch.uzh.ifi.seal.soprafs20.user.Player;
@@ -44,6 +46,8 @@ public class Game implements Serializable {
 
     @OneToOne(cascade = CascadeType.ALL)
     Deck deck;
+    
+    int cardNum;
 
     @OneToOne
     User host;
@@ -53,6 +57,7 @@ public class Game implements Serializable {
     @Enumerated
     WeatherState weatherState;
 
+    public Game(){}
 
     public Game(User user, String name){
         this.board = new CasualBoard();
@@ -60,10 +65,11 @@ public class Game implements Serializable {
         this.deck = new Deck();
         this.gameState = GameState.PENDING;
         this.host = user;
+        int cardNum = 6;
 
 
         Player hostPlayer = new Player();
-        hostPlayer.setUser(host);
+        hostPlayer.setUser(this.host);
         this.players.add(hostPlayer);
     }
 
@@ -81,6 +87,18 @@ public class Game implements Serializable {
 
         // Return the player
         return nextPlayer;
+    }
+
+    public void decreaseCardNum() {
+        if (cardNum > 2) {
+            this.cardNum--;
+        } else {
+            cardNum = 6;
+        }
+    }
+
+    public int getCardNum() {
+        return this.cardNum;
     }
 
     /**
@@ -144,7 +162,7 @@ public class Game implements Serializable {
     }
 
     public User getHost() {
-        return host;
+        return this.host;
     }
 
     public void setHost(User host) {

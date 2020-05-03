@@ -36,18 +36,19 @@ public class LobbyController {
     @PostMapping("/lobbies")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public void createLobby(@RequestBody LobbyPostCreateDTO lobbyPostCreateDTO,
+    public GameGetDTO createLobby(@RequestBody LobbyPostCreateDTO lobbyPostCreateDTO,
                             @RequestHeader("X-Token") String token){
         String lobbyName = lobbyPostCreateDTO.getName();
         User userCreatingLobby = gameService.getUserByToken(token);
-        gameService.createLobby(userCreatingLobby, lobbyName);
+        GameGetDTO createdGame = gameService.createLobby(userCreatingLobby, lobbyName);
+        return createdGame;
     }
 
 
     @GetMapping("/lobby/{id}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Game getLobbyById(@PathVariable Long id){
+    public GameGetDTO getLobbyById(@PathVariable Long id){
         return gameService.getLobbyById(id);
     }
 
@@ -56,7 +57,6 @@ public class LobbyController {
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public void addUser(@PathVariable Long id, @RequestHeader("X-Token") String token){
-        // TODO require token (which can be used to add the user since users can only add themesleves // should be done!
         gameService.addUser(id, token);
     }
 
@@ -76,7 +76,5 @@ public class LobbyController {
         if(gameService.checkToken(id, token)) {
             gameService.setUpGame(id);
         }
-        //else return error
     }
-
 }
