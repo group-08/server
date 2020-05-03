@@ -42,8 +42,8 @@ public class GameController {
     @GetMapping("/game/{id}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public GameGetDTO2 getGame(@PathVariable Long id) {
-        GameGetDTO2 gameNoDeck = DTOMapper.INSTANCE.convertEntityToGameGetDTO2(gameService.getGameById(id));
+    public GameGetDTO getGame(@PathVariable Long id) {
+        GameGetDTO gameNoDeck = DTOMapper.INSTANCE.convertEntityToGameGetDTO(gameService.getGameById(id));
         return gameNoDeck;
     }
     //get current game with id
@@ -55,12 +55,13 @@ public class GameController {
     @PostMapping("/game/{id}/exchange")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public Game exchangeCard(@RequestBody ExchangePostDTO exchangePostDTO,
+    public GameGetDTO exchangeCard(@RequestBody ExchangePostDTO exchangePostDTO,
                              @RequestHeader("X-Token") String token) {
         User userExchangingCard = gameService.getUserByToken(token);
         long gameId = exchangePostDTO.getId();
         Card cardToExchange = exchangePostDTO.getCard();
-        Game updatedGame = gameService.letPlayersChangeCard(gameId, userExchangingCard.getId(),cardToExchange);
+        GameGetDTO updatedGame =
+                DTOMapper.INSTANCE.convertEntityToGameGetDTO(gameService.letPlayersChangeCard(gameId, userExchangingCard.getId(),cardToExchange));
         return updatedGame;
     }
 

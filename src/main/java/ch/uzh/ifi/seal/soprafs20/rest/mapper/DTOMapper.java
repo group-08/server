@@ -1,12 +1,11 @@
 package ch.uzh.ifi.seal.soprafs20.rest.mapper;
 
 
+import ch.uzh.ifi.seal.soprafs20.board.Board;
+import ch.uzh.ifi.seal.soprafs20.field.Field;
 import ch.uzh.ifi.seal.soprafs20.game.Game;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.GameGetDTO;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.GameGetDTO2;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
 import ch.uzh.ifi.seal.soprafs20.user.User;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.UserGetDTO;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostDTO;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
@@ -54,6 +53,18 @@ public interface DTOMapper {
     @Mapping(source = "cardNum", target = "cardNum")
     @Mapping(source = "weatherState", target = "weatherState")
     GameGetDTO2 convertEntityToGameGetDTO2(Game game);
+
+
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "fields", target = "fields")
+    @Mapping(source = "players", target = "players")
+    BoardGetDTO convertEntityToBoardGetDTO(Board board);
+
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "occupant", target = "occupant")
+    @Mapping(source = "player", target = "player")
+    FieldGetDTO convertEntityToFieldGetDTO(Field field);
+
 
 
 
