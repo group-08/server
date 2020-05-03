@@ -31,7 +31,6 @@ public class GameService {
 
     private UserService userService;
     private DeckService deckService;
-    //for exchange function
     private PlayerService playerService;
 
     private final BoardService boardService;
@@ -40,11 +39,12 @@ public class GameService {
 
     @Autowired
     public GameService(@Qualifier("gameRepository") GameRepository gameRepository,
-                       UserService userService, BoardService boardService,PlayerService playerService){
+                       UserService userService, BoardService boardService,PlayerService playerService, DeckService deckService){
         this.userService = userService;
         this.gameRepository = gameRepository;
         this.boardService = boardService;
         this.playerService = playerService;
+        this.deckService = deckService;
     }
 
     /**
@@ -185,11 +185,11 @@ public class GameService {
 
 
         /// fill the deck with cards and shuffle those
-        deckService.createDeck(game.getDeck());
+        this.deckService.createDeck(game.getDeck());
 
 
         // Shuffle the cards
-        deckService.shuffleDeck(gameId);
+        this.deckService.shuffleDeck(gameId);
 
         this.distributeCards(gameId, game.getCardNum());
         game.setExchangeCard(true);

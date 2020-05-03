@@ -25,17 +25,17 @@ public class GameController {
 
     GameController(GameService gameService){this.gameService = gameService;}
 
-    @PostMapping("/game")
+    @GetMapping("/game/{id}/possible")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public ArrayList<Field> getPossibleFields(@RequestBody MovePostDTO move) {
+    public ArrayList<Field> getPossibleFields(@RequestBody MovePostDTO move, @PathVariable String id) {
         return gameService.getPossibleFields(move);
     }
 
-    @PostMapping("/move")
+    @PostMapping("/game/{id}/move")
     @ResponseStatus(HttpStatus.ACCEPTED)
     @ResponseBody
-    public Board move(@RequestBody MovePostDTO move) {
+    public Board move(@RequestBody MovePostDTO move, @PathVariable String id) {
         return gameService.playPlayersMove(move); //id is needed to get game
     }
 
@@ -55,8 +55,9 @@ public class GameController {
     @PostMapping("/game/{id}/exchange")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
+
     public GameGetDTO exchangeCard(@RequestBody ExchangePostDTO exchangePostDTO,
-                             @RequestHeader("X-Token") String token) {
+                             @RequestHeader("X-Token") String token, @PathVariable String id) {
         User userExchangingCard = gameService.getUserByToken(token);
         long gameId = exchangePostDTO.getId();
         Card cardToExchange = exchangePostDTO.getCard();
