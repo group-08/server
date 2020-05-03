@@ -127,7 +127,8 @@ public class BoardService {
      * @return List of all possible fields the player on field could land on
      */
     public ArrayList<Field> getPossibleFields(long gameId, Card card, Field field) {
-        Game actualGame = gameRepository.findById(gameId).get();
+        Game actualGame = gameRepository.findById(gameId).orElse(null);
+        assert actualGame != null;
         Board board = actualGame.getBoard();
         ArrayList<Integer> moveValues = getMoveValues(card);
 
@@ -269,7 +270,8 @@ public class BoardService {
     public ArrayList<Field> getPossibleFieldsJack(long gameId, Card card, Field field){
         ArrayList<Field> possibleFields = new ArrayList<>();
         Player playerOnField = field.getOccupant().getPlayer();
-        Game actualGame = gameRepository.findById(gameId).get();
+        Game actualGame = gameRepository.findById(gameId).orElse(null);
+        assert actualGame != null;
         Board board = actualGame.getBoard();
 
         for(Field iterField : board.getFields()){
