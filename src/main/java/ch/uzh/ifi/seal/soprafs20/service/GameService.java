@@ -189,6 +189,7 @@ public class GameService {
 
 
         this.distributeCards(gameId, game.getCardNum());
+        game.decreaseCardNum();
         game.setExchangeCard(true);
 
         // Set the gameState to running
