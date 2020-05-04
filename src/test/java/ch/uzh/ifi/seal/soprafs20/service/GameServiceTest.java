@@ -1,59 +1,38 @@
 package ch.uzh.ifi.seal.soprafs20.service;
 
-import ch.uzh.ifi.seal.soprafs20.cards.Deck;
+import ch.uzh.ifi.seal.soprafs20.cards.*;
 import ch.uzh.ifi.seal.soprafs20.game.Game;
 import ch.uzh.ifi.seal.soprafs20.game.GameState;
+import ch.uzh.ifi.seal.soprafs20.repository.CardRepository;
+import ch.uzh.ifi.seal.soprafs20.repository.DeckRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import ch.uzh.ifi.seal.soprafs20.user.*;
 import org.junit.jupiter.api.Test;
 
-import ch.uzh.ifi.seal.soprafs20.game.Game;
-import ch.uzh.ifi.seal.soprafs20.game.WeatherState;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.GameGetDTO;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.LobbyPostCreateDTO;
-import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
-import ch.uzh.ifi.seal.soprafs20.service.GameService;
-import ch.uzh.ifi.seal.soprafs20.service.UserService;
 import ch.uzh.ifi.seal.soprafs20.user.Player;
 import ch.uzh.ifi.seal.soprafs20.user.User;
 import ch.uzh.ifi.seal.soprafs20.user.UserStatus;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.JsonPath;
-import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.util.Assert;
-import org.springframework.web.server.ResponseStatusException;
 
-import static org.hamcrest.Matchers.*;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Collections;
-import java.util.List;
 
-@SpringBootTest
+//@SpringBootTest
 class GameServiceTest {
 
     @Mock
     private GameRepository gameRepository;
+
+    @Mock
+    private CardRepository cardRepository;
+
+    @Mock
+    private DeckRepository deckRepository;
 
     @InjectMocks
     private GameService gameService;
@@ -141,19 +120,19 @@ class GameServiceTest {
         Player testPlayer3 = new Player();
         testPlayer3.setUser(user3);
 
+        Card card = new NormalCard(Suit.CLUBS, Value.SEVEN);
+        Deck deck = new Deck();
 
-
-        given(gameRepository.findById(Mockito.anyLong())).willReturn(java.util.Optional.of(game));
+        given(gameRepository.findById((Mockito.anyLong()))).willReturn(java.util.Optional.of(game));
         given(gameRepository.save(Mockito.any())).willReturn(game);
+        given(cardRepository.saveAndFlush(card)).willReturn(card);
+        given(deckRepository.saveAndFlush(deck)).willReturn(deck);
+        given(deckRepository.findById(deck.getId())).willReturn(java.util.Optional.of(deck));
 
         game.getPlayers().add(testPlayer2);
         game.getPlayers().add(testPlayer3);
         game.getPlayers().add(testPlayer4);
 
-        gameService.setUpGame(1);
-
-
-
-
+        gameService.setUpGame(1L);
     }
 }

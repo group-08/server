@@ -3,6 +3,8 @@ package ch.uzh.ifi.seal.soprafs20.service;
 
 import ch.uzh.ifi.seal.soprafs20.cards.Value;
 import ch.uzh.ifi.seal.soprafs20.game.GameState;
+import ch.uzh.ifi.seal.soprafs20.repository.CardRepository;
+import ch.uzh.ifi.seal.soprafs20.repository.DeckRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.GameGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.user.Colour;
@@ -31,22 +33,29 @@ public class GameService {
     private UserService userService;
     private DeckService deckService;
     private PlayerService playerService;
-
     private final BoardService boardService;
     private final GameRepository gameRepository;
+    private CardService cardService;
+    private CardRepository cardRepository;
+    private DeckRepository deckRepository;
 
 
     @Autowired
     public GameService(@Qualifier("gameRepository") GameRepository gameRepository,
+                       @Qualifier("cardRepository") CardRepository cardRepository,
+                       @Qualifier("deckRepository") DeckRepository deckRepository,
                        UserService userService,
                        BoardService boardService,
                        PlayerService playerService,
                        DeckService deckService){
         this.userService = userService;
+        this.cardRepository = cardRepository;
         this.gameRepository = gameRepository;
         this.boardService = boardService;
         this.playerService = playerService;
-        this.deckService = deckService;
+        this.deckRepository = deckRepository;
+        this.cardService = new CardService(cardRepository);
+        this.deckService = new DeckService(deckRepository, cardService);
     }
 
     /**
@@ -175,6 +184,7 @@ public class GameService {
         this.setColourOfPlayer(game.getPlayer(2), Colour.YELLOW);
         this.setColourOfPlayer(game.getPlayer(3), Colour.RED);
 
+
         // Assign figures to players
         for (int playerIndex = 0; playerIndex < 4; playerIndex++) {
             Player player = game.getPlayer(playerIndex);
@@ -184,7 +194,6 @@ public class GameService {
                 game.assignPlayerandFigure(figureIndex, player);
             }
         }
-
 
         /// fill the deck with cards and shuffle those
         deckService.createDeck(game.getDeck());
