@@ -120,7 +120,7 @@ public class DeckService {
 
     public void createDeck(Deck deck){
         ///create the cards
-        List<Card> allCards = createCards();
+        List<Card> allCards = this.createCards();
 
         // Shuffle the cards
         Collections.shuffle(allCards);
@@ -133,12 +133,12 @@ public class DeckService {
         deck.setCards(allCards);
 
         ///shuffle the deck
-        safeDeck(deck);
+        this.safeDeck(deck);
 
-        shuffleDeck(deck.getId());
+        this.shuffleDeck(deck.getId());
 
         ///safe the deck in jpa
-        safeDeck(deck);
+        this.safeDeck(deck);
 
     }
     ///creating the unique deck in two steps
