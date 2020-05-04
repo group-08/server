@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.service;
 
 import ch.uzh.ifi.seal.soprafs20.cards.*;
+import ch.uzh.ifi.seal.soprafs20.repository.CardRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.DeckRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,9 +22,9 @@ public class DeckService {
 
 
     @Autowired
-    public DeckService(@Qualifier("deckRepository") DeckRepository deckRepository, @Qualifier("cardService") CardService cardService) {
+    public DeckService(@Qualifier("deckRepository") DeckRepository deckRepository, @Qualifier("cardRepository") CardRepository cardRepository) {
         this.deckRepository = deckRepository;
-        this.cardService = cardService;
+        this.cardService = new CardService(cardRepository);
     }
 
     ///number of decks we play with default 2

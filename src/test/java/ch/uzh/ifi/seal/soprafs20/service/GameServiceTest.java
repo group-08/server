@@ -37,12 +37,6 @@ class GameServiceTest {
     @InjectMocks
     private GameService gameService;
 
-    @InjectMocks
-    private DeckService deckService;
-
-    @InjectMocks
-    private BoardService boardService;
-
     private User user;
     private User user2;
     private User user3;

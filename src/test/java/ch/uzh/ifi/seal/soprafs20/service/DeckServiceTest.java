@@ -33,16 +33,6 @@ class DeckServiceTest {
     @Test
     public void createDeckTest() {
 
-        Card card = new NormalCard(Suit.CLUBS, Value.SEVEN);
-        given(cardRepository.saveAndFlush(Mockito.any())).willReturn(card);
-
-        Deck testDeck = new Deck();
-        CardService cardService = new CardService(cardRepository);
-        DeckService deckService = new DeckService(deckRepository, cardService);
-        deckService.createDeck(testDeck);
-
-
-
     }
 
 

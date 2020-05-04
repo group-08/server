@@ -3,8 +3,7 @@ package ch.uzh.ifi.seal.soprafs20.service;
 
 import ch.uzh.ifi.seal.soprafs20.cards.Value;
 import ch.uzh.ifi.seal.soprafs20.game.GameState;
-import ch.uzh.ifi.seal.soprafs20.repository.CardRepository;
-import ch.uzh.ifi.seal.soprafs20.repository.DeckRepository;
+import ch.uzh.ifi.seal.soprafs20.repository.*;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.GameGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.user.Colour;
@@ -15,7 +14,6 @@ import ch.uzh.ifi.seal.soprafs20.board.Board;
 import ch.uzh.ifi.seal.soprafs20.cards.Card;
 import ch.uzh.ifi.seal.soprafs20.field.Field;
 import ch.uzh.ifi.seal.soprafs20.game.Game;
-import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.MovePostDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -36,26 +34,22 @@ public class GameService {
     private final BoardService boardService;
     private final GameRepository gameRepository;
     private CardService cardService;
-    private CardRepository cardRepository;
-    private DeckRepository deckRepository;
+
 
 
     @Autowired
     public GameService(@Qualifier("gameRepository") GameRepository gameRepository,
                        @Qualifier("cardRepository") CardRepository cardRepository,
                        @Qualifier("deckRepository") DeckRepository deckRepository,
-                       UserService userService,
-                       BoardService boardService,
-                       PlayerService playerService,
-                       DeckService deckService){
-        this.userService = userService;
-        this.cardRepository = cardRepository;
+                       @Qualifier("playerRepository") PlayerRepository playerRepository,
+                       @Qualifier("userRepository") UserRepository userRepository){
+
         this.gameRepository = gameRepository;
-        this.boardService = boardService;
-        this.playerService = playerService;
-        this.deckRepository = deckRepository;
+        this.boardService = new BoardService(gameRepository);
+        this.playerService = new PlayerService(playerRepository, gameRepository);
+        this.userService = new UserService(userRepository);
         this.cardService = new CardService(cardRepository);
-        this.deckService = new DeckService(deckRepository, cardService);
+        this.deckService = new DeckService(deckRepository, cardRepository);
     }
 
     /**
@@ -199,7 +193,7 @@ public class GameService {
         deckService.createDeck(game.getDeck());
 
 
-        this.distributeCards(gameId, game.getCardNum());
+        // TODO this.distributeCards(gameId, game.getCardNum());
         game.decreaseCardNum();
         game.setExchangeCard(true);
 

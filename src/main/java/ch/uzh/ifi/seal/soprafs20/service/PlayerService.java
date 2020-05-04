@@ -25,11 +25,10 @@ public class PlayerService {
 
     @Autowired
     public PlayerService(@Qualifier("playerRepository") PlayerRepository playerRepository,
-                         @Qualifier("gameRepository") GameRepository gameRepository,
-                         @Qualifier("boardService") BoardService boardService){
+                         @Qualifier("gameRepository") GameRepository gameRepository){
         this.playerRepository=playerRepository;
         this.gameRepository = gameRepository;
-        this.boardService = boardService;
+        this.boardService = new BoardService(gameRepository);
     }
 
     public void addGiftedCard(long gameId, long playerId, Card card){
