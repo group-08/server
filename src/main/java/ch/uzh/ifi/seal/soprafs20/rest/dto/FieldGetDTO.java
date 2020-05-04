@@ -9,7 +9,6 @@ public class FieldGetDTO {
 
     private Figure occupant;
 
-
     public long getId() {
         return id;
     }

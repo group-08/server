@@ -30,7 +30,7 @@ public class GameGetDTO {
 
     private int cardNum;
 
-    private BoardGetDTO board;
+    private Board board;
 
     public WeatherState getWeatherState() {
         return weatherState;
@@ -41,12 +41,11 @@ public class GameGetDTO {
     }
 
     public BoardGetDTO getBoard() {
-        return board;
+        return DTOMapper.INSTANCE.convertEntityToBoardGetDTO(this.board);
     }
 
     public void setBoard(Board board) {
-            BoardGetDTO boardGetDTO = DTOMapper.INSTANCE.convertEntityToBoardGetDTO(board);
-            this.board = boardGetDTO;
+            this.board = board;
     }
 
     public int getCardNum() {

@@ -11,7 +11,7 @@ public class BoardGetDTO {
 
     private long id;
 
-    private List<FieldGetDTO> fields;
+    private List<Field> fields;
 
     private List<Player> players;
 
@@ -24,15 +24,15 @@ public class BoardGetDTO {
     }
 
     public List<FieldGetDTO> getFields() {
-        return fields;
+        List<FieldGetDTO> fieldGetDTOS = new ArrayList<>();
+        for (Field field : this.fields) {
+            fieldGetDTOS.add(DTOMapper.INSTANCE.convertEntityToFieldGetDTO(field));
+        }
+        return fieldGetDTOS;
     }
 
     public void setFields(List<Field> fields) {
-        List<FieldGetDTO> fieldGetDTOS = new ArrayList<>();
-        for (Field field : fields) {
-            fieldGetDTOS.add(DTOMapper.INSTANCE.convertEntityToFieldGetDTO(field));
-        }
-        this.fields = fieldGetDTOS;
+        this.fields = fields;
     }
 
     public List<Player> getPlayers() {
