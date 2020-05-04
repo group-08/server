@@ -15,7 +15,6 @@ import ch.uzh.ifi.seal.soprafs20.field.Field;
 import ch.uzh.ifi.seal.soprafs20.game.Game;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.MovePostDTO;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -39,7 +38,10 @@ public class GameService {
 
     @Autowired
     public GameService(@Qualifier("gameRepository") GameRepository gameRepository,
-                       UserService userService, BoardService boardService,PlayerService playerService, DeckService deckService){
+                       UserService userService,
+                       BoardService boardService,
+                       PlayerService playerService,
+                       DeckService deckService){
         this.userService = userService;
         this.gameRepository = gameRepository;
         this.boardService = boardService;
@@ -179,13 +181,13 @@ public class GameService {
             int firstField = 81+(playerIndex*4);
             int lastField = firstField+3;
             for (int figureIndex = firstField; figureIndex<=lastField; figureIndex++) {
-                game.setPlayer(figureIndex, player);
+                game.assignPlayerandFigure(figureIndex, player);
             }
         }
 
 
         /// fill the deck with cards and shuffle those
-        this.deckService.createDeck(game.getDeck());
+        deckService.createDeck(game.getDeck());
 
 
         this.distributeCards(gameId, game.getCardNum());

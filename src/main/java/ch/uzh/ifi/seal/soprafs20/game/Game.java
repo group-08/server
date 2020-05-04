@@ -95,7 +95,7 @@ public class Game implements Serializable {
      * @param id Field id
      * @param player Player to assign to figure
      */
-    public void setPlayer(int id, Player player) {
+    public void assignPlayerandFigure(int id, Player player) {
         if (board.getField(id).getOccupant() != null) {
             Field field = board.getField(id);
             Figure figure = field.getOccupant();
