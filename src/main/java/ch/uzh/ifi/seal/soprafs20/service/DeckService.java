@@ -45,10 +45,9 @@ public class DeckService {
         return getDeck(Id).getCardsInDeck();
     }
 /////maybe done
-    public void shuffleDeck(Long Id){
+    public void shuffleDeck(Deck deck){
 
-        ///safe
-        Collections.shuffle(getCards(Id));
+        Collections.shuffle(deck.getCardsInDeck());
     }
 
     private int checkLengthOfTheDeck(Long Id){
@@ -74,8 +73,10 @@ public class DeckService {
         List<Card> allCards = createCards();
         getDeck(Id).setCards(allCards);
 
+        Deck deck = getDeck(Id);
+
         ///shuffle the Deck
-        shuffleDeck(Id);
+        shuffleDeck(deck);
 
         ///safe the newly filled deck
         safeDeck(getDeck(Id));
@@ -133,9 +134,7 @@ public class DeckService {
         deck.setCards(allCards);
 
         ///shuffle the deck
-        this.safeDeck(deck);
-
-        this.shuffleDeck(deck.getId());
+        this.shuffleDeck(deck);
 
         ///safe the deck in jpa
         this.safeDeck(deck);

@@ -112,13 +112,8 @@ public class LobbyControllerTest {
         Game lobby = new Game(user, "testGame");
         lobby.setId((long)1);
         lobby.setWeatherState(WeatherState.CASUAL);
-<<<<<<< Updated upstream
-        lobby.setBoard(null);
-=======
-
 
         GameGetDTO gameGetDTO = DTOMapper.INSTANCE.convertEntityToGameGetDTO(lobby);
->>>>>>> Stashed changes
 
         given(gameService.getLobbyById(1)).willReturn(DTOMapper.INSTANCE.convertEntityToGameGetDTO(lobby));
 
