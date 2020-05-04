@@ -9,8 +9,6 @@ public class FieldGetDTO {
 
     private Figure occupant;
 
-    private Player player;
-
 
     public long getId() {
         return id;
@@ -26,13 +24,5 @@ public class FieldGetDTO {
 
     public void setOccupant(Figure occupant) {
         this.occupant = occupant;
-    }
-
-    public Player getPlayer() {
-        return player;
-    }
-
-    public void setPlayer(Player player) {
-        this.player = player;
     }
 }

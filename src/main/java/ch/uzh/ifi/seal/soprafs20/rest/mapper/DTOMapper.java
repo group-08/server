@@ -43,7 +43,19 @@ public interface DTOMapper {
     @Mapping(source = "host", target = "host")
     @Mapping(source = "cardNum", target = "cardNum")
     @Mapping(source = "weatherState", target = "weatherState")
+    @Mapping(source = "board", target = "board")
     GameGetDTO convertEntityToGameGetDTO(Game game);
+
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "occupant", target = "occupant")
+    FieldGetDTO convertEntityToFieldGetDTO(Field field);
+
+
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "players", target = "players")
+    @Mapping(source = "fields", target = "fields")
+    BoardGetDTO convertEntityToBoardGetDTO(Board board);
+
 
 
 

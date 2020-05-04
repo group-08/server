@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.rest.dto;
 
 import ch.uzh.ifi.seal.soprafs20.board.Board;
+import ch.uzh.ifi.seal.soprafs20.board.CasualBoard;
 import ch.uzh.ifi.seal.soprafs20.field.Field;
 import ch.uzh.ifi.seal.soprafs20.game.GameState;
 import ch.uzh.ifi.seal.soprafs20.game.WeatherState;
@@ -8,6 +9,7 @@ import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.user.Player;
 import ch.uzh.ifi.seal.soprafs20.user.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameGetDTO {
@@ -28,12 +30,23 @@ public class GameGetDTO {
 
     private int cardNum;
 
+    private BoardGetDTO board;
+
     public WeatherState getWeatherState() {
         return weatherState;
     }
 
     public void setWeatherState(WeatherState weatherState) {
         this.weatherState = weatherState;
+    }
+
+    public BoardGetDTO getBoard() {
+        return board;
+    }
+
+    public void setBoard(Board board) {
+            BoardGetDTO boardGetDTO = DTOMapper.INSTANCE.convertEntityToBoardGetDTO(board);
+            this.board = boardGetDTO;
     }
 
     public int getCardNum() {
