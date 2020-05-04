@@ -115,7 +115,6 @@ public class LobbyControllerTest {
 
         GameGetDTO gameGetDTO = DTOMapper.INSTANCE.convertEntityToGameGetDTO(lobby);
 
-
         given(gameService.getLobbyById(1)).willReturn(DTOMapper.INSTANCE.convertEntityToGameGetDTO(lobby));
 
         MockHttpServletRequestBuilder getRequest = get("/lobby/{id}", "1")
