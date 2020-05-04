@@ -21,7 +21,7 @@ public class DeckService {
 
 
     @Autowired
-    public DeckService(@Qualifier("deckRepository") DeckRepository deckRepository, CardService cardService) {
+    public DeckService(@Qualifier("deckRepository") DeckRepository deckRepository, @Qualifier("cardService") CardService cardService) {
         this.deckRepository = deckRepository;
         this.cardService = cardService;
     }
@@ -50,8 +50,8 @@ public class DeckService {
         Collections.shuffle(deck.getCardsInDeck());
     }
 
-    private int checkLengthOfTheDeck(Long Id){
-        return getDeck(Id).getCardsInDeck().size() * numberOfPlayers;
+    public int checkLengthOfTheDeck(long Id){
+        return getDeck(Id).getCardsInDeck().size();
     }
 
     private void safeDeck(Deck deck){
