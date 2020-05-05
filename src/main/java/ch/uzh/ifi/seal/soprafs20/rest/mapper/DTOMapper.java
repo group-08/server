@@ -47,7 +47,6 @@ public interface DTOMapper {
     GameGetDTO convertEntityToGameGetDTO(Game game);
 
     @Mapping(source = "id", target = "id")
-    @Mapping(source = "occupant", target = "occupant")
     FieldGetDTO convertEntityToFieldGetDTO(Field field);
 
 
