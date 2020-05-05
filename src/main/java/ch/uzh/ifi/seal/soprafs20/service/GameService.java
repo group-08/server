@@ -193,14 +193,15 @@ public class GameService {
         deckService.createDeck(game.getDeck());
 
 
-        // TODO this.distributeCards(gameId, game.getCardNum());
+        this.distributeCards(gameId, game.getCardNum());
         game.decreaseCardNum();
         game.setExchangeCard(true);
 
         // Set the gameState to running
         game.setGameState(GameState.RUNNING);
 
-        this.gameRepository.save(game);
+
+        this.gameRepository.saveAndFlush(game);
 
     }
 
@@ -213,7 +214,7 @@ public class GameService {
         assert game != null;
         playerService.exchange(gameId, userId, card);
         game.setExchangeCard(false);
-        this.gameRepository.save(game);
+        this.gameRepository.saveAndFlush(game);
         return game;
     }
 

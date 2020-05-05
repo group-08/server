@@ -17,6 +17,8 @@ import ch.uzh.ifi.seal.soprafs20.repository.CardRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.DeckRepository;
 import ch.uzh.ifi.seal.soprafs20.service.CardService;
 import ch.uzh.ifi.seal.soprafs20.service.DeckService;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.stereotype.Repository;
 
 
@@ -39,6 +41,7 @@ public class Game implements Serializable {
     @Enumerated
     GameState gameState;
 
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(targetEntity = Player.class, cascade = CascadeType.ALL)
     List<Player> players = new ArrayList<>();
 

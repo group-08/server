@@ -12,6 +12,10 @@ public class NormalCard extends Card {
     @Enumerated
     private Value value;
 
+    public NormalCard() {
+
+    }
+
     public NormalCard(Suit suit, Value value) {
         this.suit = suit;
         this.value = value;

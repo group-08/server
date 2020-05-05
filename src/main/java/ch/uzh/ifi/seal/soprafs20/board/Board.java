@@ -10,6 +10,9 @@ import ch.uzh.ifi.seal.soprafs20.user.Figure;
 import ch.uzh.ifi.seal.soprafs20.cards.Card;
 import ch.uzh.ifi.seal.soprafs20.field.*;
 import ch.uzh.ifi.seal.soprafs20.repository.BoardRepository;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -24,10 +27,12 @@ public class Board implements Serializable {
     @Id
     private long id;
 
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(targetEntity = Field.class, cascade = CascadeType.ALL)
     private List<Field> fields = new ArrayList<>();
 
 
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(targetEntity = Player.class, cascade = CascadeType.ALL)
     private List<Player> players = new ArrayList<>();
 
