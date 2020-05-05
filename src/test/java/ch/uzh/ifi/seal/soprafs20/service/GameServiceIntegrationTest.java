@@ -246,6 +246,7 @@ public class GameServiceIntegrationTest {
 
 
         ////////// TEST MOVE ////////////
+        
 
         // Here follow assertions if move executed correctly
 
