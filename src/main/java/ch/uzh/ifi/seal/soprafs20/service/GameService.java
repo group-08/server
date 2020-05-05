@@ -35,15 +35,13 @@ public class GameService {
     private final GameRepository gameRepository;
     private CardService cardService;
 
-
-
     @Autowired
     public GameService(@Qualifier("gameRepository") GameRepository gameRepository,
                        @Qualifier("cardRepository") CardRepository cardRepository,
                        @Qualifier("deckRepository") DeckRepository deckRepository,
                        @Qualifier("playerRepository") PlayerRepository playerRepository,
-                       @Qualifier("userRepository") UserRepository userRepository){
-
+                       @Qualifier("userRepository") UserRepository userRepository)
+    {
         this.gameRepository = gameRepository;
         this.boardService = new BoardService(gameRepository);
         this.playerService = new PlayerService(playerRepository, gameRepository);
@@ -102,6 +100,42 @@ public class GameService {
         } else {
             return boardService.getPossibleFields(move.getId(), card, currentField);
         }
+    }
+
+    public Board playPlayersMove(MovePostDTO move) {
+        // get the game from gameId
+        long gameId = move.getId();
+        Game game = gameRepository.findById(gameId).orElse(null);
+        assert game != null;
+
+        // set currentPlayer, partner, and rotate players
+        Player currentPlayer = this.getNextPlayer(gameId);
+        Player partner = game.getPlayer(1);
+
+        //remove card from player
+        playerService.removeFromHand(currentPlayer.getId(), move.getCard());
+
+        // move figure
+        this.moveFigure(move);
+
+        // check if player is finished and if partner is finished
+        if (checkIfPlayerFinished(gameId, currentPlayer)) {
+            if (checkIfPlayerFinished(gameId, partner)) {
+                game.setGameState(GameState.FINISHED);
+            } else {
+                // take over partners figures
+            }
+        }
+
+        // check if game still running and no cards left, distribute new cards
+        if (game.getGameState() == GameState.RUNNING && !checkIfCardsLeft(gameId)) {
+            distributeCards(gameId, game.getCardNum());
+            game.decreaseCardNum();
+            game.setExchangeCard(true);
+        }
+
+        this.gameRepository.save(game);
+        return game.getBoard();
     }
 
     /**
@@ -249,42 +283,6 @@ public class GameService {
             }
         }
         return check;
-    }
-
-    public Board playPlayersMove(MovePostDTO move) {
-        // get the game from gameId
-        long gameId = move.getId();
-        Game game = gameRepository.findById(gameId).orElse(null);
-        assert game != null;
-
-        // set currentPlayer, partner, and rotate players
-        Player currentPlayer = this.getNextPlayer(gameId);
-        Player partner = game.getPlayer(1);
-
-        //remove card from player
-        playerService.removeFromHand(currentPlayer.getId(), move.getCard());
-
-        // move figure
-        this.moveFigure(move);
-
-        // check if player is finished and if partner is finished
-        if (checkIfPlayerFinished(gameId, currentPlayer)) {
-            if (checkIfPlayerFinished(gameId, partner)) {
-                game.setGameState(GameState.FINISHED);
-            } else {
-                // take over partners figures
-            }
-        }
-
-        // check if game still running and no cards left, distribute new cards
-        if (game.getGameState() == GameState.RUNNING && !checkIfCardsLeft(gameId)) {
-            distributeCards(gameId, game.getCardNum());
-            game.decreaseCardNum();
-            game.setExchangeCard(true);
-        }
-
-        this.gameRepository.save(game);
-        return game.getBoard();
     }
 
     /**

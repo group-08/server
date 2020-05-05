@@ -2,6 +2,7 @@ package ch.uzh.ifi.seal.soprafs20.service;
 
 
 import ch.uzh.ifi.seal.soprafs20.cards.Card;
+import ch.uzh.ifi.seal.soprafs20.cards.JokerCard;
 import ch.uzh.ifi.seal.soprafs20.cards.Value;
 import ch.uzh.ifi.seal.soprafs20.game.Game;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
@@ -80,6 +81,8 @@ public class PlayerService {
                     if (boardService.getPossibleFieldsJack(gameId, card, figure.getField()) != null) {
                         canPlay = true;
                     }
+                } else if (card instanceof JokerCard){
+                    canPlay = true;
                 } else {
                     if (boardService.getPossibleFields(gameId, card, figure.getField()) != null) {
                         canPlay = true;

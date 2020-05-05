@@ -38,5 +38,6 @@ public class MovePostDTO {
         return targetField;
     }
 
+    public void setTargetField(Field targetField) {this.targetField = targetField;}
 
 }

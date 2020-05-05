@@ -6,6 +6,7 @@ import ch.uzh.ifi.seal.soprafs20.game.GameState;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.UserRepository;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.MovePostDTO;
 import ch.uzh.ifi.seal.soprafs20.user.Colour;
 import ch.uzh.ifi.seal.soprafs20.user.Player;
 import ch.uzh.ifi.seal.soprafs20.user.User;
@@ -50,7 +51,7 @@ public class GameServiceIntegrationTest {
     private GameService gameService;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         gameRepository.deleteAll();
     }
 
@@ -156,6 +157,87 @@ public class GameServiceIntegrationTest {
         assertEquals(6, game.getPlayer(1).getHand().size());
         assertEquals(6, game.getPlayer(2).getHand().size());
         assertEquals(6, game.getPlayer(3).getHand().size());
+    }
+
+    @Test
+    public void PlayPlayersMoveTest() {
+        User user = new User();
+        user.setUsername("firstname.lastname");
+        user.setEmail("firstname@lastname.ch");
+        user.setPassword("test");
+        user.setToken("asdf");
+        user.setStatus(UserStatus.ONLINE);
+
+        Player testPlayer = new Player();
+        testPlayer.setUser(user);
+
+        Game game = new Game(user, "testGame");
+
+        User user4 = new User();
+        user4.setUsername("firstname.lastnam");
+        user4.setEmail("firstname@lastname.c");
+        user4.setPassword("test");
+        user4.setToken("assdf");
+        user4.setStatus(UserStatus.ONLINE);
+
+        Player testPlayer4 = new Player();
+        testPlayer4.setUser(user4);
+
+        User user2 = new User();
+        user2.setUsername("firstname.lastna");
+        user2.setEmail("firstname@lastname.");
+        user2.setPassword("test");
+        user2.setToken("fdsas");
+        user2.setStatus(UserStatus.ONLINE);
+
+        Player testPlayer2 = new Player();
+        testPlayer2.setUser(user2);
+
+        User user3 = new User();
+        user3.setUsername("firstname.lastn");
+        user3.setEmail("firstname@lastname");
+        user3.setPassword("test");
+        user3.setToken("öklh");
+        user3.setStatus(UserStatus.ONLINE);
+
+        Player testPlayer3 = new Player();
+        testPlayer3.setUser(user3);
+
+        game.getPlayers().add(testPlayer2);
+        game.getPlayers().add(testPlayer3);
+        game.getPlayers().add(testPlayer4);
+
+        userRepository.saveAndFlush(user);
+        userRepository.saveAndFlush(user2);
+        userRepository.saveAndFlush(user3);
+        userRepository.saveAndFlush(user4);
+        gameRepository.saveAndFlush(game);
+
+        deckService.createDeck(game.getDeck());
+
+        gameService.setUpGame(game.getId());
+
+        game = gameRepository.findById(game.getId()).orElse(null);
+        assert game != null;
+
+
+        ///////////////
+
+
+        Card KingClubs = new NormalCard(Suit.CLUBS, Value.KING);
+
+        MovePostDTO move = new MovePostDTO();
+        move.setId(game.getId());
+        move.setCard(KingClubs);
+        // Sorry folgendes isch unschön
+        move.setFigure(game.getPlayers().get(0).getFigures().get(0));
+        move.setTargetField(game.getBoard().getField(1));
+
+        // Move first figure of first player out to the StartField
+        gameService.playPlayersMove(move);
+
+        // Here follow assertions
+
     }
 
 }

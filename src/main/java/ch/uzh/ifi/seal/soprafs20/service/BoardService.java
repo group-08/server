@@ -63,6 +63,8 @@ public class BoardService {
 
     public Board move(long gameId, Figure figure, Field targetField) {
         Board board = this.getBoard(gameId);
+        Game game = gameRepository.findById(gameId).orElse(null);
+        assert game != null;
         Field currentField = this.getCurrentField(figure);
         if (targetField.getOccupant() != null) {
             Figure occupant = targetField.getOccupant();
@@ -81,7 +83,7 @@ public class BoardService {
             ((FirstField) currentField).setBlocked(false);
         }
 
-        this.saveAndFlushBoard(gameId);
+        gameRepository.saveAndFlush(game);
 
         return board;
     }
