@@ -246,9 +246,11 @@ public class GameServiceIntegrationTest {
 
 
         ////////// TEST MOVE ////////////
-        
+
 
         // Here follow assertions if move executed correctly
+        // Created a card to move figure, but player might have not that card so it wouldn't remove it from his hands
+        // therefore after move maybe still has 6 cards
 
     }
 
