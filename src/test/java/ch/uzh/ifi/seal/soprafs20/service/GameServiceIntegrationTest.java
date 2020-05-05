@@ -161,6 +161,8 @@ public class GameServiceIntegrationTest {
 
     @Test
     public void PlayPlayersMoveTest() {
+
+        //////////// GAME SETUP //////////
         User user = new User();
         user.setUsername("firstname.lastname");
         user.setEmail("firstname@lastname.ch");
@@ -221,7 +223,7 @@ public class GameServiceIntegrationTest {
         assert game != null;
 
 
-        ///////////////
+        ////////// MOVE SETUP ///////////
 
 
         Card KingClubs = new NormalCard(Suit.CLUBS, Value.KING);
@@ -233,10 +235,19 @@ public class GameServiceIntegrationTest {
         move.setFigure(game.getPlayers().get(0).getFigures().get(0));
         move.setTargetField(game.getBoard().getField(1));
 
+
+
+        /////////// MAKE MOVE ////////////
+
+
+
         // Move first figure of first player out to the StartField
         gameService.playPlayersMove(move);
 
-        // Here follow assertions
+
+        ////////// TEST MOVE ////////////
+
+        // Here follow assertions if move executed correctly
 
     }
 
