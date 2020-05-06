@@ -2,6 +2,8 @@ package ch.uzh.ifi.seal.soprafs20.field;
 
 
 import ch.uzh.ifi.seal.soprafs20.user.Figure;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -20,6 +22,7 @@ public abstract class Field implements Serializable {
     @OneToOne(targetEntity = Figure.class, cascade = CascadeType.ALL)
     private Figure occupant;
 
+    @LazyCollection(LazyCollectionOption.FALSE)
     @ManyToMany(targetEntity = Field.class, cascade = CascadeType.ALL)
     private List<Field> adjacencyList = new ArrayList<>();
 

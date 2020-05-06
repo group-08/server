@@ -1,6 +1,8 @@
 package ch.uzh.ifi.seal.soprafs20.service;
 
 
+import ch.uzh.ifi.seal.soprafs20.cards.JokerCard;
+import ch.uzh.ifi.seal.soprafs20.cards.NormalCard;
 import ch.uzh.ifi.seal.soprafs20.cards.Value;
 import ch.uzh.ifi.seal.soprafs20.game.GameState;
 import ch.uzh.ifi.seal.soprafs20.repository.*;
@@ -345,6 +347,29 @@ public class GameService {
         //We need function to delete User; Takes id and User;
     }
      */
+
+    // For testing reasons
+    public MovePostDTO automaticMove(Player player, long gameId) {
+        for (Figure figure : player.getFigures())  {
+            for (Card card : player.getHand()) {
+                if (card instanceof JokerCard) {
+                    ((JokerCard) card).setValue(Value.KING);
+                } else if (card.getValue() == Value.SEVEN) {
+                    ((NormalCard) card).setValue(Value.ACE);
+                }
+                MovePostDTO move = new MovePostDTO();
+                move.setId(gameId);
+                move.setCard(card);
+                move.setFigure(figure);
+                List<Field> fields = this.getPossibleFields(move);
+                if (!fields.isEmpty()) {
+                    move.setTargetField(fields.get(0));
+                    return move;
+                }
+            }
+        }
+        return null;
+    }
 
 
 }

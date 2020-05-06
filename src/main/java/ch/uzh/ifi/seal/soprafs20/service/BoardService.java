@@ -10,6 +10,7 @@ import ch.uzh.ifi.seal.soprafs20.repository.BoardRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.user.Figure;
 import ch.uzh.ifi.seal.soprafs20.user.Player;
+import org.apache.catalina.startup.HomesUserDatabase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -154,6 +155,9 @@ public class BoardService {
                     return fields;
                 }
             }
+        }
+        if(field instanceof HomeField) {
+            return new ArrayList<>();
         }
         if (card.getValue() == Value.FOUR) {
             ArrayList<Field> forwardFour = getFieldsBoard(field, moveValues);

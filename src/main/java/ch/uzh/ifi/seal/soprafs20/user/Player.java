@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.user;
 
 import ch.uzh.ifi.seal.soprafs20.cards.Card;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.MovePostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import org.hibernate.annotations.LazyCollection;
@@ -70,7 +71,6 @@ public class Player {
     public Colour getColour() {
         return this.colour;
     }
-
 
 }
 

@@ -28,16 +28,15 @@ public class NormalCard extends Card {
 
     }
 
-
-
-
-
-
     public Suit getSuit() {
         return suit;
     }
 
     public Value getValue(){
         return this.value;
+    }
+
+    public void setValue(Value value)  {
+        this.value = value;
     }
 }

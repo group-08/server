@@ -7,6 +7,7 @@ import ch.uzh.ifi.seal.soprafs20.cards.Value;
 import ch.uzh.ifi.seal.soprafs20.game.Game;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.MovePostDTO;
 import ch.uzh.ifi.seal.soprafs20.user.Figure;
 import ch.uzh.ifi.seal.soprafs20.user.Player;
 import org.springframework.beans.factory.annotation.Autowired;
