@@ -1,5 +1,6 @@
 package ch.uzh.ifi.seal.soprafs20.rest.dto;
 
+import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.user.Figure;
 import ch.uzh.ifi.seal.soprafs20.user.Player;
 
@@ -17,8 +18,9 @@ public class FieldGetDTO {
         this.id = id;
     }
 
-    public Figure getOccupant() {
-        return this.occupant;
+    public FigureGetDTO getOccupant() {
+        FigureGetDTO occupantDTO = DTOMapper.INSTANCE.convertEntityToFigureGetDTO(this.occupant);
+        return occupantDTO;
     }
 
     public void setOccupant(Figure occupant) {

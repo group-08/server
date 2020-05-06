@@ -3,15 +3,17 @@ package ch.uzh.ifi.seal.soprafs20.rest.dto;
 import ch.uzh.ifi.seal.soprafs20.board.Board;
 import ch.uzh.ifi.seal.soprafs20.game.GameState;
 import ch.uzh.ifi.seal.soprafs20.game.WeatherState;
+import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.user.Player;
 import ch.uzh.ifi.seal.soprafs20.user.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameGetDTO {
-    private String name;
-
     private Long id;
+
+    private String name;
 
     private GameState gameState;
 
@@ -19,21 +21,7 @@ public class GameGetDTO {
 
     private List<Player> players;
 
-    private boolean exchangeCard;
-
-    private WeatherState weatherState;
-
-    private int cardNum;
-
     private Board board;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public Long getId() {
         return id;
@@ -41,6 +29,14 @@ public class GameGetDTO {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public GameState getGameState() {
@@ -51,48 +47,30 @@ public class GameGetDTO {
         this.gameState = gameState;
     }
 
-    public User getHost() {
-        return host;
+    public UserGetDTO getHost() {
+        UserGetDTO hostDTO = DTOMapper.INSTANCE.convertEntityToUserGetDTO(this.host);
+        return hostDTO;
     }
 
     public void setHost(User host) {
         this.host = host;
     }
 
-    public List<Player> getPlayers() {
-        return players;
+    public List<PlayerGetDTO> getPlayers() {
+        List<PlayerGetDTO> playerGetDTOList = new ArrayList<>();
+        for (Player player : this.players) {
+            playerGetDTOList.add(DTOMapper.INSTANCE.convertEntityToPlayerGetDTO(player));
+        }
+        return playerGetDTOList;
     }
 
     public void setPlayers(List<Player> players) {
         this.players = players;
     }
 
-    public boolean isExchangeCard() {
-        return exchangeCard;
-    }
-
-    public void setExchangeCard(boolean exchangeCard) {
-        this.exchangeCard = exchangeCard;
-    }
-
-    public WeatherState getWeatherState() {
-        return weatherState;
-    }
-
-    public void setWeatherState(WeatherState weatherState) {
-        this.weatherState = weatherState;
-    }
-
-    public int getCardNum() {
-        return cardNum;
-    }
-
-    public void setCardNum(int cardNum) {
-        this.cardNum = cardNum;
-    }
-
-    public Board getBoard() {
-        return board;
+    public BoardGetDTO getBoard() {
+        BoardGetDTO boardGetDTO = DTOMapper.INSTANCE.convertEntityToBoardGetDTO(this.board);
+        return boardGetDTO;
     }
 
     public void setBoard(Board board) {
