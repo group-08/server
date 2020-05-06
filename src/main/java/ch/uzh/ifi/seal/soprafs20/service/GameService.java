@@ -3,6 +3,7 @@ package ch.uzh.ifi.seal.soprafs20.service;
 
 import ch.uzh.ifi.seal.soprafs20.cards.Value;
 import ch.uzh.ifi.seal.soprafs20.game.GameState;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.GameGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.LobbyGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.user.Colour;
@@ -339,8 +340,9 @@ public class GameService {
         return DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(game);
     }
 
-    public Game getGameById(Long id){
-        return gameRepository.findById(id).orElse(null);
+    public GameGetDTO getGameById(Long id){
+        Game game =  gameRepository.findById(id).orElse(null);
+        return DTOMapper.INSTANCE.convertEntityToGameGetDTO(game);
     }
     /*
     public void deleteUser(Long id, UserPostDTO userToBeDeletedDTO){

@@ -5,6 +5,7 @@ import ch.uzh.ifi.seal.soprafs20.board.Board;
 import ch.uzh.ifi.seal.soprafs20.cards.Card;
 import ch.uzh.ifi.seal.soprafs20.field.Field;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.ExchangePostDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.GameGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.LobbyGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.MovePostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
@@ -40,9 +41,9 @@ public class GameController {
     @GetMapping("/game/{id}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public LobbyGetDTO getGame(@PathVariable Long id) {
-        LobbyGetDTO gameNoDeck = DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(gameService.getGameById(id));
-        return gameNoDeck;
+    public GameGetDTO getGame(@PathVariable Long id) {
+        GameGetDTO game = gameService.getGameById(id);
+        return game;
     }
     //get current game with id
 
