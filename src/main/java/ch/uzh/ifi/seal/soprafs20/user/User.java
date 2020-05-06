@@ -1,9 +1,9 @@
 package ch.uzh.ifi.seal.soprafs20.user;
 
+import org.springframework.security.crypto.bcrypt.BCrypt;
+
 import javax.persistence.*;
 import java.io.Serializable;
-
-import org.springframework.security.crypto.bcrypt.BCrypt;
 
 /**
  * Internal User Representation

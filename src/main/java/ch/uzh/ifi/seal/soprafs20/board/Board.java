@@ -1,19 +1,15 @@
 package ch.uzh.ifi.seal.soprafs20.board;
 
-import ch.uzh.ifi.seal.soprafs20.user.Player;
+import ch.uzh.ifi.seal.soprafs20.field.CasualField;
 import ch.uzh.ifi.seal.soprafs20.field.Field;
-
-import java.io.Serializable;
-import javax.persistence.*;
-
+import ch.uzh.ifi.seal.soprafs20.field.GoalField;
+import ch.uzh.ifi.seal.soprafs20.field.HomeField;
 import ch.uzh.ifi.seal.soprafs20.user.Figure;
-import ch.uzh.ifi.seal.soprafs20.cards.Card;
-import ch.uzh.ifi.seal.soprafs20.field.*;
-import ch.uzh.ifi.seal.soprafs20.repository.BoardRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 
-
-import java.util.*;
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity

@@ -3,9 +3,12 @@ package ch.uzh.ifi.seal.soprafs20.rest.mapper;
 import ch.uzh.ifi.seal.soprafs20.game.Game;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.LobbyGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.PlayerGetDTO;
-import ch.uzh.ifi.seal.soprafs20.user.*;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostDTO;
+import ch.uzh.ifi.seal.soprafs20.user.Colour;
+import ch.uzh.ifi.seal.soprafs20.user.Player;
+import ch.uzh.ifi.seal.soprafs20.user.User;
+import ch.uzh.ifi.seal.soprafs20.user.UserStatus;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

@@ -2,7 +2,6 @@ package ch.uzh.ifi.seal.soprafs20.rest.dto;
 
 import ch.uzh.ifi.seal.soprafs20.field.Field;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
-import ch.uzh.ifi.seal.soprafs20.user.Player;
 
 import java.util.ArrayList;
 import java.util.List;

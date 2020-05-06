@@ -1,9 +1,8 @@
 package ch.uzh.ifi.seal.soprafs20.service;
 
-import ch.uzh.ifi.seal.soprafs20.user.UserStatus;
-import ch.uzh.ifi.seal.soprafs20.user.User;
 import ch.uzh.ifi.seal.soprafs20.repository.UserRepository;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostLoginDTO;
+import ch.uzh.ifi.seal.soprafs20.user.User;
+import ch.uzh.ifi.seal.soprafs20.user.UserStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

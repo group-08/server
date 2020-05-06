@@ -8,7 +8,8 @@ import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
 import ch.uzh.ifi.seal.soprafs20.user.Figure;
 import ch.uzh.ifi.seal.soprafs20.user.Player;
 import ch.uzh.ifi.seal.soprafs20.user.User;
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 /**

@@ -1,10 +1,6 @@
 package ch.uzh.ifi.seal.soprafs20.rest.dto;
 
-import ch.uzh.ifi.seal.soprafs20.board.Board;
-import ch.uzh.ifi.seal.soprafs20.board.CasualBoard;
-import ch.uzh.ifi.seal.soprafs20.field.Field;
 import ch.uzh.ifi.seal.soprafs20.game.GameState;
-import ch.uzh.ifi.seal.soprafs20.game.WeatherState;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.user.Player;
 import ch.uzh.ifi.seal.soprafs20.user.User;

@@ -6,7 +6,6 @@ import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.user.Colour;
 import ch.uzh.ifi.seal.soprafs20.user.User;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerGetDTO {
