@@ -293,7 +293,7 @@ public class GameService {
 
     public LobbyGetDTO getLobbyById(long id){
         Game game = gameRepository.findById(id).orElse(null);
-        return DTOMapper.INSTANCE.convertEntityToGameGetDTO(game);
+        return DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(game);
     }
 
     public void addUser(Long gameId, String tokenOfUser){
@@ -321,7 +321,7 @@ public class GameService {
         List<Game> allGames = gameRepository.findAll();
         List<LobbyGetDTO> games = new ArrayList<>();
         for(Game game : allGames){
-            games.add(DTOMapper.INSTANCE.convertEntityToGameGetDTO(game));
+            games.add(DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(game));
         }
         return games;
     }
@@ -333,7 +333,7 @@ public class GameService {
     public LobbyGetDTO createLobby(User userOwner, String gameName){
         Game game = new Game(userOwner, gameName);
         gameRepository.saveAndFlush(game);
-        return DTOMapper.INSTANCE.convertEntityToGameGetDTO(game);
+        return DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(game);
     }
 
     public Game getGameById(Long id){

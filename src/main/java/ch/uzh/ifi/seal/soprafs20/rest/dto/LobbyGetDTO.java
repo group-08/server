@@ -24,46 +24,6 @@ public class LobbyGetDTO {
 
     private List<Player> players;
 
-    private boolean exchangeCard;
-
-    private WeatherState weatherState;
-
-    private int cardNum;
-
-    private Board board;
-
-    public WeatherState getWeatherState() {
-        return weatherState;
-    }
-
-    public void setWeatherState(WeatherState weatherState) {
-        this.weatherState = weatherState;
-    }
-
-    public BoardGetDTO getBoard() {
-        return DTOMapper.INSTANCE.convertEntityToBoardGetDTO(this.board);
-    }
-
-    public void setBoard(Board board) {
-            this.board = board;
-    }
-
-    public int getCardNum() {
-        return cardNum;
-    }
-
-    public void setCardNum(int cardNum) {
-        this.cardNum = cardNum;
-    }
-
-    public boolean getExchangeCard() {
-        return this.exchangeCard;
-    }
-
-    public void setExchangeCard(boolean exchange) {
-        this.exchangeCard = exchange;
-    }
-
     public String getName() {
         return name;
     }

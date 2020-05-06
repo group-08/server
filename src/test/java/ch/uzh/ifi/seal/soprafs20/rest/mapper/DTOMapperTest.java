@@ -61,7 +61,7 @@ public class DTOMapperTest {
         user.setToken("1");
         Game game = new Game(user, "testGame");
 
-        LobbyGetDTO lobbyGetDTO = DTOMapper.INSTANCE.convertEntityToGameGetDTO(game);
+        LobbyGetDTO lobbyGetDTO = DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(game);
 
         assertEquals(game.getId(), lobbyGetDTO.getId());
         assertEquals(game.getName(), lobbyGetDTO.getName());

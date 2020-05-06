@@ -53,7 +53,7 @@ public class LobbyControllerTest {
 
         Game lobby = new Game(user, "testGame");
 
-        LobbyGetDTO lobbyGetDTO = DTOMapper.INSTANCE.convertEntityToGameGetDTO(lobby);
+        LobbyGetDTO lobbyGetDTO = DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(lobby);
 
         List<LobbyGetDTO> allGames = Collections.singletonList(lobbyGetDTO);
 
@@ -109,9 +109,9 @@ public class LobbyControllerTest {
         lobby.setWeatherState(WeatherState.CASUAL);
         
 
-        LobbyGetDTO lobbyGetDTO = DTOMapper.INSTANCE.convertEntityToGameGetDTO(lobby);
+        LobbyGetDTO lobbyGetDTO = DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(lobby);
 
-        given(gameService.getLobbyById(1)).willReturn(DTOMapper.INSTANCE.convertEntityToGameGetDTO(lobby));
+        given(gameService.getLobbyById(1)).willReturn(DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(lobby));
 
         MockHttpServletRequestBuilder getRequest = get("/lobby/{id}", "1")
                 .contentType(MediaType.APPLICATION_JSON)

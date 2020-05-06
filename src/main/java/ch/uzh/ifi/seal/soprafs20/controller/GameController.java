@@ -41,7 +41,7 @@ public class GameController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public LobbyGetDTO getGame(@PathVariable Long id) {
-        LobbyGetDTO gameNoDeck = DTOMapper.INSTANCE.convertEntityToGameGetDTO(gameService.getGameById(id));
+        LobbyGetDTO gameNoDeck = DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(gameService.getGameById(id));
         return gameNoDeck;
     }
     //get current game with id
@@ -60,7 +60,7 @@ public class GameController {
         long gameId = exchangePostDTO.getId();
         Card cardToExchange = exchangePostDTO.getCard();
         LobbyGetDTO updatedGame =
-                DTOMapper.INSTANCE.convertEntityToGameGetDTO(gameService.letPlayersChangeCard(gameId, userExchangingCard.getId(),cardToExchange));
+                DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(gameService.letPlayersChangeCard(gameId, userExchangingCard.getId(),cardToExchange));
         return updatedGame;
     }
 
