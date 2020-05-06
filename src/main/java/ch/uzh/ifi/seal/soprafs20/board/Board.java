@@ -28,14 +28,6 @@ public class Board implements Serializable {
     private List<Field> fields = new ArrayList<>();
 
 
-    @OneToMany(targetEntity = Player.class, cascade = CascadeType.ALL)
-    private List<Player> players = new ArrayList<>();
-
-    @Transient
-    @Autowired
-    private BoardRepository boardRepository;
-
-
     public Board() {
         // Create all the fields
         for (int i = 0; i <= 63; i++){ // Casual fields
@@ -115,14 +107,6 @@ public class Board implements Serializable {
 
     }
 
-    public List<Player> getPlayers() {
-        return players;
-    }
-
-    public void setPlayers(List<Player> players) {
-        this.players = players;
-    }
-
     public long getId() {
         return id;
     }
@@ -142,28 +126,6 @@ public class Board implements Serializable {
     public void setFields(List<Field> fields) {
         this.fields = fields;
     }
-
-    public BoardRepository getBoardRepository() {
-        return boardRepository;
-    }
-
-    public void setBoardRepository(BoardRepository boardRepository) {
-        this.boardRepository = boardRepository;
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }
 

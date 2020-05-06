@@ -24,10 +24,13 @@ import java.util.Queue;
 @Transactional
 public class BoardService {
 
+    private final BoardRepository boardRepository;
     private final GameRepository gameRepository;
 
     @Autowired
-    public BoardService(@Qualifier("gameRepository") GameRepository gameRepository){
+    public BoardService(@Qualifier("boardRepository") BoardRepository boardRepository,
+                        @Qualifier("gameRepository") GameRepository gameRepository){
+        this.boardRepository = boardRepository;
         this.gameRepository = gameRepository;
     }
 
@@ -55,12 +58,6 @@ public class BoardService {
         }
     }
 
-    public void saveAndFlushBoard(long gameId)  {
-        Board board = this.getBoard(gameId);
-        BoardRepository repository = board.getBoardRepository();
-        repository.saveAndFlush(board);
-    }
-
     public Board move(long gameId, Figure figure, Field targetField) {
         Board board = this.getBoard(gameId);
         Field currentField = this.getCurrentField(figure);
@@ -81,7 +78,7 @@ public class BoardService {
             ((FirstField) currentField).setBlocked(false);
         }
 
-        this.saveAndFlushBoard(gameId);
+        this.boardRepository.saveAndFlush(board);
 
         return board;
     }

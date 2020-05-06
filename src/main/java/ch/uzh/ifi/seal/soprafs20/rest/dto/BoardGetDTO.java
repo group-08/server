@@ -13,8 +13,6 @@ public class BoardGetDTO {
 
     private List<Field> fields;
 
-    private List<Player> players;
-
     public long getId() {
         return id;
     }
@@ -33,13 +31,5 @@ public class BoardGetDTO {
 
     public void setFields(List<Field> fields) {
         this.fields = fields;
-    }
-
-    public List<Player> getPlayers() {
-        return players;
-    }
-
-    public void setPlayers(List<Player> players) {
-        this.players = players;
     }
 }

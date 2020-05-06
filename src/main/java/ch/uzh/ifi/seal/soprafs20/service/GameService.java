@@ -38,7 +38,10 @@ public class GameService {
 
     @Autowired
     public GameService(@Qualifier("gameRepository") GameRepository gameRepository,
-                       UserService userService, BoardService boardService,PlayerService playerService, DeckService deckService){
+                       UserService userService,
+                       BoardService boardService,
+                       PlayerService playerService,
+                       DeckService deckService){
         this.userService = userService;
         this.gameRepository = gameRepository;
         this.boardService = boardService;
