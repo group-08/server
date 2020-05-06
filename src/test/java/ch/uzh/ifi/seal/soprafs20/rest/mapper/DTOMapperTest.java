@@ -2,6 +2,7 @@ package ch.uzh.ifi.seal.soprafs20.rest.mapper;
 
 import ch.uzh.ifi.seal.soprafs20.game.Game;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.LobbyGetDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.PlayerGetDTO;
 import ch.uzh.ifi.seal.soprafs20.user.*;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostDTO;
@@ -67,5 +68,20 @@ public class DTOMapperTest {
         assertEquals(game.getName(), lobbyGetDTO.getName());
         assertEquals(game.getGameState(), lobbyGetDTO.getGameState());
         assertEquals(game.getPlayers().get(0).getId(), lobbyGetDTO.getPlayers().get(0).getId());
+    }
+
+    @Test
+    public void testCreatePlayerGetDTO_fromPlayer() {
+        Player testPlayer = new Player();
+        testPlayer.setColour(Colour.GREEN);
+
+        User testUser = new User();
+        testUser.setId(1L);
+
+        testPlayer.setUser(testUser);
+
+        PlayerGetDTO testPlayerDTO = DTOMapper.INSTANCE.convertEntityToPlayerGetDTO(testPlayer);
+        assertEquals(testPlayer.getColour(), testPlayerDTO.getColour());
+        assertEquals(testPlayer.getUser().getId(), testPlayerDTO.getUser().getId());
     }
 }
