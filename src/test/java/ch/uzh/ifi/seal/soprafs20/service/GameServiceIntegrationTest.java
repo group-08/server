@@ -1,17 +1,18 @@
 package ch.uzh.ifi.seal.soprafs20.service;
 
+import ch.uzh.ifi.seal.soprafs20.board.Board;
 import ch.uzh.ifi.seal.soprafs20.cards.*;
+import ch.uzh.ifi.seal.soprafs20.field.Field;
 import ch.uzh.ifi.seal.soprafs20.game.Game;
 import ch.uzh.ifi.seal.soprafs20.game.GameState;
+import ch.uzh.ifi.seal.soprafs20.repository.CardRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.UserRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.MovePostDTO;
-import ch.uzh.ifi.seal.soprafs20.user.Colour;
-import ch.uzh.ifi.seal.soprafs20.user.Player;
-import ch.uzh.ifi.seal.soprafs20.user.User;
-import ch.uzh.ifi.seal.soprafs20.user.UserStatus;
+import ch.uzh.ifi.seal.soprafs20.user.*;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @WebAppConfiguration
 @SpringBootTest
@@ -38,6 +38,10 @@ public class GameServiceIntegrationTest {
     @Autowired
     private PlayerRepository playerRepository;
 
+    @Qualifier("cardRepository")
+    @Autowired
+    private CardRepository cardRepository;
+
     @Autowired
     private UserService userService;
 
@@ -53,11 +57,15 @@ public class GameServiceIntegrationTest {
     @BeforeEach
     void setup() {
         gameRepository.deleteAll();
+        userRepository.deleteAll();
+        cardRepository.deleteAll();
     }
 
     @AfterEach
     public void tearDown() {
         gameRepository.deleteAll();
+        userRepository.deleteAll();
+        cardRepository.deleteAll();
     }
 
     @Test
@@ -157,6 +165,7 @@ public class GameServiceIntegrationTest {
         assertEquals(6, game.getPlayer(1).getHand().size());
         assertEquals(6, game.getPlayer(2).getHand().size());
         assertEquals(6, game.getPlayer(3).getHand().size());
+
     }
 
     @Test
@@ -239,18 +248,36 @@ public class GameServiceIntegrationTest {
 
         /////////// MAKE MOVE ////////////
 
+        // Get field of Figure before Move
+        Field homeField = game.getPlayer(0).getFigures().get(0).getField();
+        Field targetField = move.getTargetField();
 
 
         // Move first figure of first player out to the StartField
         gameService.playPlayersMove(move);
 
 
+
+        Game gameAfterMove = gameRepository.findById(game.getId()).orElse(null);
+
         ////////// TEST MOVE ////////////
 
+        assert gameAfterMove != null;
+        Board boardOfGame = gameAfterMove.getBoard();
+        Field firstField = gameAfterMove.getBoard().getField(1);
+
+        Field fieldReadOutOfFigure = gameAfterMove.getPlayer(0).getFigures().get(0).getField();
+        Figure figureofPlayer = gameAfterMove.getPlayer(0).getFigures().get(0);
 
         // Here follow assertions if move executed correctly
         // Created a card to move figure, but player might have not that card so it wouldn't remove it from his hands
         // therefore after move maybe still has 6 cards
+        assertNotEquals(game, gameAfterMove);
+        assertNotNull(firstField.getOccupant());
+        assertNull(homeField.getOccupant());
+        Assertions.assertEquals(targetField, fieldReadOutOfFigure);
+        Assertions.assertEquals(targetField.getOccupant(), figureofPlayer);
+
 
     }
 

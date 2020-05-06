@@ -134,7 +134,7 @@ public class GameService {
             game.setExchangeCard(true);
         }
 
-        this.gameRepository.save(game);
+        this.gameRepository.saveAndFlush(game);
         return game.getBoard();
     }
 

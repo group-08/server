@@ -44,7 +44,14 @@ public class Board implements Serializable {
     public Board() {
         // Create all the fields
         for (int i = 0; i <= 63; i++){ // Casual fields
-            this.fields.add(new CasualField());
+            if(i==0 || i==16 || i==32 || i==48){
+                FirstField firstField = new FirstField();
+                firstField.setBlocked(false);
+                this.fields.add(firstField);
+            }
+            else {
+                this.fields.add(new CasualField());
+            }
         }
         for (int i = 64; i <= 79; i++){ // Goal field
             this.fields.add(new GoalField());

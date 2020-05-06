@@ -12,7 +12,7 @@ public class FirstField extends Field {
     @OneToOne
     private Player player;
 
-    private Boolean blocked;
+    private Boolean blocked = false;
 
     public Player getPlayer(){ return player;}
     public void setPlayer(Player player){this.player=player;}
