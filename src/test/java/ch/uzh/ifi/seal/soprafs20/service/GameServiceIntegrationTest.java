@@ -174,9 +174,7 @@ public class GameServiceIntegrationTest {
 
     @Test
     public void MoveFigureTest() {
-
-        /////////// SETUP GAME //////////
-
+        
         //////////// GAME SETUP //////////
         User user = new User();
         user.setUsername("firstname.lastname");
