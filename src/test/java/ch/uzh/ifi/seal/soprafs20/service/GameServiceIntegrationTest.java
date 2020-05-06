@@ -173,7 +173,7 @@ public class GameServiceIntegrationTest {
     }
 
     @Test
-    public void PlayPlayersMoveTest() {
+    public void MoveFigureTest() {
 
         /////////// SETUP GAME //////////
 
