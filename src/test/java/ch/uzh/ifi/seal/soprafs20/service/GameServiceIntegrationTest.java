@@ -1,6 +1,5 @@
 package ch.uzh.ifi.seal.soprafs20.service;
 
-import ch.uzh.ifi.seal.soprafs20.board.Board;
 import ch.uzh.ifi.seal.soprafs20.cards.*;
 import ch.uzh.ifi.seal.soprafs20.field.Field;
 import ch.uzh.ifi.seal.soprafs20.game.Game;
@@ -54,11 +53,16 @@ public class GameServiceIntegrationTest {
     @Autowired
     private GameService gameService;
 
+    private Game game;
+
+    private long ID;
+
     @BeforeEach
-    void setup() {
+    public void init() {
         gameRepository.deleteAll();
         userRepository.deleteAll();
         cardRepository.deleteAll();
+
     }
 
     @AfterEach
@@ -171,6 +175,8 @@ public class GameServiceIntegrationTest {
     @Test
     public void PlayPlayersMoveTest() {
 
+        /////////// SETUP GAME //////////
+
         //////////// GAME SETUP //////////
         User user = new User();
         user.setUsername("firstname.lastname");
@@ -223,6 +229,7 @@ public class GameServiceIntegrationTest {
         userRepository.saveAndFlush(user3);
         userRepository.saveAndFlush(user4);
         gameRepository.saveAndFlush(game);
+        long ID = game.getId();
 
         deckService.createDeck(game.getDeck());
 
@@ -232,53 +239,46 @@ public class GameServiceIntegrationTest {
         assert game != null;
 
 
-        ////////// MOVE SETUP ///////////
+        ////////// CARD SETUP ///////////
 
 
         Card KingClubs = new NormalCard(Suit.CLUBS, Value.KING);
 
+
+        /////////// MOVE SETUP ////////////
+
+        // MovePostDTO setup
         MovePostDTO move = new MovePostDTO();
         move.setId(game.getId());
         move.setCard(KingClubs);
-        // Sorry folgendes isch unschön
         move.setFigure(game.getPlayers().get(0).getFigures().get(0));
         move.setTargetField(game.getBoard().getField(1));
 
 
-
-        /////////// MAKE MOVE ////////////
-
-        // Get field of Figure before Move
-        Field homeField = game.getPlayer(0).getFigures().get(0).getField();
-        Field targetField = move.getTargetField();
+        /////////// MAKE MOVE //////////////
 
 
-        // Move first figure of first player out to the StartField
         gameService.playPlayersMove(move);
+        Game gameAfterMove = gameRepository.findById(ID).orElse(null);
+        assert gameAfterMove != null;
 
-
-
-        Game gameAfterMove = gameRepository.findById(game.getId()).orElse(null);
 
         ////////// TEST MOVE ////////////
 
-        assert gameAfterMove != null;
-        Board boardOfGame = gameAfterMove.getBoard();
-        Field firstField = gameAfterMove.getBoard().getField(1);
+        // Setup Tests
+        Field homeField = gameAfterMove.getBoard().getField(81);
+        Field targetField = gameAfterMove.getBoard().getField(1);
 
-        Field fieldReadOutOfFigure = gameAfterMove.getPlayer(0).getFigures().get(0).getField();
-        Figure figureofPlayer = gameAfterMove.getPlayer(0).getFigures().get(0);
+        Field fieldReadOutOfFigure = gameAfterMove.getPlayer(3).getFigures().get(0).getField();
+        Figure figureofPlayer = gameAfterMove.getPlayer(3).getFigures().get(0);
 
         // Here follow assertions if move executed correctly
         // Created a card to move figure, but player might have not that card so it wouldn't remove it from his hands
         // therefore after move maybe still has 6 cards
-        assertNotEquals(game, gameAfterMove);
-        assertNotNull(firstField.getOccupant());
+        assertNotNull(targetField.getOccupant());
         assertNull(homeField.getOccupant());
         Assertions.assertEquals(targetField, fieldReadOutOfFigure);
         Assertions.assertEquals(targetField.getOccupant(), figureofPlayer);
-
-
     }
 
 }

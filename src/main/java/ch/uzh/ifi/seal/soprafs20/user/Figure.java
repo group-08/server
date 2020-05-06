@@ -54,4 +54,8 @@ public class Figure {
 
     public Field getField() { return this.field; }
 
+    public void setField(Field field) {
+        this.field = field;
+    }
+
 }

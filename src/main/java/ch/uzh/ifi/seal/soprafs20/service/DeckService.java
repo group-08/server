@@ -92,29 +92,21 @@ public class DeckService {
     }
 
 
-
+    public Card removeCard(Long id) {
+        return getDeck(id).getCardsInDeck().remove(0);
+    }
 
     /// second version
     public List<Card> drawCards (int amountToDraw, Long  Id){
 
-
         List<Card> hand = new ArrayList<Card>();
 
-        Card topCard;
-
-        List<Card> currentCards = getCards(Id);
 
         ///drawing as many cards from cards as necessary
         for (int loopVal = 0; loopVal < amountToDraw; loopVal++){
             ///from list instead
-            topCard = currentCards.remove(0);
-            hand.add(topCard);
+            hand.add(removeCard(Id));
         }
-
-        emptyDeck(Id);
-        getDeck(Id).setCards(currentCards);
-
-        safeDeck(getDeck(Id));
 
         return hand;
     }

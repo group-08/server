@@ -76,10 +76,10 @@ public class PlayerServiceTest {
         test.add(testCardSEVEN);
 
         // remove Cards from player
-        playerService.removeFromHand(testPlayer.getId(), testCardFIVE);
+        playerService.removeFromHand(testPlayer, testCardFIVE);
         assertEquals(test, testPlayer.getHand());
 
-        playerService.removeAllFromHand(testPlayer.getId());
+        playerService.removeAllFromHand(testPlayer);
         assertNull(testPlayer.getHand());
 
     }

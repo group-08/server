@@ -31,50 +31,65 @@ public class BoardService {
         this.gameRepository = gameRepository;
     }
 
-    public Board getBoard(long gameId) {
-        Game game = gameRepository.findById(gameId).orElse(null);
-        assert game != null;
+    public Board getBoard(Game game) {
         return game.getBoard();
     }
 
     /**
      * Sends the figure home
-     * @param gameId ID of game
+     * @param game game
      * @param figure that has to be sent home
      */
-    public void sendFigureHome(long gameId, Figure figure) {
-        Board board = this.getBoard(gameId);
+    public void sendFigureHome(Game game, Figure figure) {
+        Board board = this.getBoard(game);
         Player playerOfFigure = figure.getPlayer();
         for(Field field : board.getFields()){
             if(field instanceof HomeField){
                 if(((HomeField) field).getPlayer()==playerOfFigure && field.getOccupant() == null){
                     field.setOccupant(figure);
+                    figure.setField(field);
                     return;
                 }
             }
         }
     }
 
-    public void saveAndFlushBoard(long gameId)  {
-        Board board = this.getBoard(gameId);
-        BoardRepository repository = board.getBoardRepository();
-        repository.saveAndFlush(board);
+    public Field matchFields(Game game, Field currentField) {
+        for (Field field : this.getBoard(game).getFields()) {
+            if (field.getId() == currentField.getId()) {
+                return field;
+            }
+        }
+        return null;
     }
 
-    public Board move(long gameId, Figure figure, Field targetField) {
-        Board board = this.getBoard(gameId);
-        Game game = gameRepository.findById(gameId).orElse(null);
-        assert game != null;
-        Field currentField = this.getCurrentField(figure);
+    public Field getFieldfromFigure(Game game, Figure figure) {
+        for (Field field : game.getBoard().getFields()) {
+            if (field.getId() == figure.getField().getId()) {
+                return field;
+            }
+        }
+        return null;
+    }
+
+    public Board move(Game game, Figure figure, Field targetFieldObject) {
+
+        Field targetField = this.matchFields(game, targetFieldObject);
+        Field currentField = getFieldfromFigure(game, figure);
+
         if (targetField.getOccupant() != null) {
+            Figure occ = currentField.getOccupant();
             Figure occupant = targetField.getOccupant();
-            this.sendFigureHome(gameId, occupant);
+            this.sendFigureHome(game, occupant);
             currentField.setOccupant(null);
-            targetField.setOccupant(figure);
+            targetField.setOccupant(occ);
+            occ.setField(targetField);
         }
         else {
+            Figure occ = currentField.getOccupant();
             currentField.setOccupant(null);
-            targetField.setOccupant(figure);
+            targetField.setOccupant(occ);
+            occ.setField(targetField);
         }
         if (targetField instanceof FirstField && currentField instanceof HomeField) {
             ((FirstField) targetField).setBlocked(true);
@@ -83,13 +98,11 @@ public class BoardService {
             ((FirstField) currentField).setBlocked(false);
         }
 
-        gameRepository.saveAndFlush(game);
-
-        return board;
+        return game.getBoard();
     }
 
-    public boolean checkIfAllTargetFieldsOccupied(long gameId, Player player) {
-        Board board = this.getBoard(gameId);
+    public boolean checkIfAllTargetFieldsOccupied(Game game, Player player) {
+        Board board = this.getBoard(game);
         List<Field> fieldsOfBoard = board.getFields();
         int count = 0;
         for (Field field : fieldsOfBoard) {
@@ -128,9 +141,7 @@ public class BoardService {
      * @param field field the card is being palyed on
      * @return List of all possible fields the player on field could land on
      */
-    public ArrayList<Field> getPossibleFields(long gameId, Card card, Field field) {
-        Game actualGame = gameRepository.findById(gameId).orElse(null);
-        assert actualGame != null;
+    public ArrayList<Field> getPossibleFields(Game actualGame, Card card, Field field) {
         Board board = actualGame.getBoard();
         ArrayList<Integer> moveValues = getMoveValues(card);
 
@@ -269,11 +280,9 @@ public class BoardService {
         return possibleFields;
     }
 
-    public ArrayList<Field> getPossibleFieldsJack(long gameId, Card card, Field field){
+    public ArrayList<Field> getPossibleFieldsJack(Game actualGame, Card card, Field field){
         ArrayList<Field> possibleFields = new ArrayList<>();
         Player playerOnField = field.getOccupant().getPlayer();
-        Game actualGame = gameRepository.findById(gameId).orElse(null);
-        assert actualGame != null;
         Board board = actualGame.getBoard();
 
         for(Field iterField : board.getFields()){
