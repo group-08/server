@@ -2,19 +2,14 @@ package ch.uzh.ifi.seal.soprafs20.rest.mapper;
 
 
 import ch.uzh.ifi.seal.soprafs20.board.Board;
-import ch.uzh.ifi.seal.soprafs20.cards.Card;
 import ch.uzh.ifi.seal.soprafs20.field.Field;
 import ch.uzh.ifi.seal.soprafs20.game.Game;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
-import ch.uzh.ifi.seal.soprafs20.user.Colour;
 import ch.uzh.ifi.seal.soprafs20.user.Figure;
 import ch.uzh.ifi.seal.soprafs20.user.Player;
 import ch.uzh.ifi.seal.soprafs20.user.User;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
-
-import javax.persistence.MappedSuperclass;
-import java.util.List;
 
 /**
  * DTOMapper
@@ -49,7 +44,7 @@ public interface DTOMapper {
     @Mapping(source = "cardNum", target = "cardNum")
     @Mapping(source = "weatherState", target = "weatherState")
     @Mapping(source = "board", target = "board")
-    GameGetDTO convertEntityToGameGetDTO(Game game);
+    LobbyGetDTO convertEntityToGameGetDTO(Game game);
 
 
     @Mapping(source = "id", target = "id")
