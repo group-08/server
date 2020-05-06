@@ -158,6 +158,7 @@ public class BoardService {
         if (card.getValue() == Value.FOUR) {
             ArrayList<Field> forwardFour = getFieldsBoard(field, moveValues);
             ArrayList<Field> backwardFour = getPossibleFieldsFour(card, field, board);
+            backwardFour.removeIf(n -> (n instanceof GoalField));
             forwardFour.addAll(backwardFour);
             return forwardFour;
         }
@@ -183,23 +184,28 @@ public class BoardService {
                 queue.add(null);
             }
             else {
-                for(Field boardField : fields){
-                    if(boardField.getAdjacencyList().contains(temp)) {
-                        if(boardField instanceof HomeField){
-                            assert true;
-                        }
-                        else if (boardField instanceof FirstField) {
-                            if (((FirstField) boardField).getBlocked()) {
+                if (temp instanceof FirstField || temp instanceof CasualField) {
+                    for (Field boardField : fields) {
+                        if (boardField.getAdjacencyList().contains(temp)) {
+                            if (boardField instanceof HomeField) {
                                 assert true;
+                            }
+                            else if (boardField instanceof FirstField) {
+                                if (((FirstField) boardField).getBlocked()) {
+                                    assert true;
+                                }
+                                else {
+                                    queue.add(boardField);
+                                }
                             }
                             else {
                                 queue.add(boardField);
                             }
                         }
-                        else{
-                            queue.add(boardField);
-                        }
                     }
+                } else if (temp instanceof GoalField){
+                    queue.addAll(temp.getAdjacencyList());
+                }
                     if(temp instanceof FirstField){
                         for(Field pField : temp.getAdjacencyList()){
                             if(pField instanceof GoalField){
@@ -209,7 +215,6 @@ public class BoardService {
                             }
                         }
                     }
-                }
             }
         }
         while (!queue.isEmpty()) {
