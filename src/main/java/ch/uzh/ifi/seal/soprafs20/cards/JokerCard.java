@@ -28,7 +28,6 @@ public class JokerCard extends Card {
         return this.value;
     }
 
-
     public String toString(){
         if (this.value != null ) {
             return "Value: " + this.value;

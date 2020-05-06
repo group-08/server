@@ -27,8 +27,9 @@ public class PlayerGetDTO {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public UserGetDTO getUser() {
+        UserGetDTO userGetDTO = DTOMapper.INSTANCE.convertEntityToUserGetDTO(this.user);
+        return userGetDTO;
     }
 
     public void setUser(User user) {
