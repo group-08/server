@@ -3,7 +3,9 @@ package ch.uzh.ifi.seal.soprafs20.controller;
 import ch.uzh.ifi.seal.soprafs20.field.CasualField;
 import ch.uzh.ifi.seal.soprafs20.game.Game;
 import ch.uzh.ifi.seal.soprafs20.game.WeatherState;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.GameGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.MovePostDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.service.GameService;
 import ch.uzh.ifi.seal.soprafs20.user.Figure;
 import ch.uzh.ifi.seal.soprafs20.field.Field;
@@ -83,7 +85,9 @@ public class GameControllerTest {
         game.setWeatherState(WeatherState.CASUAL);
         game.setBoard(null);
 
-        given(gameService.getGameById(Mockito.anyLong())).willReturn(game);
+        GameGetDTO gameGetDTO = DTOMapper.INSTANCE.convertEntityToGameGetDTO(game);
+
+        given(gameService.getGameById(Mockito.anyLong())).willReturn(gameGetDTO);
 
         MockHttpServletRequestBuilder getRequest = get("/game/{id}", 1)
                 .contentType(MediaType.APPLICATION_JSON)
