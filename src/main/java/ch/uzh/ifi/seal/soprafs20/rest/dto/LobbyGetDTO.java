@@ -48,8 +48,12 @@ public class LobbyGetDTO {
         this.gameState = gameState;
     }
 
-    public List<Player> getPlayers() {
-        return players;
+    public List<PlayerGetDTO> getPlayers() {
+        List<PlayerGetDTO> playerGetDTOList = new ArrayList<>();
+        for (Player player : this.players) {
+            playerGetDTOList.add(DTOMapper.INSTANCE.convertEntityToPlayerGetDTO(player));
+        }
+        return playerGetDTOList;
     }
 
     public void setPlayers(List<Player> players) {

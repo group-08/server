@@ -1,11 +1,13 @@
 package ch.uzh.ifi.seal.soprafs20.controller;
 
 import ch.uzh.ifi.seal.soprafs20.game.Game;
+import ch.uzh.ifi.seal.soprafs20.game.GameState;
 import ch.uzh.ifi.seal.soprafs20.game.WeatherState;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.LobbyGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.LobbyPostCreateDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.service.GameService;
+import ch.uzh.ifi.seal.soprafs20.user.Player;
 import ch.uzh.ifi.seal.soprafs20.user.User;
 import ch.uzh.ifi.seal.soprafs20.user.UserStatus;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -83,13 +85,21 @@ public class LobbyControllerTest {
         LobbyPostCreateDTO lobbyPostCreateDTO = new LobbyPostCreateDTO();
         lobbyPostCreateDTO.setName("Allo");
 
+        Player player = new Player();
+        player.setUser(user);
+
         LobbyGetDTO lobbyGetDTO = new LobbyGetDTO();
+        lobbyGetDTO.setId(1L);
         lobbyGetDTO.setName(lobbyPostCreateDTO.getName());
+        lobbyGetDTO.setHost(user);
+        lobbyGetDTO.setGameState(GameState.PENDING);
+        lobbyGetDTO.setPlayers(Collections.singletonList(player));
 
         given(gameService.getUserByToken(Mockito.anyString())).willReturn(user);
         given(gameService.createLobby(Mockito.any(), Mockito.anyString())).willReturn(lobbyGetDTO);
 
-        MockHttpServletRequestBuilder postRequest = post("/lobbies").contentType(MediaType.APPLICATION_JSON)
+        MockHttpServletRequestBuilder postRequest = post("/lobbies")
+                .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(lobbyPostCreateDTO))
                 .header("X-Token", "1");
 

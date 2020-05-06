@@ -66,6 +66,6 @@ public class DTOMapperTest {
         assertEquals(game.getId(), lobbyGetDTO.getId());
         assertEquals(game.getName(), lobbyGetDTO.getName());
         assertEquals(game.getGameState(), lobbyGetDTO.getGameState());
-        assertEquals(game.getPlayers(), lobbyGetDTO.getPlayers());
+        assertEquals(game.getPlayers().get(0).getId(), lobbyGetDTO.getPlayers().get(0).getId());
     }
 }
