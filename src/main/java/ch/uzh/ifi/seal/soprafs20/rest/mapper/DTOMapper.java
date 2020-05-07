@@ -51,11 +51,9 @@ public interface DTOMapper {
     @Mapping(source = "board", target = "board")
     GameGetDTO convertEntityToGameGetDTO(Game game);
 
-
     @Mapping(source = "id", target = "id")
     @Mapping(source = "fields", target = "fields")
     BoardGetDTO convertEntityToBoardGetDTO(Board board);
-
 
     @Mapping(source = "id", target = "id")
     @Mapping(source = "occupant", target = "occupant")
@@ -64,11 +62,9 @@ public interface DTOMapper {
     @Mapping(source = "id", target = "id")
     FigureGetDTO convertEntityToFigureGetDTO(Figure figure);
 
-
     @Mapping(source = "id", target = "id")
     @Mapping(source = "user", target = "user")
     @Mapping(source = "colour", target = "colour")
     @Mapping(source = "hand", target = "hand")
     PlayerGetDTO convertEntityToPlayerGetDTO(Player player);
-
 }
