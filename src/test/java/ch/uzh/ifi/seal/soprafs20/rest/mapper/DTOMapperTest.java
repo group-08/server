@@ -1,10 +1,8 @@
 package ch.uzh.ifi.seal.soprafs20.rest.mapper;
 
-import ch.uzh.ifi.seal.soprafs20.game.Game;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.GameGetDTO;
+import ch.uzh.ifi.seal.soprafs20.game.*;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
 import ch.uzh.ifi.seal.soprafs20.user.*;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.UserGetDTO;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostDTO;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -60,12 +58,28 @@ public class DTOMapperTest {
         user.setStatus(UserStatus.OFFLINE);
         user.setToken("1");
         Game game = new Game(user, "testGame");
+        game.setGameState(GameState.RUNNING);
 
-        GameGetDTO gameGetDTO = DTOMapper.INSTANCE.convertEntityToGameGetDTO(game);
+        LobbyGetDTO lobbyGetDTO = DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(game);
 
-        assertEquals(game.getId(), gameGetDTO.getId());
-        assertEquals(game.getName(), gameGetDTO.getName());
-        assertEquals(game.getGameState(), gameGetDTO.getGameState());
-        assertEquals(game.getPlayers(), gameGetDTO.getPlayers());
+        assertEquals(game.getId(), lobbyGetDTO.getId());
+        assertEquals(game.getName(), lobbyGetDTO.getName());
+        assertEquals(game.getGameState(), lobbyGetDTO.getGameState());
+        assertEquals(game.getPlayers().get(0).getId(), lobbyGetDTO.getPlayers().get(0).getId());
+    }
+
+    @Test
+    public void testCreatePlayerGetDTO_fromPlayer() {
+        Player testPlayer = new Player();
+        testPlayer.setColour(Colour.GREEN);
+
+        User testUser = new User();
+        testUser.setId(1L);
+
+        testPlayer.setUser(testUser);
+
+        PlayerGetDTO testPlayerDTO = DTOMapper.INSTANCE.convertEntityToPlayerGetDTO(testPlayer);
+        assertEquals(testPlayer.getColour(), testPlayerDTO.getColour());
+        assertEquals(testPlayer.getUser().getId(), testPlayerDTO.getUser().getId());
     }
 }

@@ -10,7 +10,6 @@ import ch.uzh.ifi.seal.soprafs20.repository.BoardRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.user.Figure;
 import ch.uzh.ifi.seal.soprafs20.user.Player;
-import org.apache.catalina.startup.HomesUserDatabase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -25,10 +24,13 @@ import java.util.Queue;
 @Transactional
 public class BoardService {
 
+    private final BoardRepository boardRepository;
     private final GameRepository gameRepository;
 
     @Autowired
-    public BoardService(@Qualifier("gameRepository") GameRepository gameRepository){
+    public BoardService(@Qualifier("boardRepository") BoardRepository boardRepository,
+                        @Qualifier("gameRepository") GameRepository gameRepository){
+        this.boardRepository = boardRepository;
         this.gameRepository = gameRepository;
     }
 
@@ -54,6 +56,7 @@ public class BoardService {
             }
         }
     }
+
 
     public Field matchFields(Game game, Field currentField) {
         for (Field field : this.getBoard(game).getFields()) {
@@ -309,10 +312,3 @@ public class BoardService {
     }
 
 }
-
-
-
-
-
-
-
