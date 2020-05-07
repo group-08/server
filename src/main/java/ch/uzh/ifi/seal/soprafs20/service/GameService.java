@@ -1,9 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.service;
 
 
-import ch.uzh.ifi.seal.soprafs20.cards.JokerCard;
-import ch.uzh.ifi.seal.soprafs20.cards.NormalCard;
-import ch.uzh.ifi.seal.soprafs20.cards.Value;
+import ch.uzh.ifi.seal.soprafs20.cards.*;
 import ch.uzh.ifi.seal.soprafs20.game.GameState;
 import ch.uzh.ifi.seal.soprafs20.repository.*;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.GameGetDTO;
@@ -13,7 +11,6 @@ import ch.uzh.ifi.seal.soprafs20.user.Figure;
 import ch.uzh.ifi.seal.soprafs20.user.Player;
 import ch.uzh.ifi.seal.soprafs20.user.User;
 import ch.uzh.ifi.seal.soprafs20.board.Board;
-import ch.uzh.ifi.seal.soprafs20.cards.Card;
 import ch.uzh.ifi.seal.soprafs20.field.Field;
 import ch.uzh.ifi.seal.soprafs20.game.Game;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.MovePostDTO;
@@ -350,6 +347,9 @@ public class GameService {
 
     // For testing reasons
     public MovePostDTO automaticMove(Player player, long gameId) {
+        Card cardKing = new NormalCard(Suit.SPADES, Value.ACE);
+        player.getHand().remove(0);
+        player.getHand().add(cardKing);
         for (Figure figure : player.getFigures())  {
             for (Card card : player.getHand()) {
                 if (card instanceof JokerCard) {
