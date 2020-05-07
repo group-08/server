@@ -1,9 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.cards;
 
 
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table( name = "JokerCard")

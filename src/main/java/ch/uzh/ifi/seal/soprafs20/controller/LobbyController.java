@@ -1,9 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.controller;
 
 
-import ch.uzh.ifi.seal.soprafs20.rest.dto.LobbyGetDTO;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.LobbyPostCreateDTO;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
 import ch.uzh.ifi.seal.soprafs20.service.GameService;
 import ch.uzh.ifi.seal.soprafs20.user.User;
 import org.springframework.http.HttpStatus;
