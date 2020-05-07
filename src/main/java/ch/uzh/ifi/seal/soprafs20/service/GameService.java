@@ -271,14 +271,13 @@ public class GameService {
     }
 
     public boolean checkIfCardsLeft(Game game)   {
-        boolean check = false;
+        int counter = 0;
         for (Player player : game.getPlayers()) {
-            if (player.getHand() != null) {
-                check = true;
-                break;
+            if (player.getHand().isEmpty()) {
+                counter++;
             }
         }
-        return check;
+        return counter<4;
     }
 
     /**
@@ -366,7 +365,8 @@ public class GameService {
                 }
             }
         }
-        return null;
+        MovePostDTO moveReturn = new MovePostDTO();
+        return moveReturn;
     }
 
 

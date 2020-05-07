@@ -149,7 +149,8 @@ public class BoardService {
         if(field instanceof HomeField && (card.getValue() == Value.KING || card.getValue() == Value.ACE)){
             Player playerOfField = ((HomeField) field).getPlayer();
             for (Field key : board.getFields()){
-                if(key instanceof FirstField && ((FirstField) key).getPlayer()==playerOfField){
+                if(key instanceof FirstField && ((FirstField) key).getPlayer().getId()==playerOfField.getId() &&
+                !(((FirstField) key).getBlocked())){
                     ArrayList<Field> fields = new ArrayList<>();
                     fields.add(key);
                     return fields;
@@ -257,13 +258,15 @@ public class BoardService {
                 }
                 else {
                     List<Field> adjFields = temp.getAdjacencyList();
+                    List<Field> adjFieldsCopyFirstState = new ArrayList<>(adjFields);
                     if (temp instanceof FirstField && ((FirstField) temp).getBlocked()) {
-                        for (Field field1 : adjFields) {
+                        for (Field field1 : adjFieldsCopyFirstState) {
                             if (field1 instanceof GoalField) {
                                 adjFields.remove(field1);
                             }
                         }
                     }
+
                     for (Field f : adjFields) {
                         if (f instanceof FirstField && ((FirstField) f).getBlocked()) {
                             assert true;

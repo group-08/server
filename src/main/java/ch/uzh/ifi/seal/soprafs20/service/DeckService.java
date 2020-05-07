@@ -27,8 +27,8 @@ public class DeckService {
         this.cardService = new CardService(cardRepository);
     }
 
-    ///number of decks we play with default 2
-    private int numberOfDecks = 2;
+    ///number of decks we play with default 1
+    private int numberOfDecks = 1;
 
     ///default for 4 players if we change this we would ned a player list somewhere which has than a length
     private int numberOfPlayers = 4;

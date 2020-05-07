@@ -342,9 +342,9 @@ public class GameServiceIntegrationTest {
 
         deckService.createDeck(game.getDeck());
 
-        gameService.setUpGame(game.getId());
+        gameService.setUpGame(ID);
 
-        game = gameRepository.findById(game.getId()).orElse(null);
+        game = gameRepository.findById(ID).orElse(null);
         assert game != null;
 
 
@@ -353,9 +353,9 @@ public class GameServiceIntegrationTest {
         /////////// MOVE LOGIC ///////////
 
 
-
-        for (int i = 0; i < 2; i++)   {
-            game = gameRepository.findById(game.getId()).orElse(null);
+        List<Card> playedCards = new ArrayList<>();
+        for (int i = 0; i < 44; i++)   {
+            game = gameRepository.findById(ID).orElse(null);
             assert game!=null;
             Player player = game.getPlayers().get(0);
             Card cardAce = new NormalCard(Suit.SPADES, Value.ACE);
@@ -367,16 +367,19 @@ public class GameServiceIntegrationTest {
                 if (card instanceof JokerCard) {
                     player.getHand().remove(card);
                     player.getHand().add(cardAce2);
+
                 }
                 if (card.getValue() == Value.SEVEN) {
                     ((NormalCard) card).setValue(Value.ACE);
                 }
             }
-            MovePostDTO move = gameService.automaticMove(player, game.getId());
-            gameRepository.saveAndFlush(game);
+
+            playerRepository.saveAndFlush(player);
+            MovePostDTO move = gameService.automaticMove(player, ID);
+            playedCards.add(move.getCard());
             gameService.playPlayersMove(move);
         }
-        Game gameAfterMove = gameRepository.findById(game.getId()).orElse(null);
+        Game gameAfterMove = gameRepository.findById(ID).orElse(null);
         assert gameAfterMove!= null;
     }
 
