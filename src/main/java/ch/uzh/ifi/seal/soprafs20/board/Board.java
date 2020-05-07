@@ -2,10 +2,14 @@ package ch.uzh.ifi.seal.soprafs20.board;
 
 import ch.uzh.ifi.seal.soprafs20.field.*;
 import ch.uzh.ifi.seal.soprafs20.user.Figure;
+import ch.uzh.ifi.seal.soprafs20.user.Player;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -16,14 +20,26 @@ public class Board implements Serializable {
     @Id
     private long id;
 
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(targetEntity = Field.class, cascade = CascadeType.ALL)
     private List<Field> fields = new ArrayList<>();
 
 
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(targetEntity = Player.class, cascade = CascadeType.ALL)
+    private List<Player> players = new ArrayList<>();
+
     public Board() {
         // Create all the fields
         for (int i = 0; i <= 63; i++){ // Casual fields
-            this.fields.add(new CasualField());
+            if(i==0 || i==16 || i==32 || i==48){
+                FirstField firstField = new FirstField();
+                firstField.setBlocked(false);
+                this.fields.add(firstField);
+            }
+            else {
+                this.fields.add(new CasualField());
+            }
         }
         for (int i = 64; i <= 79; i++){ // Goal field
             this.fields.add(new GoalField());

@@ -1,15 +1,18 @@
 package ch.uzh.ifi.seal.soprafs20.game;
 
 
+
 import ch.uzh.ifi.seal.soprafs20.board.Board;
 import ch.uzh.ifi.seal.soprafs20.board.CasualBoard;
 import ch.uzh.ifi.seal.soprafs20.cards.Deck;
-import ch.uzh.ifi.seal.soprafs20.field.Field;
-import ch.uzh.ifi.seal.soprafs20.user.Figure;
-import ch.uzh.ifi.seal.soprafs20.user.Player;
-import ch.uzh.ifi.seal.soprafs20.user.User;
+import ch.uzh.ifi.seal.soprafs20.field.*;
+import ch.uzh.ifi.seal.soprafs20.user.*;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +30,7 @@ public class Game implements Serializable {
     @Enumerated
     GameState gameState;
 
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(targetEntity = Player.class, cascade = CascadeType.ALL)
     List<Player> players = new ArrayList<>();
 
@@ -83,10 +87,11 @@ public class Game implements Serializable {
      * @param id Field id
      * @param player Player to assign to figure
      */
-    public void setPlayer(int id, Player player) {
+    public void assignPlayerandFigureandHomeField(int id, Player player) {
         if (board.getField(id).getOccupant() != null) {
-            Field field = board.getField(id);
+            HomeField field =(HomeField) board.getField(id);
             Figure figure = field.getOccupant();
+            field.setPlayer(player);
             figure.setPlayer(player);
             player.addFigure(figure);
         } else {

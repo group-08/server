@@ -1,5 +1,9 @@
 package ch.uzh.ifi.seal.soprafs20.cards;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+import org.springframework.context.annotation.Lazy;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.*;
@@ -12,7 +16,8 @@ public class Deck implements Serializable {
     @GeneratedValue
     private Long id;
 
-    @OneToMany(targetEntity = Card.class)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(targetEntity = Card.class, cascade = CascadeType.ALL)
     List<Card> cards = new ArrayList<Card>();
 
 

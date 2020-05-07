@@ -30,4 +30,20 @@ public class NormalCard extends Card {
     public Value getValue(){
         return this.value;
     }
+
+    public void setValue(Value value)  {
+        this.value = value;
+    }
+
+    @Override
+    public boolean equals(Object otherObject){
+        if(otherObject==null){
+            return false;
+        }
+        if(otherObject instanceof NormalCard){
+            NormalCard other = (NormalCard) otherObject;
+            return suit.equals(other.suit) && value.equals(other.value);
+        }
+        return false;
+    }
 }

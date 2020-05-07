@@ -2,10 +2,13 @@ package ch.uzh.ifi.seal.soprafs20.service;
 
 
 import ch.uzh.ifi.seal.soprafs20.cards.Card;
+import ch.uzh.ifi.seal.soprafs20.cards.JokerCard;
 import ch.uzh.ifi.seal.soprafs20.cards.Value;
 import ch.uzh.ifi.seal.soprafs20.game.Game;
+import ch.uzh.ifi.seal.soprafs20.repository.BoardRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.MovePostDTO;
 import ch.uzh.ifi.seal.soprafs20.user.Figure;
 import ch.uzh.ifi.seal.soprafs20.user.Player;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,11 +29,11 @@ public class PlayerService {
 
     @Autowired
     public PlayerService(@Qualifier("playerRepository") PlayerRepository playerRepository,
-                         @Qualifier("gameRepository") GameRepository gameRepository,
-                         @Qualifier("boardService") BoardService boardService){
+                         @Qualifier("boardRepository") BoardRepository boardRepository,
+                         @Qualifier("gameRepository") GameRepository gameRepository){
         this.playerRepository=playerRepository;
         this.gameRepository = gameRepository;
-        this.boardService = boardService;
+        this.boardService = new BoardService(boardRepository, gameRepository);
     }
 
     public void addGiftedCard(long gameId, long playerId, Card card){
@@ -48,27 +52,37 @@ public class PlayerService {
 
     }
 
-    public void removeFromHand(long playerId, Card card){
+    public void removeCardFromHand(List<Card> hand, Card card){
+        for(Card cardInHand : hand){
+            if(card.equals(cardInHand)){
+                hand.remove(cardInHand);
+                return;
+            }
+        }
+    }
 
-        Player actualPlayer = playerRepository.findById(playerId).orElse(null);
-        assert actualPlayer != null;
+    public void removeFromHand(Player actualPlayer, Card card){
         List<Card> hand = actualPlayer.getHand();
-        hand.remove(card);
+        removeCardFromHand(hand,card);
         actualPlayer.setHand(hand);
         playerRepository.saveAndFlush(actualPlayer);
     }
 
     public void exchange(long gameId, long playerId, Card card){
+        Player player = playerRepository.findById(playerId).orElse(null);
+        assert player != null;
         addGiftedCard(gameId,playerId,card);
-        removeFromHand(playerId,card);
+        removeFromHand(player,card);
     }
 
-    public void removeAllFromHand(long playerId) {
-        Player player = playerRepository.getOne(playerId);
-        player.setHand(null);
+    public void removeAllFromHand(Player player) {
+        List<Card> playersHand = new ArrayList<>(player.getHand());
+        for (Card card : playersHand) {
+            removeCardFromHand(player.getHand(), card);
+        }
     }
 
-    public boolean checkIfCanPlay(long gameId, long playerId) {
+    public boolean checkIfCanPlay(Game game, long playerId) {
         Player player = playerRepository.getOne(playerId);
         boolean canPlay = false;
         for (Card card : player.getHand()) {
@@ -78,11 +92,13 @@ public class PlayerService {
                         canPlay = true;
                     }
                 } else if (card.getValue() == Value.JACK) {
-                    if (boardService.getPossibleFieldsJack(gameId, card, figure.getField()) != null) {
+                    if (boardService.getPossibleFieldsJack(game, card, figure.getField()) != null) {
                         canPlay = true;
                     }
+                } else if (card instanceof JokerCard){
+                    canPlay = true;
                 } else {
-                    if (boardService.getPossibleFields(gameId, card, figure.getField()) != null) {
+                    if (boardService.getPossibleFields(game, card, figure.getField()) != null) {
                         canPlay = true;
                     }
                 }

@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.service;
 
 import ch.uzh.ifi.seal.soprafs20.cards.*;
+import ch.uzh.ifi.seal.soprafs20.repository.CardRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.DeckRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,13 +22,13 @@ public class DeckService {
 
 
     @Autowired
-    public DeckService(@Qualifier("deckRepository") DeckRepository deckRepository, CardService cardService) {
+    public DeckService(@Qualifier("deckRepository") DeckRepository deckRepository, @Qualifier("cardRepository") CardRepository cardRepository) {
         this.deckRepository = deckRepository;
-        this.cardService = cardService;
+        this.cardService = new CardService(cardRepository);
     }
 
-    ///number of decks we play with default 2
-    private int numberOfDecks = 2;
+    ///number of decks we play with default 1
+    private int numberOfDecks = 1;
 
     ///default for 4 players if we change this we would ned a player list somewhere which has than a length
     private int numberOfPlayers = 4;
@@ -45,14 +46,13 @@ public class DeckService {
         return getDeck(Id).getCardsInDeck();
     }
 /////maybe done
-    public void shuffleDeck(Long Id){
+    public void shuffleDeck(Deck deck){
 
-        ///safe
-        Collections.shuffle(getCards(Id));
+        Collections.shuffle(deck.getCardsInDeck());
     }
 
-    private int checkLengthOfTheDeck(Long Id){
-        return getDeck(Id).getCardsInDeck().size() * numberOfPlayers;
+    public int checkLengthOfTheDeck(long Id){
+        return getDeck(Id).getCardsInDeck().size();
     }
 
     private void safeDeck(Deck deck){
@@ -74,8 +74,10 @@ public class DeckService {
         List<Card> allCards = createCards();
         getDeck(Id).setCards(allCards);
 
+        Deck deck = getDeck(Id);
+
         ///shuffle the Deck
-        shuffleDeck(Id);
+        shuffleDeck(deck);
 
         ///safe the newly filled deck
         safeDeck(getDeck(Id));
@@ -90,29 +92,21 @@ public class DeckService {
     }
 
 
-
+    public Card removeCard(Long id) {
+        return getDeck(id).getCardsInDeck().remove(0);
+    }
 
     /// second version
     public List<Card> drawCards (int amountToDraw, Long  Id){
 
-
         List<Card> hand = new ArrayList<Card>();
 
-        Card topCard;
-
-        List<Card> currentCards = getCards(Id);
 
         ///drawing as many cards from cards as necessary
         for (int loopVal = 0; loopVal < amountToDraw; loopVal++){
             ///from list instead
-            topCard = currentCards.remove(0);
-            hand.add(topCard);
+            hand.add(removeCard(Id));
         }
-
-        emptyDeck(Id);
-        getDeck(Id).setCards(currentCards);
-
-        safeDeck(getDeck(Id));
 
         return hand;
     }
@@ -120,7 +114,7 @@ public class DeckService {
 
     public void createDeck(Deck deck){
         ///create the cards
-        List<Card> allCards = createCards();
+        List<Card> allCards = this.createCards();
 
         // Shuffle the cards
         Collections.shuffle(allCards);
@@ -133,12 +127,10 @@ public class DeckService {
         deck.setCards(allCards);
 
         ///shuffle the deck
-        safeDeck(deck);
-
-        shuffleDeck(deck.getId());
+        this.shuffleDeck(deck);
 
         ///safe the deck in jpa
-        safeDeck(deck);
+        this.safeDeck(deck);
 
     }
     ///creating the unique deck in two steps

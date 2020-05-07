@@ -113,11 +113,11 @@ class BoardServiceTest {
 
         //apply the functions with inputs
         List<Field> possibleFieldsTWO =
-                boardService.getPossibleFields(1L, cardTWO, field0_samePlayer_as_GoalField);
+                boardService.getPossibleFields(testGame, cardTWO, field0_samePlayer_as_GoalField);
         List<Field> possibleFieldsTWO_diffPlayer =
-                boardService.getPossibleFields(1L, cardTWO, field63_not_samePlayer_as_GoalField);
-        List<Field> possibleFieldsFIVE = boardService.getPossibleFields(1L, cardFIVE, field1);
-        List<Field> possibleFieldsTEN = boardService.getPossibleFields(1L, cardTEN, field1);
+                boardService.getPossibleFields(testGame, cardTWO, field63_not_samePlayer_as_GoalField);
+        List<Field> possibleFieldsFIVE = boardService.getPossibleFields(testGame, cardFIVE, field1);
+        List<Field> possibleFieldsTEN = boardService.getPossibleFields(testGame, cardTEN, field1);
 
         //check if the fields are correct and if multiple fields are returned
         assertEquals(field1.getId() + 5, possibleFieldsFIVE.get(0).getId());
@@ -190,7 +190,7 @@ class BoardServiceTest {
 
         Card cardFOUR = new NormalCard(Suit.CLUBS, Value.FOUR);
 
-        List<Field> possibleFieldsFOUR = boardService.getPossibleFields(1L, cardFOUR, field1_samePlayer_as_GoalField);
+        List<Field> possibleFieldsFOUR = boardService.getPossibleFields(testGame, cardFOUR, field1_samePlayer_as_GoalField);
 
         Field field61 = testGame.getBoard().getField(61);
         Field field68 = testGame.getBoard().getField(68);
