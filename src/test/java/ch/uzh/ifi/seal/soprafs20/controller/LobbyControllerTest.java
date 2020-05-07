@@ -1,18 +1,13 @@
 package ch.uzh.ifi.seal.soprafs20.controller;
 
-import ch.uzh.ifi.seal.soprafs20.game.Game;
-import ch.uzh.ifi.seal.soprafs20.game.WeatherState;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.GameGetDTO;
+import ch.uzh.ifi.seal.soprafs20.game.*;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.LobbyGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.LobbyPostCreateDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.service.GameService;
-import ch.uzh.ifi.seal.soprafs20.service.UserService;
-import ch.uzh.ifi.seal.soprafs20.user.Player;
-import ch.uzh.ifi.seal.soprafs20.user.User;
-import ch.uzh.ifi.seal.soprafs20.user.UserStatus;
+import ch.uzh.ifi.seal.soprafs20.user.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +17,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.util.Assert;
 import org.springframework.web.server.ResponseStatusException;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
@@ -58,9 +50,9 @@ public class LobbyControllerTest {
 
         Game lobby = new Game(user, "testGame");
 
-        GameGetDTO lobbyGetDTO = DTOMapper.INSTANCE.convertEntityToGameGetDTO(lobby);
+        LobbyGetDTO lobbyGetDTO = DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(lobby);
 
-        List<GameGetDTO> allGames = Collections.singletonList(lobbyGetDTO);
+        List<LobbyGetDTO> allGames = Collections.singletonList(lobbyGetDTO);
 
         given(gameService.getAllLobbies()).willReturn(allGames);
         given(gameService.checkIfUserExists(Mockito.anyString())).willReturn(true);
@@ -88,13 +80,21 @@ public class LobbyControllerTest {
         LobbyPostCreateDTO lobbyPostCreateDTO = new LobbyPostCreateDTO();
         lobbyPostCreateDTO.setName("Allo");
 
-        GameGetDTO gameGetDTO = new GameGetDTO();
-        gameGetDTO.setName(lobbyPostCreateDTO.getName());
+        Player player = new Player();
+        player.setUser(user);
+
+        LobbyGetDTO lobbyGetDTO = new LobbyGetDTO();
+        lobbyGetDTO.setId(1L);
+        lobbyGetDTO.setName(lobbyPostCreateDTO.getName());
+        lobbyGetDTO.setHost(user);
+        lobbyGetDTO.setGameState(GameState.PENDING);
+        lobbyGetDTO.setPlayers(Collections.singletonList(player));
 
         given(gameService.getUserByToken(Mockito.anyString())).willReturn(user);
-        given(gameService.createLobby(Mockito.any(), Mockito.anyString())).willReturn(gameGetDTO);
+        given(gameService.createLobby(Mockito.any(), Mockito.anyString())).willReturn(lobbyGetDTO);
 
-        MockHttpServletRequestBuilder postRequest = post("/lobbies").contentType(MediaType.APPLICATION_JSON)
+        MockHttpServletRequestBuilder postRequest = post("/lobbies")
+                .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(lobbyPostCreateDTO))
                 .header("X-Token", "1");
 
@@ -112,9 +112,11 @@ public class LobbyControllerTest {
         Game lobby = new Game(user, "testGame");
         lobby.setId((long)1);
         lobby.setWeatherState(WeatherState.CASUAL);
-        lobby.setBoard(null);
+        
 
-        given(gameService.getLobbyById(1)).willReturn(DTOMapper.INSTANCE.convertEntityToGameGetDTO(lobby));
+        LobbyGetDTO lobbyGetDTO = DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(lobby);
+
+        given(gameService.getLobbyById(1)).willReturn(DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(lobby));
 
         MockHttpServletRequestBuilder getRequest = get("/lobby/{id}", "1")
                 .contentType(MediaType.APPLICATION_JSON)

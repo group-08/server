@@ -1,12 +1,9 @@
 package ch.uzh.ifi.seal.soprafs20.controller;
 
 
-import ch.uzh.ifi.seal.soprafs20.rest.dto.GameGetDTO;
-import ch.uzh.ifi.seal.soprafs20.user.User;
-import ch.uzh.ifi.seal.soprafs20.game.Game;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.LobbyPostCreateDTO;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.UserPostDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
 import ch.uzh.ifi.seal.soprafs20.service.GameService;
+import ch.uzh.ifi.seal.soprafs20.user.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,9 +20,9 @@ public class LobbyController {
     @GetMapping("/lobbies")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public List<GameGetDTO> getAllLobbies(@RequestHeader("X-Token") String token){
+    public List<LobbyGetDTO> getAllLobbies(@RequestHeader("X-Token") String token){
         if(gameService.checkIfUserExists(token)) {
-            List<GameGetDTO> allGames = gameService.getAllLobbies();
+            List<LobbyGetDTO> allGames = gameService.getAllLobbies();
             return allGames;
         }
         else{
@@ -36,19 +33,19 @@ public class LobbyController {
     @PostMapping("/lobbies")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public GameGetDTO createLobby(@RequestBody LobbyPostCreateDTO lobbyPostCreateDTO,
-                            @RequestHeader("X-Token") String token){
+    public LobbyGetDTO createLobby(@RequestBody LobbyPostCreateDTO lobbyPostCreateDTO,
+                                   @RequestHeader("X-Token") String token){
         String lobbyName = lobbyPostCreateDTO.getName();
         User userCreatingLobby = gameService.getUserByToken(token);
-        GameGetDTO createdGame = gameService.createLobby(userCreatingLobby, lobbyName);
-        return createdGame;
+        LobbyGetDTO createdLobby = gameService.createLobby(userCreatingLobby, lobbyName);
+        return createdLobby;
     }
 
 
     @GetMapping("/lobby/{id}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public GameGetDTO getLobbyById(@PathVariable Long id){
+    public LobbyGetDTO getLobbyById(@PathVariable Long id){
         return gameService.getLobbyById(id);
     }
 

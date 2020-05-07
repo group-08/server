@@ -1,6 +1,5 @@
 package ch.uzh.ifi.seal.soprafs20.rest.dto;
 
-import ch.uzh.ifi.seal.soprafs20.board.Board;
 import ch.uzh.ifi.seal.soprafs20.game.GameState;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.user.Player;
@@ -9,10 +8,11 @@ import ch.uzh.ifi.seal.soprafs20.user.User;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameGetDTO {
-    private Long id;
+public class LobbyGetDTO {
 
     private String name;
+
+    private Long id;
 
     private GameState gameState;
 
@@ -20,7 +20,13 @@ public class GameGetDTO {
 
     private List<Player> players;
 
-    private Board board;
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+         this.name = name;
+    }
 
     public Long getId() {
         return id;
@@ -30,29 +36,12 @@ public class GameGetDTO {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public GameState getGameState() {
         return gameState;
     }
 
     public void setGameState(GameState gameState) {
         this.gameState = gameState;
-    }
-
-    public UserGetDTO getHost() {
-        UserGetDTO hostDTO = DTOMapper.INSTANCE.convertEntityToUserGetDTO(this.host);
-        return hostDTO;
-    }
-
-    public void setHost(User host) {
-        this.host = host;
     }
 
     public List<PlayerGetDTO> getPlayers() {
@@ -67,12 +56,11 @@ public class GameGetDTO {
         this.players = players;
     }
 
-    public BoardGetDTO getBoard() {
-        BoardGetDTO boardGetDTO = DTOMapper.INSTANCE.convertEntityToBoardGetDTO(this.board);
-        return boardGetDTO;
+    public void setHost(User host) {
+        this.host = host;
     }
 
-    public void setBoard(Board board) {
-        this.board = board;
+    public UserGetDTO getHost() {
+        return DTOMapper.INSTANCE.convertEntityToUserGetDTO(host);
     }
 }

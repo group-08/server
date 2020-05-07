@@ -13,9 +13,19 @@ public abstract class Card implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    @Enumerated
+    protected Value value;
+
+    @Enumerated
+    protected CardType type;
+
     public abstract String toString();
 
-    public Value getValue(){
-        return null;
+    public Value getValue() {
+        return this.value;
+    }
+
+    public CardType getType() {
+        return this.type;
     }
 }

@@ -2,8 +2,7 @@ package ch.uzh.ifi.seal.soprafs20.cards;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "DECK")

@@ -4,11 +4,7 @@ package ch.uzh.ifi.seal.soprafs20.controller;
 import ch.uzh.ifi.seal.soprafs20.board.Board;
 import ch.uzh.ifi.seal.soprafs20.cards.Card;
 import ch.uzh.ifi.seal.soprafs20.field.Field;
-import ch.uzh.ifi.seal.soprafs20.game.Game;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.ExchangePostDTO;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.GameGetDTO;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.GameGetDTO2;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.MovePostDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.service.GameService;
 import ch.uzh.ifi.seal.soprafs20.user.User;
@@ -43,8 +39,8 @@ public class GameController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public GameGetDTO getGame(@PathVariable Long id) {
-        GameGetDTO gameNoDeck = DTOMapper.INSTANCE.convertEntityToGameGetDTO(gameService.getGameById(id));
-        return gameNoDeck;
+        GameGetDTO game = gameService.getGameById(id);
+        return game;
     }
     //get current game with id
 
@@ -57,12 +53,16 @@ public class GameController {
     @ResponseBody
 
     public GameGetDTO exchangeCard(@RequestBody ExchangePostDTO exchangePostDTO,
-                             @RequestHeader("X-Token") String token, @PathVariable String id) {
+                                    @RequestHeader("X-Token") String token, @PathVariable String id) {
         User userExchangingCard = gameService.getUserByToken(token);
         long gameId = exchangePostDTO.getId();
         Card cardToExchange = exchangePostDTO.getCard();
-        GameGetDTO updatedGame =
-                DTOMapper.INSTANCE.convertEntityToGameGetDTO(gameService.letPlayersChangeCard(gameId, userExchangingCard.getId(),cardToExchange));
+        GameGetDTO updatedGame = DTOMapper.INSTANCE.convertEntityToGameGetDTO(
+                gameService.letPlayersChangeCard(
+                        gameId,
+                        userExchangingCard.getId(),
+                        cardToExchange)
+        );
         return updatedGame;
     }
 

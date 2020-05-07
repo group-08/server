@@ -1,16 +1,15 @@
 package ch.uzh.ifi.seal.soprafs20.cards;
 
 
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table( name = "JokerCard")
 public class JokerCard extends Card {
 
-    @Enumerated
-    private Value value = null;
+    public JokerCard() {
+        this.type = CardType.Joker;
+    }
 
     public void setValue(Value value){
         try {
@@ -27,7 +26,6 @@ public class JokerCard extends Card {
     public Value getValue() {
         return this.value;
     }
-
 
     public String toString(){
         if (this.value != null ) {
