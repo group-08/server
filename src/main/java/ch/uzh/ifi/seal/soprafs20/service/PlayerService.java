@@ -49,9 +49,18 @@ public class PlayerService {
 
     }
 
+    public void removeCardFromHand(List<Card> hand, Card card){
+        for(Card cardInHand : hand){
+            if(card.equals(cardInHand)){
+                hand.remove(cardInHand);
+                return;
+            }
+        }
+    }
+
     public void removeFromHand(Player actualPlayer, Card card){
         List<Card> hand = actualPlayer.getHand();
-        hand.remove(card);
+        removeCardFromHand(hand,card);
         actualPlayer.setHand(hand);
         playerRepository.saveAndFlush(actualPlayer);
     }
