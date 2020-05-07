@@ -73,7 +73,9 @@ public class PlayerService {
     }
 
     public void removeAllFromHand(Player player) {
-        player.setHand(null);
+        for (Card card : player.getHand()) {
+            removeCardFromHand(player.getHand(), card);
+        }
     }
 
     public boolean checkIfCanPlay(Game game, long playerId) {
