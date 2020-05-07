@@ -2,6 +2,7 @@ package ch.uzh.ifi.seal.soprafs20.service;
 
 
 import ch.uzh.ifi.seal.soprafs20.cards.*;
+import ch.uzh.ifi.seal.soprafs20.field.FirstField;
 import ch.uzh.ifi.seal.soprafs20.game.GameState;
 import ch.uzh.ifi.seal.soprafs20.repository.*;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.GameGetDTO;
@@ -212,10 +213,15 @@ public class GameService {
         // Assign figures to players
         for (int playerIndex = 0; playerIndex < 4; playerIndex++) {
             Player player = game.getPlayer(playerIndex);
+            int fieldIndex = playerIndex*16+1;
+            //assign player to firstFields
+            FirstField firstFieldToAssignPlayer = (FirstField)game.getBoard().getField(fieldIndex);
+            firstFieldToAssignPlayer.setPlayer(player);
+            //assign all figures to player, all players to their figures and all players to homeFields
             int firstField = 81+(playerIndex*4);
             int lastField = firstField+3;
             for (int figureIndex = firstField; figureIndex<=lastField; figureIndex++) {
-                game.assignPlayerandFigure(figureIndex, player);
+                game.assignPlayerandFigureandHomeField(figureIndex, player);
             }
         }
 
@@ -347,16 +353,8 @@ public class GameService {
 
     // For testing reasons
     public MovePostDTO automaticMove(Player player, long gameId) {
-        Card cardKing = new NormalCard(Suit.SPADES, Value.ACE);
-        player.getHand().remove(0);
-        player.getHand().add(cardKing);
         for (Figure figure : player.getFigures())  {
             for (Card card : player.getHand()) {
-                if (card instanceof JokerCard) {
-                    ((JokerCard) card).setValue(Value.KING);
-                } else if (card.getValue() == Value.SEVEN) {
-                    ((NormalCard) card).setValue(Value.ACE);
-                }
                 MovePostDTO move = new MovePostDTO();
                 move.setId(gameId);
                 move.setCard(card);

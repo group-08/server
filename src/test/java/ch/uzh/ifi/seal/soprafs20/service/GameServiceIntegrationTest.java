@@ -19,6 +19,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @WebAppConfiguration
@@ -351,9 +354,26 @@ public class GameServiceIntegrationTest {
 
 
 
-        for (int i = 0; i < 1; i++)   {
+        for (int i = 0; i < 2; i++)   {
+            game = gameRepository.findById(game.getId()).orElse(null);
+            assert game!=null;
             Player player = game.getPlayers().get(0);
+            Card cardAce = new NormalCard(Suit.SPADES, Value.ACE);
+            Card cardAce2 = new NormalCard(Suit.SPADES, Value.ACE);
+            player.getHand().remove(0);
+            player.getHand().add(cardAce);
+            List<Card> playerHand = new ArrayList<>(player.getHand());
+            for (Card card : playerHand) {
+                if (card instanceof JokerCard) {
+                    player.getHand().remove(card);
+                    player.getHand().add(cardAce2);
+                }
+                if (card.getValue() == Value.SEVEN) {
+                    ((NormalCard) card).setValue(Value.ACE);
+                }
+            }
             MovePostDTO move = gameService.automaticMove(player, game.getId());
+            gameRepository.saveAndFlush(game);
             gameService.playPlayersMove(move);
         }
         Game gameAfterMove = gameRepository.findById(game.getId()).orElse(null);

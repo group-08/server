@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.game;
 
 
+import ch.uzh.ifi.seal.soprafs20.field.HomeField;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.service.BoardService;
@@ -98,10 +99,11 @@ public class Game implements Serializable {
      * @param id Field id
      * @param player Player to assign to figure
      */
-    public void assignPlayerandFigure(int id, Player player) {
+    public void assignPlayerandFigureandHomeField(int id, Player player) {
         if (board.getField(id).getOccupant() != null) {
-            Field field = board.getField(id);
+            HomeField field =(HomeField) board.getField(id);
             Figure figure = field.getOccupant();
+            field.setPlayer(player);
             figure.setPlayer(player);
             player.addFigure(figure);
         } else {
