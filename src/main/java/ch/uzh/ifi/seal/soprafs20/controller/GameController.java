@@ -6,7 +6,6 @@ import ch.uzh.ifi.seal.soprafs20.cards.Card;
 import ch.uzh.ifi.seal.soprafs20.field.Field;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.ExchangePostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.GameGetDTO;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.LobbyGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.MovePostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.service.GameService;
@@ -55,13 +54,17 @@ public class GameController {
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
 
-    public LobbyGetDTO exchangeCard(@RequestBody ExchangePostDTO exchangePostDTO,
+    public GameGetDTO exchangeCard(@RequestBody ExchangePostDTO exchangePostDTO,
                                     @RequestHeader("X-Token") String token, @PathVariable String id) {
         User userExchangingCard = gameService.getUserByToken(token);
         long gameId = exchangePostDTO.getId();
         Card cardToExchange = exchangePostDTO.getCard();
-        LobbyGetDTO updatedGame =
-                DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(gameService.letPlayersChangeCard(gameId, userExchangingCard.getId(),cardToExchange));
+        GameGetDTO updatedGame = DTOMapper.INSTANCE.convertEntityToGameGetDTO(
+                gameService.letPlayersChangeCard(
+                        gameId,
+                        userExchangingCard.getId(),
+                        cardToExchange)
+        );
         return updatedGame;
     }
 
