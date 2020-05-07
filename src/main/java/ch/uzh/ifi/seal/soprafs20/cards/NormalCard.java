@@ -9,12 +9,12 @@ public class NormalCard extends Card {
     @Enumerated
     private Suit suit;
 
-    @Enumerated
-    private Value value;
-
-    public NormalCard() { }
+    public NormalCard() {
+        this.type = CardType.Normal;
+    }
 
     public NormalCard(Suit suit, Value value) {
+        this.type = CardType.Normal;
         this.suit = suit;
         this.value = value;
     }

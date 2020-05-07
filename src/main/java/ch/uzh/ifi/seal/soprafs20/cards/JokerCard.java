@@ -7,8 +7,9 @@ import javax.persistence.*;
 @Table( name = "JokerCard")
 public class JokerCard extends Card {
 
-    @Enumerated
-    private Value value = null;
+    public JokerCard() {
+        this.type = CardType.Joker;
+    }
 
     public void setValue(Value value){
         try {
