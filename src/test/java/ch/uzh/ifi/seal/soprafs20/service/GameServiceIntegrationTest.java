@@ -156,8 +156,8 @@ public class GameServiceIntegrationTest {
         // Check if Field 81's Figure is the first figure of the first player
         assertEquals(game.getPlayer(0).getFigures().get(0), game.getBoard().getField(81).getOccupant());
 
-        // Check if Deck has 32 cards after distribution
-        assertEquals(32, game.getDeck().getCardsInDeck().size());
+        // Check if Deck has 30 cards after distribution
+        assertEquals(30, game.getDeck().getCardsInDeck().size());
 
         // Check if cardNum gets decreased after inital distribution
         assertEquals(5, game.getCardNum());
