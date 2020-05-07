@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.rest.mapper;
 
 import ch.uzh.ifi.seal.soprafs20.game.Game;
+import ch.uzh.ifi.seal.soprafs20.game.GameState;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.LobbyGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.PlayerGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserGetDTO;
@@ -64,6 +65,7 @@ public class DTOMapperTest {
         user.setStatus(UserStatus.OFFLINE);
         user.setToken("1");
         Game game = new Game(user, "testGame");
+        game.setGameState(GameState.RUNNING);
 
         LobbyGetDTO lobbyGetDTO = DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(game);
 
