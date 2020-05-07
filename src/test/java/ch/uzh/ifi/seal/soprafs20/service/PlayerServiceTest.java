@@ -80,8 +80,7 @@ public class PlayerServiceTest {
         assertEquals(test, testPlayer.getHand());
 
         playerService.removeAllFromHand(testPlayer);
-        assertNull(testPlayer.getHand());
-
+        assertEquals(0, testPlayer.getHand().size());
     }
 
 }

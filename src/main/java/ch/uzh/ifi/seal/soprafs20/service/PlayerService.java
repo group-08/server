@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -75,7 +76,8 @@ public class PlayerService {
     }
 
     public void removeAllFromHand(Player player) {
-        for (Card card : player.getHand()) {
+        List<Card> playersHand = new ArrayList<>(player.getHand());
+        for (Card card : playersHand) {
             removeCardFromHand(player.getHand(), card);
         }
     }
