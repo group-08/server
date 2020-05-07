@@ -1,20 +1,22 @@
 package ch.uzh.ifi.seal.soprafs20.service;
 
 
-import ch.uzh.ifi.seal.soprafs20.cards.*;
+import ch.uzh.ifi.seal.soprafs20.board.Board;
+import ch.uzh.ifi.seal.soprafs20.cards.Card;
+import ch.uzh.ifi.seal.soprafs20.cards.Value;
+import ch.uzh.ifi.seal.soprafs20.field.Field;
 import ch.uzh.ifi.seal.soprafs20.field.FirstField;
+import ch.uzh.ifi.seal.soprafs20.game.Game;
 import ch.uzh.ifi.seal.soprafs20.game.GameState;
 import ch.uzh.ifi.seal.soprafs20.repository.*;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.GameGetDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.LobbyGetDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.MovePostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.user.Colour;
 import ch.uzh.ifi.seal.soprafs20.user.Figure;
 import ch.uzh.ifi.seal.soprafs20.user.Player;
 import ch.uzh.ifi.seal.soprafs20.user.User;
-import ch.uzh.ifi.seal.soprafs20.board.Board;
-import ch.uzh.ifi.seal.soprafs20.field.Field;
-import ch.uzh.ifi.seal.soprafs20.game.Game;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.MovePostDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -42,12 +44,15 @@ public class GameService {
                        @Qualifier("deckRepository") DeckRepository deckRepository,
                        @Qualifier("playerRepository") PlayerRepository playerRepository,
                        @Qualifier("userRepository") UserRepository userRepository,
-                       @Qualifier("fieldRepository") FieldRepository fieldRepository)
-    {
+                       @Qualifier("fieldRepository") FieldRepository fieldRepository,
+                       @Qualifier("userService") UserService userService,
+                       @Qualifier("boardRepository") BoardRepository boardRepository ) {
+
+        this.userService = userService;
         this.gameRepository = gameRepository;
         this.fieldRepository = fieldRepository;
-        this.boardService = new BoardService(gameRepository);
-        this.playerService = new PlayerService(playerRepository, gameRepository);
+        this.boardService = new BoardService(boardRepository, gameRepository);
+        this.playerService = new PlayerService(playerRepository, boardRepository, gameRepository);
         this.userService = new UserService(userRepository);
         this.cardService = new CardService(cardRepository);
         this.deckService = new DeckService(deckRepository, cardRepository);
@@ -290,9 +295,9 @@ public class GameService {
         return boardService.checkIfAllTargetFieldsOccupied(game, currentPlayer);
     }
 
-    public GameGetDTO getLobbyById(long id){
+    public LobbyGetDTO getLobbyById(long id){
         Game game = gameRepository.findById(id).orElse(null);
-        return DTOMapper.INSTANCE.convertEntityToGameGetDTO(game);
+        return DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(game);
     }
 
     public void addUser(Long gameId, String tokenOfUser){
@@ -314,13 +319,13 @@ public class GameService {
         return userService.getUserByToken(tokenOfUser) != null;
     }
 
-    public List<GameGetDTO> getAllLobbies(){
+    public List<LobbyGetDTO> getAllLobbies(){
 
 
         List<Game> allGames = gameRepository.findAll();
-        List<GameGetDTO> games = new ArrayList<>();
+        List<LobbyGetDTO> games = new ArrayList<>();
         for(Game game : allGames){
-            games.add(DTOMapper.INSTANCE.convertEntityToGameGetDTO(game));
+            games.add(DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(game));
         }
         return games;
     }
@@ -329,14 +334,15 @@ public class GameService {
         return userService.getUserByToken(token);
     }
 
-    public GameGetDTO createLobby(User userOwner, String gameName){
+    public LobbyGetDTO createLobby(User userOwner, String gameName){
         Game game = new Game(userOwner, gameName);
         gameRepository.saveAndFlush(game);
-        return DTOMapper.INSTANCE.convertEntityToGameGetDTO(game);
+        return DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(game);
     }
 
-    public Game getGameById(Long id){
-        return gameRepository.findById(id).orElse(null);
+    public GameGetDTO getGameById(Long id){
+        Game game =  gameRepository.findById(id).orElse(null);
+        return DTOMapper.INSTANCE.convertEntityToGameGetDTO(game);
     }
     /*
     public void deleteUser(Long id, UserPostDTO userToBeDeletedDTO){

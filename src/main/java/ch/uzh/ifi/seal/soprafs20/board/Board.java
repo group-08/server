@@ -1,22 +1,15 @@
 package ch.uzh.ifi.seal.soprafs20.board;
 
-import ch.uzh.ifi.seal.soprafs20.user.Player;
-import ch.uzh.ifi.seal.soprafs20.field.Field;
-
-import java.io.Serializable;
-import javax.persistence.*;
-
-import ch.uzh.ifi.seal.soprafs20.user.Figure;
-import ch.uzh.ifi.seal.soprafs20.cards.Card;
 import ch.uzh.ifi.seal.soprafs20.field.*;
-import ch.uzh.ifi.seal.soprafs20.repository.BoardRepository;
-import org.hibernate.annotations.Fetch;
+import ch.uzh.ifi.seal.soprafs20.user.Figure;
+import ch.uzh.ifi.seal.soprafs20.user.Player;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
-import org.springframework.beans.factory.annotation.Autowired;
 
-
-import java.util.*;
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -35,11 +28,6 @@ public class Board implements Serializable {
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(targetEntity = Player.class, cascade = CascadeType.ALL)
     private List<Player> players = new ArrayList<>();
-
-    @Transient
-    @Autowired
-    private BoardRepository boardRepository;
-
 
     public Board() {
         // Create all the fields
@@ -127,14 +115,6 @@ public class Board implements Serializable {
 
     }
 
-    public List<Player> getPlayers() {
-        return players;
-    }
-
-    public void setPlayers(List<Player> players) {
-        this.players = players;
-    }
-
     public long getId() {
         return id;
     }
@@ -154,28 +134,6 @@ public class Board implements Serializable {
     public void setFields(List<Field> fields) {
         this.fields = fields;
     }
-
-    public BoardRepository getBoardRepository() {
-        return boardRepository;
-    }
-
-    public void setBoardRepository(BoardRepository boardRepository) {
-        this.boardRepository = boardRepository;
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }
 

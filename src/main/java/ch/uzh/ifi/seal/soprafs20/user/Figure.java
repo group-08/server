@@ -1,8 +1,9 @@
 package ch.uzh.ifi.seal.soprafs20.user;
 
 
-import javax.persistence.*;
 import ch.uzh.ifi.seal.soprafs20.field.Field;
+
+import javax.persistence.*;
 
 @Entity
 @Table(name = "FIGURE")

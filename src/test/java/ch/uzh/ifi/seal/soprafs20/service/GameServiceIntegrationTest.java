@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Repeat;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.ArrayList;
@@ -155,8 +156,8 @@ public class GameServiceIntegrationTest {
         // Check if Field 81's Figure is the first figure of the first player
         assertEquals(game.getPlayer(0).getFigures().get(0), game.getBoard().getField(81).getOccupant());
 
-        // Check if Deck has 32 cards after distribution
-        assertEquals(32, game.getDeck().getCardsInDeck().size());
+        // Check if Deck has 30 cards after distribution
+        assertEquals(30, game.getDeck().getCardsInDeck().size());
 
         // Check if cardNum gets decreased after inital distribution
         assertEquals(5, game.getCardNum());
@@ -358,19 +359,14 @@ public class GameServiceIntegrationTest {
             game = gameRepository.findById(ID).orElse(null);
             assert game!=null;
             Player player = game.getPlayers().get(0);
-            Card cardAce = new NormalCard(Suit.SPADES, Value.ACE);
-            Card cardAce2 = new NormalCard(Suit.SPADES, Value.ACE);
+
             player.getHand().remove(0);
-            player.getHand().add(cardAce);
+            player.getHand().add(new NormalCard(Suit.SPADES, Value.ACE));
             List<Card> playerHand = new ArrayList<>(player.getHand());
             for (Card card : playerHand) {
-                if (card instanceof JokerCard) {
+                if (card instanceof JokerCard || card.getValue() == Value.SEVEN) {
                     player.getHand().remove(card);
-                    player.getHand().add(cardAce2);
-
-                }
-                if (card.getValue() == Value.SEVEN) {
-                    ((NormalCard) card).setValue(Value.ACE);
+                    player.getHand().add(new NormalCard(Suit.SPADES, Value.ACE));
                 }
             }
 

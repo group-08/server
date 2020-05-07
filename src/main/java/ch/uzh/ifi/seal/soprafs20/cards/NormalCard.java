@@ -9,23 +9,18 @@ public class NormalCard extends Card {
     @Enumerated
     private Suit suit;
 
-    @Enumerated
-    private Value value;
-
     public NormalCard() {
-
+        this.type = CardType.Normal;
     }
 
     public NormalCard(Suit suit, Value value) {
+        this.type = CardType.Normal;
         this.suit = suit;
         this.value = value;
     }
 
-
     public String toString(){
-
-       return String.format("Suit: %s Value: %s", this.suit, this.value);
-
+        return String.format("Suit: %s Value: %s", this.suit, this.value);
     }
 
     public Suit getSuit() {

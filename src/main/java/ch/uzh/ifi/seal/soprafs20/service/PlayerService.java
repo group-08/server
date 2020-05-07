@@ -5,6 +5,7 @@ import ch.uzh.ifi.seal.soprafs20.cards.Card;
 import ch.uzh.ifi.seal.soprafs20.cards.JokerCard;
 import ch.uzh.ifi.seal.soprafs20.cards.Value;
 import ch.uzh.ifi.seal.soprafs20.game.Game;
+import ch.uzh.ifi.seal.soprafs20.repository.BoardRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.MovePostDTO;
@@ -27,10 +28,11 @@ public class PlayerService {
 
     @Autowired
     public PlayerService(@Qualifier("playerRepository") PlayerRepository playerRepository,
+                         @Qualifier("boardRepository") BoardRepository boardRepository,
                          @Qualifier("gameRepository") GameRepository gameRepository){
         this.playerRepository=playerRepository;
         this.gameRepository = gameRepository;
-        this.boardService = new BoardService(gameRepository);
+        this.boardService = new BoardService(boardRepository, gameRepository);
     }
 
     public void addGiftedCard(long gameId, long playerId, Card card){

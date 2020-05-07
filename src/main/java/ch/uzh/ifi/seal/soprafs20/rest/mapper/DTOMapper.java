@@ -5,11 +5,12 @@ import ch.uzh.ifi.seal.soprafs20.board.Board;
 import ch.uzh.ifi.seal.soprafs20.field.Field;
 import ch.uzh.ifi.seal.soprafs20.game.Game;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
+import ch.uzh.ifi.seal.soprafs20.user.Figure;
+import ch.uzh.ifi.seal.soprafs20.user.Player;
 import ch.uzh.ifi.seal.soprafs20.user.User;
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
-
-import javax.persistence.MappedSuperclass;
 
 /**
  * DTOMapper
@@ -39,18 +40,31 @@ public interface DTOMapper {
     @Mapping(source = "name", target = "name")
     @Mapping(source = "gameState", target = "gameState")
     @Mapping(source = "players", target = "players")
-    @Mapping(source = "exchangeCard", target = "exchangeCard")
     @Mapping(source = "host", target = "host")
-    @Mapping(source = "cardNum", target = "cardNum")
-    @Mapping(source = "weatherState", target = "weatherState")
+    LobbyGetDTO convertEntityToLobbyGetDTO(Game game);
+
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "name", target = "name")
+    @Mapping(source = "gameState", target = "gameState")
+    @Mapping(source = "players", target = "players")
+    @Mapping(source = "host", target = "host")
+    @Mapping(source = "board", target = "board")
     GameGetDTO convertEntityToGameGetDTO(Game game);
 
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "fields", target = "fields")
+    BoardGetDTO convertEntityToBoardGetDTO(Board board);
 
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "occupant", target = "occupant")
+    FieldGetDTO convertEntityToFieldGetDTO(Field field);
 
+    @Mapping(source = "id", target = "id")
+    FigureGetDTO convertEntityToFigureGetDTO(Figure figure);
 
-
-
-
-
-
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "user", target = "user")
+    @Mapping(source = "colour", target = "colour")
+    @Mapping(source = "hand", target = "hand")
+    PlayerGetDTO convertEntityToPlayerGetDTO(Player player);
 }
