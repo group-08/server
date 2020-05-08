@@ -197,11 +197,11 @@ public class GameServiceIntegrationTest {
         Assertions.assertEquals(targetField.getOccupant(), figureofPlayer);
     }
 
-    @RepeatedTest(value = 1)
+    @RepeatedTest(value = 10)
     public void PlayRounds() {
         /////////// MOVE LOGIC ///////////
         List<Card> playedCards = new ArrayList<>();
-        for (int i = 0; i < 1000; i++)   {
+        for (int i = 0; i < 44; i++)   {
             game = gameRepository.findById(ID).orElse(null);
             assert game!=null;
             Player player = game.getPlayers().get(0);
@@ -218,23 +218,22 @@ public class GameServiceIntegrationTest {
                 player.getHand().add(new NormalCard(Suit.SPADES, Value.ACE));
                 move = gameService.automaticMove(player, ID);
             }
-            long figureId = move.getFigure().getId();
             playerRepository.saveAndFlush(player);
+            Card card = move.getCard();
+            long playerId = player.getId();
             if (move.getCard().getValue() == Value.SEVEN) {
                 while (move.getRemainingSeven() != 0) {
                     int remaining = gameService.playPlayersMoveSeven(ID, move);
-                    move.setRemainingSeven(remaining);
-                    Figure updatedFigure = figureRepository.findById(figureId).orElse(null);
-                    move.setFigure(updatedFigure);
+                    player = playerRepository.findById(playerId).orElse(null);
+                    assert player != null;
+                    move = gameService.automaticMoveSeven(ID, card, player, remaining);
                 }
-                playedCards.add(move.getCard());
+                playedCards.add(card);
             } else {
-                playedCards.add(move.getCard());
+                playedCards.add(card);
                 gameService.playPlayersMove(game.getId(), move);
             }
         }
-        Game gameAfterMove = gameRepository.findById(ID).orElse(null);
-        assert gameAfterMove!= null;
     }
 
 }

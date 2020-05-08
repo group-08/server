@@ -430,5 +430,21 @@ public class GameService {
         return null;
     }
 
+    public MovePostDTO automaticMoveSeven(long gameId, Card card, Player player, int remaining) {
+        for (Figure figure : player.getFigures()) {
+            MovePostDTO move = new MovePostDTO();
+            move.setCard(card);
+            move.setFigure(figure);
+            move.setRemainingSeven(remaining);
+            List<Field> fields = this.getPossibleFields(gameId, move);
+            if (!fields.isEmpty()) {
+                Collections.shuffle(fields);
+                move.setTargetField(fields.get(0));
+                return move;
+            }
+        }
+        return new MovePostDTO();
+    }
+
 
 }
