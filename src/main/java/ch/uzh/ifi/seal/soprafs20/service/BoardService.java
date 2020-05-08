@@ -96,7 +96,6 @@ public class BoardService {
         Field targetField = this.matchFields(game, targetFieldObject);
         Field currentField = getFieldfromFigure(game, figure);
         Field actualField = currentField;
-        Figure occupant = currentField.getOccupant();
         List<Field> fieldsToMove = new ArrayList<>();
         // get all fields in between current and target field
         while (actualField.getId() != targetField.getId()) {
@@ -116,6 +115,8 @@ public class BoardService {
                         }
                     }
                 }
+            } else {
+                fieldsToMove.add(actualField);
             }
         }
         fieldsToMove.add(targetField);
