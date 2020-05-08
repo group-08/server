@@ -4,10 +4,7 @@ import ch.uzh.ifi.seal.soprafs20.cards.*;
 import ch.uzh.ifi.seal.soprafs20.field.Field;
 import ch.uzh.ifi.seal.soprafs20.game.Game;
 import ch.uzh.ifi.seal.soprafs20.game.GameState;
-import ch.uzh.ifi.seal.soprafs20.repository.CardRepository;
-import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
-import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
-import ch.uzh.ifi.seal.soprafs20.repository.UserRepository;
+import ch.uzh.ifi.seal.soprafs20.repository.*;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.MovePostDTO;
 import ch.uzh.ifi.seal.soprafs20.user.*;
 import org.junit.jupiter.api.*;
@@ -41,6 +38,10 @@ public class GameServiceIntegrationTest {
     @Qualifier("cardRepository")
     @Autowired
     private CardRepository cardRepository;
+
+    @Qualifier("figureRepository")
+    @Autowired
+    private FigureRepository figureRepository;
 
     @Autowired
     private UserService userService;
@@ -217,13 +218,16 @@ public class GameServiceIntegrationTest {
                 player.getHand().add(new NormalCard(Suit.SPADES, Value.ACE));
                 move = gameService.automaticMove(player, ID);
             }
+            long figureId = move.getFigure().getId();
             playerRepository.saveAndFlush(player);
             if (move.getCard().getValue() == Value.SEVEN) {
                 while (move.getRemainingSeven() != 0) {
                     int remaining = gameService.playPlayersMoveSeven(ID, move);
                     move.setRemainingSeven(remaining);
-                    playedCards.add(move.getCard());
+                    Figure updatedFigure = figureRepository.findById(figureId).orElse(null);
+                    move.setFigure(updatedFigure);
                 }
+                playedCards.add(move.getCard());
             } else {
                 playedCards.add(move.getCard());
                 gameService.playPlayersMove(game.getId(), move);
