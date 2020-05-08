@@ -327,6 +327,9 @@ public class BoardService {
                         else if (f instanceof GoalField && ((GoalField) f).getPlayer() != fieldToCheck.getOccupant().getPlayer()) {
                             assert true;
                         }
+                        else if (f instanceof GoalField && ((GoalField) f).getPlayer() == fieldToCheck.getOccupant().getPlayer() && f.getOccupant() != null) {
+                            assert true;
+                        }
                         else {
                             queue.add(f);
                         }
