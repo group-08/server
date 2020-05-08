@@ -200,29 +200,34 @@ public class GameServiceIntegrationTest {
     public void PlayRounds() {
         /////////// MOVE LOGIC ///////////
         List<Card> playedCards = new ArrayList<>();
-        for (int i = 0; i < 44; i++)   {
+        for (int i = 0; i < 1000; i++)   {
             game = gameRepository.findById(ID).orElse(null);
             assert game!=null;
             Player player = game.getPlayers().get(0);
-
-            player.getHand().remove(0);
-            player.getHand().add(new NormalCard(Suit.SPADES, Value.ACE));
             List<Card> playerHand = new ArrayList<>(player.getHand());
             for (Card card : playerHand) {
-                if (card instanceof JokerCard || card.getValue() == Value.SEVEN) {
+                if (card instanceof JokerCard) {
                     player.getHand().remove(card);
-                    player.getHand().add(new NormalCard(Suit.SPADES, Value.ACE));
+                    player.getHand().add(new NormalCard(Suit.SPADES, Value.SEVEN));
                 }
             }
-
-            playerRepository.saveAndFlush(player);
             MovePostDTO move = gameService.automaticMove(player, ID);
-            playedCards.add(move.getCard());
-            gameService.playPlayersMove(game.getId(), move);
-
-            Game gameAfterMove = gameRepository.findById(game.getId()).orElse(null);
-            assert gameAfterMove != null;
-
+            if (move == null) {
+                player.getHand().remove(0);
+                player.getHand().add(new NormalCard(Suit.SPADES, Value.ACE));
+                move = gameService.automaticMove(player, ID);
+            }
+            playerRepository.saveAndFlush(player);
+            if (move.getCard().getValue() == Value.SEVEN) {
+                while (move.getRemainingSeven() != 0) {
+                    int remaining = gameService.playPlayersMoveSeven(game.getId(), move);
+                    move.setRemainingSeven(remaining);
+                    playedCards.add(move.getCard());
+                }
+            } else {
+                playedCards.add(move.getCard());
+                gameService.playPlayersMove(game.getId(), move);
+            }
         }
         Game gameAfterMove = gameRepository.findById(ID).orElse(null);
         assert gameAfterMove!= null;

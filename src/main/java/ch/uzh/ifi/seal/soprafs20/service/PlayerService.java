@@ -84,26 +84,25 @@ public class PlayerService {
 
     public boolean checkIfCanPlay(Game game, long playerId) {
         Player player = playerRepository.getOne(playerId);
-        boolean canPlay = false;
         for (Card card : player.getHand()) {
             for (Figure figure : player.getFigures()) {
                 if (card.getValue() == Value.SEVEN) {
                     if (boardService.getPossibleFieldsSeven(card, figure.getField(), 7) != null) {
-                        canPlay = true;
+                        return true;
                     }
                 } else if (card.getValue() == Value.JACK) {
                     if (boardService.getPossibleFieldsJack(game, card, figure.getField()) != null) {
-                        canPlay = true;
+                        return true;
                     }
                 } else if (card instanceof JokerCard){
-                    canPlay = true;
+                    return true;
                 } else {
                     if (boardService.getPossibleFields(game, card, figure.getField()) != null) {
-                        canPlay = true;
+                        return true;
                     }
                 }
             }
         }
-        return canPlay;
+        return false;
     }
 }

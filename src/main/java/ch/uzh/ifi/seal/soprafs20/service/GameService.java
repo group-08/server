@@ -414,17 +414,20 @@ public class GameService {
         for (Figure figure : player.getFigures())  {
             for (Card card : player.getHand()) {
                 MovePostDTO move = new MovePostDTO();
+                if (card.getValue() == Value.SEVEN) {
+                    move.setRemainingSeven(7);
+                }
                 move.setCard(card);
                 move.setFigure(figure);
                 List<Field> fields = this.getPossibleFields(gameId, move);
                 if (!fields.isEmpty()) {
+                    Collections.shuffle(fields);
                     move.setTargetField(fields.get(0));
                     return move;
                 }
             }
         }
-        MovePostDTO moveReturn = new MovePostDTO();
-        return moveReturn;
+        return null;
     }
 
 

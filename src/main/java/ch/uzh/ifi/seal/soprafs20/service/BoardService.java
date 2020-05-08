@@ -266,7 +266,7 @@ public class BoardService {
                 }
                     if(temp instanceof FirstField){
                         for(Field pField : temp.getAdjacencyList()){
-                            if(pField instanceof GoalField){
+                            if(pField instanceof GoalField && pField.getOccupant() == null){
                                 if(((GoalField) pField).getPlayer()==player){
                                     queue.add(pField);
                                 }
@@ -290,7 +290,7 @@ public class BoardService {
         ArrayList<Field> possibleFields = new ArrayList<>();
         for(int i=1; i<=value;i++) {
             ArrayList<Integer> values = new ArrayList<>();
-            values.add(value);
+            values.add(i);
             possibleFields.addAll(this.getFieldsBoard(field, values));
         }
         return possibleFields;
