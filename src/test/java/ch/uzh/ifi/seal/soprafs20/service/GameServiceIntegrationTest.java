@@ -10,10 +10,7 @@ import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.UserRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.MovePostDTO;
 import ch.uzh.ifi.seal.soprafs20.user.*;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -185,14 +182,13 @@ public class GameServiceIntegrationTest {
         /////////// MOVE SETUP ////////////
         // MovePostDTO setup
         MovePostDTO move = new MovePostDTO();
-        move.setId(game.getId());
         move.setCard(KingClubs);
         move.setFigure(game.getPlayers().get(0).getFigures().get(0));
         move.setTargetField(game.getBoard().getField(1));
 
 
         /////////// MAKE MOVE //////////////
-        gameService.playPlayersMove(move);
+        gameService.playPlayersMove(game.getId(), move);
         Game gameAfterMove = gameRepository.findById(ID).orElse(null);
         assert gameAfterMove != null;
 
@@ -214,7 +210,7 @@ public class GameServiceIntegrationTest {
         Assertions.assertEquals(targetField.getOccupant(), figureofPlayer);
     }
 
-    @Test
+    @RepeatedTest(value = 500)
     public void PlayRounds() {
         /////////// MOVE LOGIC ///////////
         List<Card> playedCards = new ArrayList<>();
@@ -236,7 +232,17 @@ public class GameServiceIntegrationTest {
             playerRepository.saveAndFlush(player);
             MovePostDTO move = gameService.automaticMove(player, ID);
             playedCards.add(move.getCard());
-            gameService.playPlayersMove(move);
+            gameService.playPlayersMove(game.getId(), move);
+
+            Game gameAfterMove = gameRepository.findById(game.getId()).orElse(null);
+            assert gameAfterMove != null;
+            for (Field field : gameAfterMove.getBoard().getFields())   {
+                if (field.getOccupant() != null)    {
+                    if (field.getOccupant().getField() != field) {
+                        System.out.println();
+                    }
+                }
+            }
         }
         Game gameAfterMove = gameRepository.findById(ID).orElse(null);
         assert gameAfterMove!= null;

@@ -62,8 +62,12 @@ public class GameService {
      * Gets the next player in the players list and adds it to the end of the list
      * @return the next player
      */
-    public Player getNextPlayer(Game game){
+    public void rotatePlayersUntilNextPossible(Game game){
+
         List<Player> players = game.getPlayers();
+        Player currentPlayer = players.get(0);
+        players.remove(currentPlayer);
+        players.add(currentPlayer);
 
         // Get player on top of the array
         Player nextPlayer = players.get(0);
@@ -75,14 +79,7 @@ public class GameService {
             nextPlayer = players.get(0);
         }
 
-        players.remove(nextPlayer);
-        players.add(nextPlayer);
-
         this.gameRepository.saveAndFlush(game);
-
-        // Return the player
-        return nextPlayer;
-
     }
 
     /**
@@ -90,9 +87,9 @@ public class GameService {
      * @param move MovePostDTO that contains all information for the move (currentField and Card to play)
      * @return all possible targetFields that the player can move to from the specific field with the specific card
      */
-    public ArrayList<Field> getPossibleFields(MovePostDTO move){
+    public ArrayList<Field> getPossibleFields(long gameId, MovePostDTO move){
 
-        Game actualGame = gameRepository.findById(move.getId()).orElse(null);
+        Game actualGame = gameRepository.findById(gameId).orElse(null);
         assert actualGame != null;
         Card card = move.getCard();
         Figure figure = move.getFigure();
@@ -107,23 +104,29 @@ public class GameService {
         }
     }
 
-    public Board playPlayersMove(MovePostDTO move) {
+    public void swapJack(Game game, Figure figure, Field targetField) {
+        boardService.swapJack(game, figure, targetField);
+    }
+
+    public Board playPlayersMove(long gameId, MovePostDTO move) {
         // get the game from gameId
-        long gameId = move.getId();
         Game game = gameRepository.findById(gameId).orElse(null);
         assert game != null;
 
         // set currentPlayer, partner, and rotate players
-        Player currentPlayer = this.getNextPlayer(game);
-        Player partner = game.getPlayer(1);
+        Player currentPlayer = game.getPlayer(0);
+        Player partner = game.getPlayer(2);
 
         //remove card from player
         playerService.removeFromHand(currentPlayer, move.getCard());
 
-        // move figure
-        Figure figure = move.getFigure();
-        Field field = move.getTargetField();
-        this.moveFigure(game, figure, field);
+        if (move.getCard().getValue() == Value.JACK ) {
+            this.swapJack(game, move.getFigure(), move.getTargetField());
+        } else {
+            Figure figure = move.getFigure();
+            Field field = move.getTargetField();
+            this.moveFigure(game, figure, field);
+        }
 
         // check if player is finished and if partner is finished
         if (checkIfPlayerFinished(game, currentPlayer)) {
@@ -140,6 +143,8 @@ public class GameService {
             game.decreaseCardNum();
             game.setExchangeCard(true);
         }
+
+        this.rotatePlayersUntilNextPossible(game);
 
         gameRepository.saveAndFlush(game);
 
@@ -237,6 +242,8 @@ public class GameService {
         this.distributeCards(game, game.getCardNum());
         game.decreaseCardNum();
         game.setExchangeCard(true);
+
+        rotatePlayersUntilNextPossible(game);
 
         // Set the gameState to running
         game.setGameState(GameState.RUNNING);
@@ -361,10 +368,9 @@ public class GameService {
         for (Figure figure : player.getFigures())  {
             for (Card card : player.getHand()) {
                 MovePostDTO move = new MovePostDTO();
-                move.setId(gameId);
                 move.setCard(card);
                 move.setFigure(figure);
-                List<Field> fields = this.getPossibleFields(move);
+                List<Field> fields = this.getPossibleFields(gameId, move);
                 if (!fields.isEmpty()) {
                     move.setTargetField(fields.get(0));
                     return move;

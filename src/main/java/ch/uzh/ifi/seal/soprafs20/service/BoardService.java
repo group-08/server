@@ -46,9 +46,11 @@ public class BoardService {
     public void sendFigureHome(Game game, Figure figure) {
         Board board = this.getBoard(game);
         Player playerOfFigure = figure.getPlayer();
+        Field currentField = this.getFieldfromFigure(game, figure);
         for(Field field : board.getFields()){
             if(field instanceof HomeField){
                 if(((HomeField) field).getPlayer()==playerOfFigure && field.getOccupant() == null){
+                    currentField.setOccupant(null);
                     field.setOccupant(figure);
                     figure.setField(field);
                     return;
@@ -76,23 +78,41 @@ public class BoardService {
         return null;
     }
 
+    public void swapJack(Game game, Figure figure, Field targetFieldObject) {
+        Field targetField = this.matchFields(game, targetFieldObject);
+        assert targetField.getOccupant() != null;
+        Field currentField = getFieldfromFigure(game, figure);
+        Figure currentFigure = currentField.getOccupant();
+        Figure swapFigure = targetField.getOccupant();
+
+        currentFigure.setField(targetField);
+        targetField.setOccupant(currentFigure);
+        swapFigure.setField(currentField);
+        currentField.setOccupant(swapFigure);
+
+    }
+
     public Board move(Game game, Figure figure, Field targetFieldObject) {
 
         Field targetField = this.matchFields(game, targetFieldObject);
         Field currentField = getFieldfromFigure(game, figure);
+        Figure occ = currentField.getOccupant();
+        if (occ == null)    {
+            System.out.println();
+        }
 
         if (targetField.getOccupant() != null) {
-            Figure occ = currentField.getOccupant();
             Figure occupant = targetField.getOccupant();
             this.sendFigureHome(game, occupant);
             currentField.setOccupant(null);
             targetField.setOccupant(occ);
+            assert occ != null;
             occ.setField(targetField);
         }
         else {
-            Figure occ = currentField.getOccupant();
             currentField.setOccupant(null);
             targetField.setOccupant(occ);
+            assert occ != null;
             occ.setField(targetField);
         }
         if (targetField instanceof FirstField && currentField instanceof HomeField) {
