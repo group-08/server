@@ -48,7 +48,6 @@ public class GameControllerTest {
         figure.setId(1L);
 
         move.setFigure(figure);
-        move.setId(1L);
 
         Field field = new CasualField();
         Field field2 = new CasualField();
@@ -60,7 +59,7 @@ public class GameControllerTest {
         fields.add(field);
         fields.add(field2);
 
-        given(gameService.getPossibleFields(Mockito.any())).willReturn(fields);
+        given(gameService.getPossibleFields(Mockito.anyLong(), Mockito.any())).willReturn(fields);
 
 
         MockHttpServletRequestBuilder postRequest = post("/game/1/possible").contentType(MediaType.APPLICATION_JSON)

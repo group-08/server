@@ -35,6 +35,13 @@ public class GameController {
         return gameService.playPlayersMove(id, move); //id is needed to get game
     }
 
+    @PostMapping("/game/{id}/move/seven")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @ResponseBody
+    public int moveSeven(@RequestBody MovePostDTO move, @PathVariable long id) {
+        return gameService.playPlayersMoveSeven(id, move); //id is needed to get game
+    }
+
     @GetMapping("/game/{id}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody

@@ -12,6 +12,16 @@ public class MovePostDTO {
 
     private Field targetField;
 
+    private int remainingSeven;
+
+    public void setRemainingSeven(int remaining) {
+        this.remainingSeven = remaining;
+    }
+
+    public int getRemainingSeven() {
+        return this.remainingSeven;
+    }
+
     public Card getCard() {
         return card;
     }

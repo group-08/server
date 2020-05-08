@@ -89,17 +89,48 @@ public class BoardService {
         targetField.setOccupant(currentFigure);
         swapFigure.setField(currentField);
         currentField.setOccupant(swapFigure);
-
     }
 
-    public Board move(Game game, Figure figure, Field targetFieldObject) {
+    public int moveSeven(Game game, Figure figure, Field targetFieldObject, int remaining) {
+        // move of seven
+        Field targetField = this.matchFields(game, targetFieldObject);
+        Field currentField = getFieldfromFigure(game, figure);
+        Field actualField = currentField;
+        Figure occupant = currentField.getOccupant();
+        List<Field> fieldsToMove = new ArrayList<>();
+        // get all fields in between current and target field
+        while (actualField.getId() != targetField.getId()) {
+            if (actualField.getAdjacencyList().size() > 1) {
+                if (targetField instanceof GoalField)   {
+                    for (Field field : actualField.getAdjacencyList()) {
+                        if (field instanceof GoalField) {
+                            fieldsToMove.add(field);
+                            actualField = field;
+                        }
+                    }
+                } else {
+                    for (Field field : actualField.getAdjacencyList()) {
+                        if (!(field instanceof GoalField)) {
+                            fieldsToMove.add(field);
+                            actualField = field;
+                        }
+                    }
+                }
+            }
+        }
+        fieldsToMove.add(targetField);
+        int distance = fieldsToMove.size();
+        for (Field field : fieldsToMove) {
+            this.move(game, figure, field);
+        }
+        return remaining - distance;
+    }
+
+    public void move(Game game, Figure figure, Field targetFieldObject) {
 
         Field targetField = this.matchFields(game, targetFieldObject);
         Field currentField = getFieldfromFigure(game, figure);
         Figure occ = currentField.getOccupant();
-        if (occ == null)    {
-            System.out.println();
-        }
 
         if (targetField.getOccupant() != null) {
             Figure occupant = targetField.getOccupant();
@@ -121,8 +152,6 @@ public class BoardService {
         if (currentField instanceof FirstField && !(targetField instanceof FirstField)) {
             ((FirstField) currentField).setBlocked(false);
         }
-
-        return game.getBoard();
     }
 
     public boolean checkIfAllTargetFieldsOccupied(Game game, Player player) {

@@ -96,7 +96,7 @@ public class GameService {
         Field currentField = figure.getField();
 
         if (card.getValue() == Value.SEVEN) {
-            return boardService.getPossibleFieldsSeven(card, currentField, 7);
+            return boardService.getPossibleFieldsSeven(card, currentField, move.getRemainingSeven());
         } else if (card.getValue() == Value.JACK) {
             return boardService.getPossibleFieldsJack(actualGame, card, currentField);
         } else {
@@ -104,11 +104,7 @@ public class GameService {
         }
     }
 
-    public void swapJack(Game game, Figure figure, Field targetField) {
-        boardService.swapJack(game, figure, targetField);
-    }
-
-    public Board playPlayersMove(long gameId, MovePostDTO move) {
+        public Board playPlayersMove(long gameId, MovePostDTO move) {
         // get the game from gameId
         Game game = gameRepository.findById(gameId).orElse(null);
         assert game != null;
@@ -121,11 +117,9 @@ public class GameService {
         playerService.removeFromHand(currentPlayer, move.getCard());
 
         if (move.getCard().getValue() == Value.JACK ) {
-            this.swapJack(game, move.getFigure(), move.getTargetField());
+            this.swapFigure(game, move.getFigure(), move.getTargetField());
         } else {
-            Figure figure = move.getFigure();
-            Field field = move.getTargetField();
-            this.moveFigure(game, figure, field);
+            this.moveFigure(game, move.getFigure(), move.getTargetField());
         }
 
         // check if player is finished and if partner is finished
@@ -151,12 +145,65 @@ public class GameService {
         return game.getBoard();
     }
 
+    public int playPlayersMoveSeven(long gameId, MovePostDTO move) {
+        // get the game from gameId
+        Game game = gameRepository.findById(gameId).orElse(null);
+        assert game != null;
+
+        // set currentPlayer, partner, and rotate players
+        Player currentPlayer = game.getPlayer(0);
+        Player partner = game.getPlayer(2);
+
+        //remove card from player
+        if (move.getRemainingSeven() == 7) {
+            playerService.removeFromHand(currentPlayer, move.getCard());
+        }
+
+        int remaining = this.moveSeven(game, move.getFigure(), move.getTargetField(), move.getRemainingSeven());
+
+
+        // check if player is finished and if partner is finished
+        if (checkIfPlayerFinished(game, currentPlayer)) {
+            if (checkIfPlayerFinished(game, partner)) {
+                game.setGameState(GameState.FINISHED);
+            } else {
+                for (Figure figure : partner.getFigures()) {
+                    currentPlayer.addFigure(figure);
+                }
+            }
+        }
+
+        if (remaining == 0) {
+            // check if game still running and no cards left, distribute new cards
+            if (game.getGameState() == GameState.RUNNING && !checkIfCardsLeft(game)) {
+                distributeCards(game, game.getCardNum());
+                game.decreaseCardNum();
+                game.setExchangeCard(true);
+            }
+            this.rotatePlayersUntilNextPossible(game);
+        }
+
+        gameRepository.saveAndFlush(game);
+
+        return remaining;
+    }
+
+
+
+    public int moveSeven(Game game, Figure figure, Field targetField, int remaining)  {
+        return boardService.moveSeven(game, figure, targetField, remaining);
+    }
+
+    public void swapFigure(Game game, Figure figure, Field targetField) {
+        boardService.swapJack(game, figure, targetField);
+    }
+
     /**
      * Lets the board actually move a figure from one field to another
      * @return the updated board after move is executed
      */
-    public Board moveFigure(Game actualGame, Figure figure, Field field) {
-        return boardService.move(actualGame, figure, field);
+    public void moveFigure(Game actualGame, Figure figure, Field field) {
+        boardService.move(actualGame, figure, field);
     }
 
     /**
@@ -218,7 +265,6 @@ public class GameService {
         this.setColourOfPlayer(game.getPlayer(1), Colour.GREEN);
         this.setColourOfPlayer(game.getPlayer(2), Colour.YELLOW);
         this.setColourOfPlayer(game.getPlayer(3), Colour.RED);
-
 
         // Assign figures to players
         for (int playerIndex = 0; playerIndex < 4; playerIndex++) {

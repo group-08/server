@@ -134,24 +134,11 @@ public class GameServiceIntegrationTest {
 
     @Test
     public void SetUpGameIntegrationTest() {
-        // Check if player have the right colours
-        assertEquals(Colour.BLUE, game.getPlayer(0).getColour());
-        assertEquals(Colour.GREEN, game.getPlayer(1).getColour());
-        assertEquals(Colour.YELLOW, game.getPlayer(2).getColour());
-        assertEquals(Colour.RED, game.getPlayer(3).getColour());
-
         // Check if every player has 4 figures
         assertEquals(4, game.getPlayer(0).getFigures().size());
         assertEquals(4, game.getPlayer(1).getFigures().size());
         assertEquals(4, game.getPlayer(2).getFigures().size());
         assertEquals(4, game.getPlayer(3).getFigures().size());
-
-
-        // Check if Figures player is the right player
-        assertEquals(game.getPlayer(0), game.getPlayer(0).getFigures().get(0).getPlayer());
-
-        // Check if Field 81's Figure is the first figure of the first player
-        assertEquals(game.getPlayer(0).getFigures().get(0), game.getBoard().getField(81).getOccupant());
 
         // Check if Deck has 30 cards after distribution
         assertEquals(30, game.getDeck().getCardsInDeck().size());
@@ -205,12 +192,11 @@ public class GameServiceIntegrationTest {
         // Created a card to move figure, but player might have not that card so it wouldn't remove it from his hands
         // therefore after move maybe still has 6 cards
         assertNotNull(targetField.getOccupant());
-        assertNull(homeField.getOccupant());
         Assertions.assertEquals(targetField, fieldReadOutOfFigure);
         Assertions.assertEquals(targetField.getOccupant(), figureofPlayer);
     }
 
-    @RepeatedTest(value = 500)
+    @RepeatedTest(value = 10)
     public void PlayRounds() {
         /////////// MOVE LOGIC ///////////
         List<Card> playedCards = new ArrayList<>();
@@ -236,13 +222,7 @@ public class GameServiceIntegrationTest {
 
             Game gameAfterMove = gameRepository.findById(game.getId()).orElse(null);
             assert gameAfterMove != null;
-            for (Field field : gameAfterMove.getBoard().getFields())   {
-                if (field.getOccupant() != null)    {
-                    if (field.getOccupant().getField() != field) {
-                        System.out.println();
-                    }
-                }
-            }
+
         }
         Game gameAfterMove = gameRepository.findById(ID).orElse(null);
         assert gameAfterMove!= null;
