@@ -70,7 +70,7 @@ public class BoardService {
     }
 
     public Field getFieldfromFigure(Game game, Figure figure) {
-        for (Field field : game.getBoard().getFields()) {
+        for (Field field : this.getBoard(game).getFields()) {
             if (field.getId() == figure.getField().getId()) {
                 return field;
             }
@@ -93,9 +93,13 @@ public class BoardService {
 
     public int moveSeven(Game game, Figure figure, Field targetFieldObject, int remaining) {
         // move of seven
+
         Field targetField = this.matchFields(game, targetFieldObject);
         Field currentField = getFieldfromFigure(game, figure);
         Field actualField = currentField;
+        Figure occ = currentField.getOccupant();
+        assert occ != null;
+
         List<Field> fieldsToMove = new ArrayList<>();
         // get all fields in between current and target field
         while (actualField.getId() != targetField.getId()) {
@@ -115,14 +119,17 @@ public class BoardService {
                         }
                     }
                 }
-            } else {
-                fieldsToMove.add(actualField);
             }
-        }
-        fieldsToMove.add(targetField);
+            else {
+                for (Field field : actualField.getAdjacencyList()) {
+                        fieldsToMove.add(field);
+                        actualField = field;
+                    }
+                }
+            }
         int distance = fieldsToMove.size();
         for (Field field : fieldsToMove) {
-            this.move(game, figure, field);
+            this.move(game, occ, field);
         }
         return remaining - distance;
     }
@@ -132,20 +139,21 @@ public class BoardService {
         Field targetField = this.matchFields(game, targetFieldObject);
         Field currentField = getFieldfromFigure(game, figure);
         Figure occ = currentField.getOccupant();
+        assert occ != null;
 
         if (targetField.getOccupant() != null) {
             Figure occupant = targetField.getOccupant();
             this.sendFigureHome(game, occupant);
             currentField.setOccupant(null);
             targetField.setOccupant(occ);
-            assert occ != null;
             occ.setField(targetField);
+
         }
         else {
             currentField.setOccupant(null);
             targetField.setOccupant(occ);
-            assert occ != null;
             occ.setField(targetField);
+
         }
         if (targetField instanceof FirstField && currentField instanceof HomeField) {
             ((FirstField) targetField).setBlocked(true);

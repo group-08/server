@@ -196,7 +196,7 @@ public class GameServiceIntegrationTest {
         Assertions.assertEquals(targetField.getOccupant(), figureofPlayer);
     }
 
-    @RepeatedTest(value = 10)
+    @RepeatedTest(value = 1)
     public void PlayRounds() {
         /////////// MOVE LOGIC ///////////
         List<Card> playedCards = new ArrayList<>();
@@ -220,7 +220,7 @@ public class GameServiceIntegrationTest {
             playerRepository.saveAndFlush(player);
             if (move.getCard().getValue() == Value.SEVEN) {
                 while (move.getRemainingSeven() != 0) {
-                    int remaining = gameService.playPlayersMoveSeven(game.getId(), move);
+                    int remaining = gameService.playPlayersMoveSeven(ID, move);
                     move.setRemainingSeven(remaining);
                     playedCards.add(move.getCard());
                 }
