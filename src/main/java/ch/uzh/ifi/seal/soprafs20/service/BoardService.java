@@ -296,6 +296,9 @@ public class BoardService {
 
     public ArrayList<Field> getPossibleFieldsSeven(Card card, Field field, int value){
         ArrayList<Field> possibleFields = new ArrayList<>();
+        if (field instanceof HomeField) {
+            return possibleFields;
+        }
         for(int i=1; i<=value;i++) {
             ArrayList<Integer> values = new ArrayList<>();
             values.add(i);
