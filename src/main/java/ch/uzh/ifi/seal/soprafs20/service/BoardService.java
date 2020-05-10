@@ -98,9 +98,6 @@ public class BoardService {
         Field currentField = getFieldfromFigure(game, figure);
         Field actualField = currentField;
         Figure occ = currentField.getOccupant();
-        if (occ == null) {
-            System.out.println();
-        }
         assert occ != null;
 
         List<Field> fieldsToMove = new ArrayList<>();
@@ -142,9 +139,6 @@ public class BoardService {
         Field targetField = this.matchFields(game, targetFieldObject);
         Field currentField = getFieldfromFigure(game, figure);
         Figure occ = currentField.getOccupant();
-        if (occ == null) {
-            System.out.println();
-        }
         assert occ != null;
 
         if (targetField.getOccupant() != null) {
