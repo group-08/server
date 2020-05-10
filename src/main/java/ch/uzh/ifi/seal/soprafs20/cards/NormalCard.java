@@ -46,4 +46,6 @@ public class NormalCard extends Card {
         }
         return false;
     }
+
+
 }
