@@ -201,7 +201,7 @@ public class GameServiceIntegrationTest {
     public void PlayRounds() {
         /////////// MOVE LOGIC ///////////
         List<Card> playedCards = new ArrayList<>();
-        for (int i = 0; i < 44; i++)   {
+        for (int i = 0; i < 500; i++)   {
             game = gameRepository.findById(ID).orElse(null);
             assert game!=null;
             Player player = game.getPlayers().get(0);

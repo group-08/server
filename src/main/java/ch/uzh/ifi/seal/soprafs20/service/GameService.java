@@ -285,12 +285,13 @@ public class GameService {
         /// fill the deck with cards and shuffle those
         deckService.createDeck(game.getDeck());
 
+        while (!this.checkIfCardsLeft(game))    {
+            this.distributeCards(game, game.getCardNum());
+            game.decreaseCardNum();
+            game.setExchangeCard(true);
 
-        this.distributeCards(game, game.getCardNum());
-        game.decreaseCardNum();
-        game.setExchangeCard(true);
-
-        rotatePlayersUntilNextPossible(game);
+            rotatePlayersUntilNextPossible(game);
+        }
 
         // Set the gameState to running
         game.setGameState(GameState.RUNNING);
