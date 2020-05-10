@@ -7,6 +7,7 @@ import ch.uzh.ifi.seal.soprafs20.cards.Value;
 import ch.uzh.ifi.seal.soprafs20.field.Field;
 import ch.uzh.ifi.seal.soprafs20.field.FirstField;
 import ch.uzh.ifi.seal.soprafs20.field.GoalField;
+import ch.uzh.ifi.seal.soprafs20.field.HomeField;
 import ch.uzh.ifi.seal.soprafs20.game.Game;
 import ch.uzh.ifi.seal.soprafs20.game.GameState;
 import ch.uzh.ifi.seal.soprafs20.repository.*;
@@ -181,12 +182,15 @@ public class GameService {
 
         if (remaining == 0) {
             // check if game still running and no cards left, distribute new cards
-            if (game.getGameState() == GameState.RUNNING && !checkIfCardsLeft(game)) {
+            while (!checkIfCardsLeft(game)) {
                 distributeCards(game, game.getCardNum());
                 game.decreaseCardNum();
                 game.setExchangeCard(true);
+
+                if (playerService.checkIfCanPlay(game, game.getPlayer(0).getId())) {
+                    this.rotatePlayersUntilNextPossible(game);
+                }
             }
-            this.rotatePlayersUntilNextPossible(game);
         }
 
         gameRepository.saveAndFlush(game);
