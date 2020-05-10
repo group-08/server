@@ -84,6 +84,9 @@ public class PlayerService {
 
     public boolean checkIfCanPlay(Game game, long playerId) {
         Player player = playerRepository.getOne(playerId);
+        if (player.getHand().isEmpty()) {
+            return false;
+        }
         for (Card card : player.getHand()) {
             for (Figure figure : player.getFigures()) {
                 if (card.getValue() == Value.SEVEN) {
