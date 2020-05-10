@@ -72,7 +72,7 @@ public class GameService {
         // Get player on top of the array
         Player nextPlayer = players.get(0);
 
-        while (!playerService.checkIfCanPlay(game, nextPlayer.getId()) && this.checkIfCardsLeft(game)) {
+        while ((!playerService.checkIfCanPlay(game, nextPlayer.getId()) && this.checkIfCardsLeft(game))) {
             playerService.removeAllFromHand(nextPlayer);
             players.remove(nextPlayer);
             players.add(nextPlayer);
@@ -131,6 +131,8 @@ public class GameService {
             }
         }
 
+        this.rotatePlayersUntilNextPossible(game);
+
         // check if game still running and no cards left, distribute new cards
         if (game.getGameState() == GameState.RUNNING && !checkIfCardsLeft(game)) {
             distributeCards(game, game.getCardNum());
@@ -138,7 +140,6 @@ public class GameService {
             game.setExchangeCard(true);
         }
 
-        this.rotatePlayersUntilNextPossible(game);
 
         gameRepository.saveAndFlush(game);
 
