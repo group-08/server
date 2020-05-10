@@ -47,12 +47,13 @@ public class BoardService {
         Board board = this.getBoard(game);
         Player playerOfFigure = figure.getPlayer();
         Field currentField = this.getFieldfromFigure(game, figure);
+        Figure currentFigure = currentField.getOccupant();
         for(Field field : board.getFields()){
             if(field instanceof HomeField){
                 if(((HomeField) field).getPlayer()==playerOfFigure && field.getOccupant() == null){
                     currentField.setOccupant(null);
-                    field.setOccupant(figure);
-                    figure.setField(field);
+                    field.setOccupant(currentFigure);
+                    currentFigure.setField(field);
                     return;
                 }
             }
@@ -139,6 +140,9 @@ public class BoardService {
         Field targetField = this.matchFields(game, targetFieldObject);
         Field currentField = getFieldfromFigure(game, figure);
         Figure occ = currentField.getOccupant();
+        if (occ == null) {
+            System.out.println();
+        }
         assert occ != null;
 
         if (targetField.getOccupant() != null) {

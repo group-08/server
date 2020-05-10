@@ -43,6 +43,10 @@ public class GameServiceIntegrationTest {
     @Autowired
     private FigureRepository figureRepository;
 
+    @Qualifier("fieldRepository")
+    @Autowired
+    private FieldRepository fieldRepository;
+
     @Autowired
     private UserService userService;
 
@@ -201,7 +205,8 @@ public class GameServiceIntegrationTest {
     public void PlayRounds() {
         /////////// MOVE LOGIC ///////////
         List<Card> playedCards = new ArrayList<>();
-        for (int i = 0; i < 200; i++)   {
+        for (int i = 0; i < 500; i++)   {
+            System.out.println(i+1);
             game = gameRepository.findById(ID).orElse(null);
             assert game!=null;
             Player player = game.getPlayers().get(0);
@@ -234,6 +239,50 @@ public class GameServiceIntegrationTest {
                 gameService.playPlayersMove(game.getId(), move);
             }
         }
+    }
+
+    @Test
+    public void sendHome() {
+        long gameId = game.getId();
+        Figure figure1 = game.getPlayer(0).getFigures().get(0);
+        Field field10 = game.getBoard().getField(10);
+        long field10Id = field10.getId();
+        figure1.getField().setOccupant(null);
+        field10.setOccupant(figure1);
+        figure1.setField(field10);
+
+        Figure figure2 = game.getPlayer(1).getFigures().get(0);
+        long figure2Id = figure2.getId();
+        Field field15 = game.getBoard().getField(15);
+        long field15Id = field15.getId();
+        Field homeField2 = figure2.getField();
+        long homeField2Id = homeField2.getId();
+        figure2.getField().setOccupant(null);
+        field15.setOccupant(figure2);
+        figure2.setField(field15);
+
+        Card card = new NormalCard(Suit.HEARTS, Value.FIVE);
+
+        MovePostDTO killerMove = new MovePostDTO();
+        killerMove.setFigure(figure1);
+        killerMove.setCard(card);
+        killerMove.setTargetField(field15);
+
+        gameRepository.saveAndFlush(game);
+        gameService.playPlayersMove(gameId, killerMove);
+        Field field10new = fieldRepository.findById(field10Id).orElse(null);
+        assert field10new != null;
+        Field field15new = fieldRepository.findById(field15Id).orElse(null);
+        assert field15new != null;
+        Figure figure2new = figureRepository.findById(figure2Id).orElse(null);
+        assert figure2new != null;
+        Field homeField2new = fieldRepository.findById(homeField2Id).orElse(null);
+        assert homeField2new != null;
+
+        assertNull(field10new.getOccupant());
+        assertEquals(figure1.getId(), field15new.getOccupant().getId());
+        assertEquals(homeField2.getId(), figure2new.getField().getId());
+        assertEquals(figure2.getId(), homeField2new.getOccupant().getId());
     }
 
 }

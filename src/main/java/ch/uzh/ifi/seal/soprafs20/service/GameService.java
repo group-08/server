@@ -129,7 +129,9 @@ public class GameService {
             if (checkIfPlayerFinished(game, partner)) {
                 game.setGameState(GameState.FINISHED);
             } else {
-                // take over partners figures
+                for (Figure figure : partner.getFigures()) {
+                    currentPlayer.addFigure(figure);
+                }
             }
         }
 
