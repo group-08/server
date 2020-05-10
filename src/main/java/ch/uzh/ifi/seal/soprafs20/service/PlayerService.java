@@ -93,8 +93,10 @@ public class PlayerService {
         for (Card card : player.getHand()) {
             for (Figure figure : player.getFigures()) {
                 if (card.getValue() == Value.SEVEN) {
-                    if (!(boardService.getPossibleFieldsSeven(card, figure.getField(), 7).isEmpty())) {
-                        return true;
+                    for (int i=1; i <= 7; i++) {
+                        if (!(boardService.getPossibleFieldsSeven(card, figure.getField(), i).isEmpty())) {
+                            return true;
+                        }
                     }
                 } else if (card.getValue() == Value.JACK) {
                     if (!(boardService.getPossibleFieldsJack(game, card, figure.getField()).isEmpty())) {

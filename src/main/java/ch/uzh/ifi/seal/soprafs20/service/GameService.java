@@ -6,6 +6,7 @@ import ch.uzh.ifi.seal.soprafs20.cards.Card;
 import ch.uzh.ifi.seal.soprafs20.cards.Value;
 import ch.uzh.ifi.seal.soprafs20.field.Field;
 import ch.uzh.ifi.seal.soprafs20.field.FirstField;
+import ch.uzh.ifi.seal.soprafs20.field.GoalField;
 import ch.uzh.ifi.seal.soprafs20.game.Game;
 import ch.uzh.ifi.seal.soprafs20.game.GameState;
 import ch.uzh.ifi.seal.soprafs20.repository.*;
@@ -131,15 +132,19 @@ public class GameService {
             }
         }
 
+
         this.rotatePlayersUntilNextPossible(game);
 
         // check if game still running and no cards left, distribute new cards
-        if (game.getGameState() == GameState.RUNNING && !checkIfCardsLeft(game)) {
+        while (!checkIfCardsLeft(game)) {
             distributeCards(game, game.getCardNum());
             game.decreaseCardNum();
             game.setExchangeCard(true);
-        }
 
+            if (playerService.checkIfCanPlay(game, game.getPlayer(0).getId())) {
+                this.rotatePlayersUntilNextPossible(game);
+            }
+        }
 
         gameRepository.saveAndFlush(game);
 
@@ -282,6 +287,16 @@ public class GameService {
             }
         }
 
+        // Assign GoalFields
+        for (int playerIndex = 0; playerIndex < 4; playerIndex++) {
+            Player player = game.getPlayer(playerIndex);
+            int firstGoalfield = 65+(playerIndex*4);
+            int lastGoalfield = firstGoalfield+3;
+            for (int i = firstGoalfield; i <= lastGoalfield; i++) {
+                ((GoalField) game.getBoard().getField(i)).setPlayer(player);
+            }
+        }
+
         /// fill the deck with cards and shuffle those
         deckService.createDeck(game.getDeck());
 
@@ -331,13 +346,12 @@ public class GameService {
     }
 
     public boolean checkIfCardsLeft(Game game)   {
-        int counter = 0;
         for (Player player : game.getPlayers()) {
-            if (player.getHand().isEmpty()) {
-                counter++;
+            if (!player.getHand().isEmpty()) {
+                return true;
             }
         }
-        return counter<4;
+        return false;
     }
 
     /**
@@ -429,6 +443,7 @@ public class GameService {
                 }
             }
         }
+        Game game = gameRepository.findById(gameId).orElse(null);
         return null;
     }
 
@@ -445,7 +460,9 @@ public class GameService {
                 return move;
             }
         }
-        return new MovePostDTO();
+        MovePostDTO move = new MovePostDTO();
+        move.setRemainingSeven(0);
+        return move;
     }
 
 

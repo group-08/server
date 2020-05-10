@@ -98,6 +98,9 @@ public class BoardService {
         Field currentField = getFieldfromFigure(game, figure);
         Field actualField = currentField;
         Figure occ = currentField.getOccupant();
+        if (occ == null) {
+            System.out.println();
+        }
         assert occ != null;
 
         List<Field> fieldsToMove = new ArrayList<>();
@@ -139,6 +142,9 @@ public class BoardService {
         Field targetField = this.matchFields(game, targetFieldObject);
         Field currentField = getFieldfromFigure(game, figure);
         Figure occ = currentField.getOccupant();
+        if (occ == null) {
+            System.out.println();
+        }
         assert occ != null;
 
         if (targetField.getOccupant() != null) {
@@ -158,7 +164,7 @@ public class BoardService {
         if (targetField instanceof FirstField && currentField instanceof HomeField) {
             ((FirstField) targetField).setBlocked(true);
         }
-        if (currentField instanceof FirstField && !(targetField instanceof FirstField)) {
+        if (currentField instanceof FirstField) {
             ((FirstField) currentField).setBlocked(false);
         }
     }
@@ -296,8 +302,8 @@ public class BoardService {
 
     public ArrayList<Field> getPossibleFieldsSeven(Card card, Field field, int value){
         ArrayList<Field> possibleFields = new ArrayList<>();
-        if (field instanceof HomeField) {
-            return possibleFields;
+            if (field instanceof HomeField) {
+                return possibleFields;
         }
         for(int i=1; i<=value;i++) {
             ArrayList<Integer> values = new ArrayList<>();
