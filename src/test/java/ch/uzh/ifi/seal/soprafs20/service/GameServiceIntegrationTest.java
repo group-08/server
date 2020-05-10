@@ -245,6 +245,7 @@ public class GameServiceIntegrationTest {
     public void sendHome() {
         long gameId = game.getId();
         Figure figure1 = game.getPlayer(0).getFigures().get(0);
+        long figure1Id = figure1.getId();
         Field field10 = game.getBoard().getField(10);
         long field10Id = field10.getId();
         figure1.getField().setOccupant(null);
@@ -278,9 +279,14 @@ public class GameServiceIntegrationTest {
         assert figure2new != null;
         Field homeField2new = fieldRepository.findById(homeField2Id).orElse(null);
         assert homeField2new != null;
+        Figure figure1new = figureRepository.findById(figure1Id).orElse(null);
+        assert figure1new != null;
 
         assertNull(field10new.getOccupant());
+        
         assertEquals(figure1.getId(), field15new.getOccupant().getId());
+        assertEquals(field15new.getId(), figure1new.getField().getId());
+
         assertEquals(homeField2.getId(), figure2new.getField().getId());
         assertEquals(figure2.getId(), homeField2new.getOccupant().getId());
     }
