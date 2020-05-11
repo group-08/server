@@ -11,7 +11,9 @@ import ch.uzh.ifi.seal.soprafs20.user.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.FieldPosition;
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class GameController {
@@ -24,15 +26,20 @@ public class GameController {
     @PostMapping("/game/{id}/possible")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public ArrayList<Field> getPossibleFields(@RequestBody MovePostDTO move, @PathVariable long id) {
-        return gameService.getPossibleFields(id, move);
+    public ArrayList<FieldGetDTO> getPossibleFields(@RequestBody MovePostDTO move, @PathVariable long id) {
+        List<Field> fields = gameService.getPossibleFields(id, move);
+        ArrayList<FieldGetDTO> fieldsDTO = new ArrayList<>();
+        for (Field field : fields) {
+            fieldsDTO.add(DTOMapper.INSTANCE.convertEntityToFieldGetDTO(field));
+        }
+        return fieldsDTO;
     }
 
     @PostMapping("/game/{id}/move")
     @ResponseStatus(HttpStatus.ACCEPTED)
     @ResponseBody
-    public Board move(@RequestBody MovePostDTO move, @PathVariable long id) {
-        return gameService.playPlayersMove(id, move); //id is needed to get game
+    public void move(@RequestBody MovePostDTO move, @PathVariable long id) {
+        gameService.playPlayersMove(id, move); //id is needed to get game
     }
 
     @PostMapping("/game/{id}/move/seven")
@@ -46,8 +53,7 @@ public class GameController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public GameGetDTO getGame(@PathVariable Long id) {
-        GameGetDTO game = gameService.getGameById(id);
-        return game;
+        return gameService.getGameById(id);
     }
     //get current game with id
 
