@@ -39,6 +39,8 @@ public class GameService {
     private final GameRepository gameRepository;
     private CardService cardService;
     private FieldRepository fieldRepository;
+    private FigureRepository figureRepository;
+    private CardRepository cardRepository;
 
     @Autowired
     public GameService(@Qualifier("gameRepository") GameRepository gameRepository,
@@ -48,9 +50,13 @@ public class GameService {
                        @Qualifier("userRepository") UserRepository userRepository,
                        @Qualifier("fieldRepository") FieldRepository fieldRepository,
                        @Qualifier("userService") UserService userService,
-                       @Qualifier("boardRepository") BoardRepository boardRepository ) {
+                       @Qualifier("boardRepository") BoardRepository boardRepository,
+                       @Qualifier("figureRepository") FigureRepository figureRepository
+                       ) {
 
         this.userService = userService;
+        this.cardRepository = cardRepository;
+        this.figureRepository = figureRepository;
         this.gameRepository = gameRepository;
         this.fieldRepository = fieldRepository;
         this.boardService = new BoardService(boardRepository, gameRepository);
@@ -84,6 +90,24 @@ public class GameService {
         this.gameRepository.saveAndFlush(game);
     }
 
+    public Card getCardFromId(long cardId) {
+        Card card = cardRepository.findById(cardId).orElse(null);
+        assert card != null;
+        return card;
+    }
+
+    public Figure getFigureFromId(long figureId) {
+        Figure figure = figureRepository.findById(figureId).orElse(null);
+        assert figure != null;
+        return figure;
+    }
+
+    public Field getFieldFromId(long fieldId) {
+        Field targetField = fieldRepository.findById(fieldId).orElse(null);
+        assert targetField != null;
+        return targetField;
+    }
+
     /**
      * Lets board compute all possible fields that can be reached from field with a specific card
      * @param move MovePostDTO that contains all information for the move (currentField and Card to play)
@@ -93,8 +117,10 @@ public class GameService {
 
         Game actualGame = gameRepository.findById(gameId).orElse(null);
         assert actualGame != null;
-        Card card = move.getCard();
-        Figure figure = move.getFigure();
+        long cardId = move.getCardId();
+        long figureId = move.getFigureId();
+        Card card = getCardFromId(cardId);
+        Figure figure = getFigureFromId(figureId);
         Field currentField = figure.getField();
 
         if (card.getValue() == Value.SEVEN) {
@@ -116,12 +142,19 @@ public class GameService {
         Player partner = game.getPlayer(2);
 
         //remove card from player
-        playerService.removeFromHand(currentPlayer, move.getCard());
+        long cardId = move.getCardId();
+        long fieldId = move.getTargetFieldId();
+        long figureId = move.getFigureId();
+        Card card = getCardFromId(cardId);
+        Field targetField = getFieldFromId(fieldId);
+        Figure figure = getFigureFromId(figureId);
 
-        if (move.getCard().getValue() == Value.JACK ) {
-            this.swapFigure(game, move.getFigure(), move.getTargetField());
+        playerService.removeFromHand(currentPlayer, card);
+
+        if (card.getValue() == Value.JACK ) {
+            this.swapFigure(game, figure, targetField);
         } else {
-            this.moveFigure(game, move.getFigure(), move.getTargetField());
+            this.moveFigure(game, figure, targetField);
         }
 
         // check if player is finished and if partner is finished
@@ -129,8 +162,8 @@ public class GameService {
             if (checkIfPlayerFinished(game, partner)) {
                 game.setGameState(GameState.FINISHED);
             } else {
-                for (Figure figure : partner.getFigures()) {
-                    currentPlayer.addFigure(figure);
+                for (Figure playersFigure : partner.getFigures()) {
+                    currentPlayer.addFigure(playersFigure);
                 }
             }
         }
@@ -163,12 +196,20 @@ public class GameService {
         Player currentPlayer = game.getPlayer(0);
         Player partner = game.getPlayer(2);
 
+        long cardId = move.getCardId();
+        long figureId = move.getFigureId();
+        long fieldId = move.getTargetFieldId();
+        Card card = getCardFromId(cardId);
+        Figure figure = getFigureFromId(figureId);
+        Field targetField = getFieldFromId(fieldId);
+
+
         //remove card from player
         if (move.getRemainingSeven() == 7) {
-            playerService.removeFromHand(currentPlayer, move.getCard());
+            playerService.removeFromHand(currentPlayer, card);
         }
 
-        int remaining = this.moveSeven(game, move.getFigure(), move.getTargetField(), move.getRemainingSeven());
+        int remaining = this.moveSeven(game, figure, targetField, move.getRemainingSeven());
 
 
         // check if player is finished and if partner is finished
@@ -176,8 +217,8 @@ public class GameService {
             if (checkIfPlayerFinished(game, partner)) {
                 game.setGameState(GameState.FINISHED);
             } else {
-                for (Figure figure : partner.getFigures()) {
-                    currentPlayer.addFigure(figure);
+                for (Figure playersFigure : partner.getFigures()) {
+                    currentPlayer.addFigure(playersFigure);
                 }
             }
         }
@@ -441,12 +482,13 @@ public class GameService {
                 if (card.getValue() == Value.SEVEN) {
                     move.setRemainingSeven(7);
                 }
-                move.setCard(card);
-                move.setFigure(figure);
+
+                move.setCardId(card.getId());
+                move.setFigureId(figure.getId());
                 List<Field> fields = this.getPossibleFields(gameId, move);
                 if (!fields.isEmpty()) {
                     Collections.shuffle(fields);
-                    move.setTargetField(fields.get(0));
+                    move.setTargetFieldId(fields.get(0).getId());
                     return move;
                 }
             }
@@ -458,13 +500,13 @@ public class GameService {
     public MovePostDTO automaticMoveSeven(long gameId, Card card, Player player, int remaining) {
         for (Figure figure : player.getFigures()) {
             MovePostDTO move = new MovePostDTO();
-            move.setCard(card);
-            move.setFigure(figure);
+            move.setCardId(card.getId());
+            move.setFigureId(figure.getId());
             move.setRemainingSeven(remaining);
             List<Field> fields = this.getPossibleFields(gameId, move);
             if (!fields.isEmpty()) {
                 Collections.shuffle(fields);
-                move.setTargetField(fields.get(0));
+                move.setTargetFieldId(fields.get(0).getId());
                 return move;
             }
         }

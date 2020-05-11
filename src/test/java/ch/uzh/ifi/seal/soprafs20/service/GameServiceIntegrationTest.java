@@ -165,18 +165,21 @@ public class GameServiceIntegrationTest {
 
     }
 
-    @Test
+    @RepeatedTest(value = 50)
     public void MoveFigureTest() {
         ////////// CARD SETUP ///////////
         Card KingClubs = new NormalCard(Suit.CLUBS, Value.KING);
+        cardRepository.saveAndFlush(KingClubs);
+
+        Player player = game.getPlayer(0);
 
 
         /////////// MOVE SETUP ////////////
         // MovePostDTO setup
         MovePostDTO move = new MovePostDTO();
-        move.setCard(KingClubs);
-        move.setFigure(game.getPlayers().get(0).getFigures().get(0));
-        move.setTargetField(game.getBoard().getField(1));
+        move.setCardId(KingClubs.getId());
+        move.setFigureId(player.getFigures().get(0).getId());
+        move.setTargetFieldId(game.getBoard().getField(1).getId());
 
 
         /////////// MAKE MOVE //////////////
@@ -190,8 +193,11 @@ public class GameServiceIntegrationTest {
         Field homeField = gameAfterMove.getBoard().getField(81);
         Field targetField = gameAfterMove.getBoard().getField(1);
 
-        Field fieldReadOutOfFigure = gameAfterMove.getPlayer(3).getFigures().get(0).getField();
-        Figure figureofPlayer = gameAfterMove.getPlayer(3).getFigures().get(0);
+        long playerId = player.getId();
+        Player playerNew = playerRepository.findById(playerId).orElse(null);
+        assert playerNew != null;
+        Field fieldReadOutOfFigure = playerNew.getFigures().get(0).getField();
+        Figure figureofPlayer = playerNew.getFigures().get(0);
 
         // Here follow assertions if move executed correctly
         // Created a card to move figure, but player might have not that card so it wouldn't remove it from his hands
@@ -214,7 +220,9 @@ public class GameServiceIntegrationTest {
             for (Card card : playerHand) {
                 if (card instanceof JokerCard) {
                     player.getHand().remove(card);
-                    player.getHand().add(new NormalCard(Suit.SPADES, Value.ACE));
+                    Card newCard = new NormalCard(Suit.SPADES, Value.ACE);
+                    cardRepository.saveAndFlush(newCard);
+                    player.getHand().add(newCard);
                 }
             }
             MovePostDTO move = gameService.automaticMove(player, ID);
@@ -224,9 +232,10 @@ public class GameServiceIntegrationTest {
                 move = gameService.automaticMove(player, ID);
             }
             playerRepository.saveAndFlush(player);
-            Card card = move.getCard();
+            long cardId = move.getCardId();
+            Card card = gameService.getCardFromId(cardId);
             long playerId = player.getId();
-            if (move.getCard().getValue() == Value.SEVEN) {
+            if (card.getValue() == Value.SEVEN) {
                 while (move.getRemainingSeven() > 0) {
                     int remaining = gameService.playPlayersMoveSeven(ID, move);
                     player = playerRepository.findById(playerId).orElse(null);
@@ -263,11 +272,12 @@ public class GameServiceIntegrationTest {
         figure2.setField(field15);
 
         Card card = new NormalCard(Suit.HEARTS, Value.FIVE);
+        cardRepository.saveAndFlush(card);
 
         MovePostDTO killerMove = new MovePostDTO();
-        killerMove.setFigure(figure1);
-        killerMove.setCard(card);
-        killerMove.setTargetField(field15);
+        killerMove.setFigureId(figure1.getId());
+        killerMove.setCardId(card.getId());
+        killerMove.setTargetFieldId(field15.getId());
 
         gameRepository.saveAndFlush(game);
         gameService.playPlayersMove(gameId, killerMove);

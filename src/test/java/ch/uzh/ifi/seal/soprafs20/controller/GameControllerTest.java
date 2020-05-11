@@ -47,7 +47,7 @@ public class GameControllerTest {
         Figure figure = new Figure();
         figure.setId(1L);
 
-        move.setFigure(figure);
+        move.setFigureId(figure.getId());
 
         Field field = new CasualField();
         Field field2 = new CasualField();

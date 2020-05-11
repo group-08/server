@@ -6,11 +6,11 @@ import ch.uzh.ifi.seal.soprafs20.user.Figure;
 
 public class MovePostDTO {
 
-    private Card card;
+    private long cardId;
 
-    private Figure figure;
+    private long figureId;
 
-    private Field targetField;
+    private long targetFieldId;
 
     private int remainingSeven;
 
@@ -22,22 +22,22 @@ public class MovePostDTO {
         return this.remainingSeven;
     }
 
-    public Card getCard() {
-        return card;
+    public long getCardId() {
+        return cardId;
     }
 
-    public void setCard(Card card) {
-        this.card = card;
+    public void setCardId(long cardId) {
+        this.cardId = cardId;
     }
 
-    public Figure getFigure() {return figure;}
+    public long getFigureId() {return figureId;}
 
-    public void setFigure(Figure figure){ this.figure=figure;}
+    public void setFigureId(long figureId){ this.figureId=figureId;}
 
-    public Field getTargetField() {
-        return targetField;
+    public long getTargetFieldId() {
+        return targetFieldId;
     }
 
-    public void setTargetField(Field targetField) {this.targetField = targetField;}
+    public void setTargetFieldId(long targetFieldId) {this.targetFieldId = targetFieldId;}
 
 }
