@@ -28,4 +28,9 @@ public abstract class Card implements Serializable {
     public CardType getType() {
         return this.type;
     }
+
+    public long getId() {
+        return id;
+    }
+
 }

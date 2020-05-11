@@ -24,15 +24,22 @@ public class GameController {
     @PostMapping("/game/{id}/possible")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public ArrayList<Field> getPossibleFields(@RequestBody MovePostDTO move, @PathVariable String id) {
-        return gameService.getPossibleFields(move);
+    public ArrayList<Field> getPossibleFields(@RequestBody MovePostDTO move, @PathVariable long id) {
+        return gameService.getPossibleFields(id, move);
     }
 
     @PostMapping("/game/{id}/move")
     @ResponseStatus(HttpStatus.ACCEPTED)
     @ResponseBody
-    public Board move(@RequestBody MovePostDTO move, @PathVariable String id) {
-        return gameService.playPlayersMove(move); //id is needed to get game
+    public Board move(@RequestBody MovePostDTO move, @PathVariable long id) {
+        return gameService.playPlayersMove(id, move); //id is needed to get game
+    }
+
+    @PostMapping("/game/{id}/move/seven")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @ResponseBody
+    public int moveSeven(@RequestBody MovePostDTO move, @PathVariable long id) {
+        return gameService.playPlayersMoveSeven(id, move); //id is needed to get game
     }
 
     @GetMapping("/game/{id}")

@@ -15,10 +15,10 @@ public class Figure {
     @GeneratedValue
     Long id;
 
-    @OneToOne(targetEntity = Player.class)
+    @OneToOne(targetEntity = Player.class, cascade = CascadeType.ALL)
     Player player;
 
-    @OneToOne(targetEntity = Field.class)
+    @OneToOne(targetEntity = Field.class, cascade = CascadeType.ALL)
     Field field;
 
     public Figure() {}

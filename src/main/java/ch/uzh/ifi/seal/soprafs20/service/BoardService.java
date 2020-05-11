@@ -46,11 +46,14 @@ public class BoardService {
     public void sendFigureHome(Game game, Figure figure) {
         Board board = this.getBoard(game);
         Player playerOfFigure = figure.getPlayer();
+        Field currentField = this.getFieldfromFigure(game, figure);
+        Figure currentFigure = currentField.getOccupant();
         for(Field field : board.getFields()){
             if(field instanceof HomeField){
                 if(((HomeField) field).getPlayer()==playerOfFigure && field.getOccupant() == null){
-                    field.setOccupant(figure);
-                    figure.setField(field);
+                    currentField.setOccupant(null);
+                    field.setOccupant(currentFigure);
+                    currentFigure.setField(field);
                     return;
                 }
             }
@@ -68,7 +71,7 @@ public class BoardService {
     }
 
     public Field getFieldfromFigure(Game game, Figure figure) {
-        for (Field field : game.getBoard().getFields()) {
+        for (Field field : this.getBoard(game).getFields()) {
             if (field.getId() == figure.getField().getId()) {
                 return field;
             }
@@ -76,33 +79,92 @@ public class BoardService {
         return null;
     }
 
-    public Board move(Game game, Figure figure, Field targetFieldObject) {
+    public void swapJack(Game game, Figure figure, Field targetFieldObject) {
+        Field targetField = this.matchFields(game, targetFieldObject);
+        assert targetField.getOccupant() != null;
+        Field currentField = getFieldfromFigure(game, figure);
+        Figure currentFigure = currentField.getOccupant();
+        Figure swapFigure = targetField.getOccupant();
+
+        currentFigure.setField(targetField);
+        targetField.setOccupant(currentFigure);
+        swapFigure.setField(currentField);
+        currentField.setOccupant(swapFigure);
+    }
+
+    public int moveSeven(Game game, Figure figure, Field targetFieldObject, int remaining) {
+        // move of seven
 
         Field targetField = this.matchFields(game, targetFieldObject);
         Field currentField = getFieldfromFigure(game, figure);
+        Field actualField = currentField;
+        Figure occ = currentField.getOccupant();
+        assert occ != null;
+
+        List<Field> fieldsToMove = new ArrayList<>();
+        // get all fields in between current and target field
+        while (actualField.getId() != targetField.getId()) {
+            if (actualField.getAdjacencyList().size() > 1) {
+                if (targetField instanceof GoalField)   {
+                    for (Field field : actualField.getAdjacencyList()) {
+                        if (field instanceof GoalField) {
+                            fieldsToMove.add(field);
+                            actualField = field;
+                        }
+                    }
+                } else {
+                    for (Field field : actualField.getAdjacencyList()) {
+                        if (!(field instanceof GoalField)) {
+                            fieldsToMove.add(field);
+                            actualField = field;
+                        }
+                    }
+                }
+            }
+            else {
+                for (Field field : actualField.getAdjacencyList()) {
+                        fieldsToMove.add(field);
+                        actualField = field;
+                    }
+                }
+            }
+        int distance = fieldsToMove.size();
+        for (Field field : fieldsToMove) {
+            this.move(game, occ, field);
+        }
+        return remaining - distance;
+    }
+
+    public void move(Game game, Figure figure, Field targetFieldObject) {
+
+        Field targetField = this.matchFields(game, targetFieldObject);
+        Field currentField = getFieldfromFigure(game, figure);
+        Figure occ = currentField.getOccupant();
+        if (occ == null) {
+            System.out.println();
+        }
+        assert occ != null;
 
         if (targetField.getOccupant() != null) {
-            Figure occ = currentField.getOccupant();
             Figure occupant = targetField.getOccupant();
             this.sendFigureHome(game, occupant);
             currentField.setOccupant(null);
             targetField.setOccupant(occ);
             occ.setField(targetField);
+
         }
         else {
-            Figure occ = currentField.getOccupant();
             currentField.setOccupant(null);
             targetField.setOccupant(occ);
             occ.setField(targetField);
+
         }
         if (targetField instanceof FirstField && currentField instanceof HomeField) {
             ((FirstField) targetField).setBlocked(true);
         }
-        if (currentField instanceof FirstField && !(targetField instanceof FirstField)) {
+        if (currentField instanceof FirstField) {
             ((FirstField) currentField).setBlocked(false);
         }
-
-        return game.getBoard();
     }
 
     public boolean checkIfAllTargetFieldsOccupied(Game game, Player player) {
@@ -216,7 +278,7 @@ public class BoardService {
                 }
                     if(temp instanceof FirstField){
                         for(Field pField : temp.getAdjacencyList()){
-                            if(pField instanceof GoalField){
+                            if(pField instanceof GoalField && pField.getOccupant() == null){
                                 if(((GoalField) pField).getPlayer()==player){
                                     queue.add(pField);
                                 }
@@ -238,9 +300,12 @@ public class BoardService {
 
     public ArrayList<Field> getPossibleFieldsSeven(Card card, Field field, int value){
         ArrayList<Field> possibleFields = new ArrayList<>();
+            if (field instanceof HomeField) {
+                return possibleFields;
+        }
         for(int i=1; i<=value;i++) {
             ArrayList<Integer> values = new ArrayList<>();
-            values.add(value);
+            values.add(i);
             possibleFields.addAll(this.getFieldsBoard(field, values));
         }
         return possibleFields;
@@ -277,6 +342,9 @@ public class BoardService {
                         else if (f instanceof GoalField && ((GoalField) f).getPlayer() != fieldToCheck.getOccupant().getPlayer()) {
                             assert true;
                         }
+                        else if (f instanceof GoalField && ((GoalField) f).getPlayer() == fieldToCheck.getOccupant().getPlayer() && f.getOccupant() != null) {
+                            assert true;
+                        }
                         else {
                             queue.add(f);
                         }
@@ -302,7 +370,7 @@ public class BoardService {
 
         for(Field iterField : board.getFields()){
             if(iterField.getOccupant()!=null){
-                if(iterField.getOccupant().getPlayer()!=playerOnField && (iterField instanceof CasualField
+                if(iterField.getOccupant().getPlayer().getId()!=playerOnField.getId() && (iterField instanceof CasualField
                         || (iterField instanceof FirstField && !(((FirstField) iterField).getBlocked())))){
                     possibleFields.add(iterField);
                 }
