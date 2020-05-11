@@ -197,8 +197,8 @@ public class GameServiceIntegrationTest {
         // Created a card to move figure, but player might have not that card so it wouldn't remove it from his hands
         // therefore after move maybe still has 6 cards
         assertNotNull(targetField.getOccupant());
-        Assertions.assertEquals(targetField, fieldReadOutOfFigure);
-        Assertions.assertEquals(targetField.getOccupant(), figureofPlayer);
+        Assertions.assertEquals(targetField.getId(), fieldReadOutOfFigure.getId());
+        Assertions.assertEquals(targetField.getOccupant().getId(), figureofPlayer.getId());
     }
 
     @RepeatedTest(value = 1)
