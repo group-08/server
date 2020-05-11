@@ -201,11 +201,11 @@ public class GameServiceIntegrationTest {
         Assertions.assertEquals(targetField.getOccupant(), figureofPlayer);
     }
 
-    @RepeatedTest(value = 10)
+    @RepeatedTest(value = 1)
     public void PlayRounds() {
         /////////// MOVE LOGIC ///////////
         List<Card> playedCards = new ArrayList<>();
-        for (int i = 0; i < 500; i++)   {
+        for (int i = 0; i < 40; i++)   {
             System.out.println(i+1);
             game = gameRepository.findById(ID).orElse(null);
             assert game!=null;
