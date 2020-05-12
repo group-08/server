@@ -141,7 +141,7 @@ public class DeckService {
         List<Card> jokers = createJokers();
         List<Card> allCards = new ArrayList<>();
         allCards.addAll(normalCards);
-        allCards.addAll(jokers);
+        //allCards.addAll(jokers);
         return allCards;
     }
 
