@@ -6,5 +6,7 @@ import javax.persistence.Table;
 @Entity
 @Table( name = "CASUALFIELD")
 public class CasualField extends Field {
-
+    public CasualField() {
+        this.colour = null;
+    }
 }

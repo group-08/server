@@ -17,7 +17,10 @@ public class GoalField extends Field{
         return player;
     }
 
-    public void setPlayer(Player player){this.player = player;}
+    public void setPlayer(Player player){
+        this.player = player;
+        this.setColour(player.getColour());
+    }
 
 }
 

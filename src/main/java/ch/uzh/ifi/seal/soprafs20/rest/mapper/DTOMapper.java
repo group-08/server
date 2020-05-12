@@ -57,6 +57,7 @@ public interface DTOMapper {
 
     @Mapping(source = "id", target = "id")
     @Mapping(source = "occupant", target = "occupant")
+    @Mapping(source = "colour", target = "colour")
     FieldGetDTO convertEntityToFieldGetDTO(Field field);
 
     @Mapping(source = "id", target = "id")
