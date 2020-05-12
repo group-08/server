@@ -15,5 +15,6 @@ public class HomeField extends Field{
 
     public void setPlayer(Player player) {
         this.player = player;
+        this.setColour(player.getColour());
     }
 }

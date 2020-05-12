@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.field;
 
 
+import ch.uzh.ifi.seal.soprafs20.user.Colour;
 import ch.uzh.ifi.seal.soprafs20.user.Figure;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -21,6 +22,9 @@ public abstract class Field implements Serializable {
 
     @OneToOne(targetEntity = Figure.class, cascade = CascadeType.ALL)
     private Figure occupant;
+
+    @Column
+    protected Colour colour;
 
     @LazyCollection(LazyCollectionOption.FALSE)
     @ManyToMany(targetEntity = Field.class, cascade = CascadeType.ALL)
@@ -80,5 +84,13 @@ public abstract class Field implements Serializable {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public Colour getColour() {
+        return colour;
+    }
+
+    public void setColour(Colour colour) {
+        this.colour = colour;
     }
 }
