@@ -56,7 +56,7 @@ public class PlayerServiceTest {
         Card testCardFOUR = new NormalCard(Suit.CLUBS, Value.FOUR);
         Card testCardFIVE = new NormalCard(Suit.CLUBS, Value.FIVE);
         Card testCardSIX = new NormalCard(Suit.CLUBS, Value.SIX);
-        Card testCardSEVEN = new NormalCard(Suit.CLUBS, Value.SEVEN);
+        //Card testCardSEVEN = new NormalCard(Suit.CLUBS, Value.SEVEN);
 
         // Assign Cards to players hand
         List<Card> hand = new ArrayList<>();
@@ -65,7 +65,7 @@ public class PlayerServiceTest {
         hand.add(testCardFOUR);
         hand.add(testCardFIVE);
         hand.add(testCardSIX);
-        hand.add(testCardSEVEN);
+        //hand.add(testCardSEVEN);
         testPlayer.setHand(hand);
 
         List<Card> test = new ArrayList<>();
@@ -73,7 +73,7 @@ public class PlayerServiceTest {
         test.add(testCardTHREE);
         test.add(testCardFOUR);
         test.add(testCardSIX);
-        test.add(testCardSEVEN);
+        //test.add(testCardSEVEN);
 
         // remove Cards from player
         playerService.removeFromHand(testPlayer, testCardFIVE);
