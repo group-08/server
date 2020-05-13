@@ -331,10 +331,12 @@ public class BoardService {
                         if (f instanceof FirstField && ((FirstField) f).getBlocked()) {
                             assert true;
                         }
-                        else if (f instanceof GoalField && ((GoalField) f).getPlayer() != fieldToCheck.getOccupant().getPlayer()) {
+                        else if (f instanceof GoalField &&
+                                ((GoalField) f).getPlayer().getId() != fieldToCheck.getOccupant().getPlayer().getId()) {
                             assert true;
                         }
-                        else if (f instanceof GoalField && ((GoalField) f).getPlayer() == fieldToCheck.getOccupant().getPlayer() && f.getOccupant() != null) {
+                        else if (f instanceof GoalField &&
+                                ((GoalField) f).getPlayer().getId() == fieldToCheck.getOccupant().getPlayer().getId() && f.getOccupant() != null) {
                             assert true;
                         }
                         else {
@@ -359,6 +361,14 @@ public class BoardService {
         ArrayList<Field> possibleFields = new ArrayList<>();
         Player playerOnField = field.getOccupant().getPlayer();
         Board board = actualGame.getBoard();
+        if(field instanceof FirstField){
+            if(((FirstField) field).getBlocked()){
+                return possibleFields;
+            }
+        }
+        if(field instanceof HomeField){
+            return possibleFields;
+        }
 
         for(Field iterField : board.getFields()){
             if(iterField.getOccupant()!=null){
