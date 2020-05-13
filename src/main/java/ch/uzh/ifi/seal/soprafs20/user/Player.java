@@ -13,7 +13,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "PLAYER")
-public class Player implements Playable {
+public class Player {
 
     @Id
     @GeneratedValue
