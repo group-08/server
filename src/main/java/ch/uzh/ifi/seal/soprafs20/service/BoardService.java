@@ -179,14 +179,6 @@ public class BoardService {
         return count == 4;
     }
 
-    /**
-     * Takes a Figure and gets Figures current Field
-     * @param figure figure you want the current field of
-     * @return the current field of the figure
-     */
-    public Field getCurrentField(Figure figure) {
-        return figure.getField();
-    }
 
     private ArrayList<Integer> getMoveValues(Card card){
         ArrayList<Integer> possibleValues = new ArrayList<>();
@@ -312,12 +304,12 @@ public class BoardService {
     }
 
     public ArrayList<Field> getFieldsBoard(Field fieldToCheck, ArrayList<Integer> valuesToCheck){
-        int level = 0;
         ArrayList<Field> possibleFields = new ArrayList<>();
-        Queue<Field> queue = new LinkedList<>();
-        queue.add(fieldToCheck);
-        queue.add(null);
         for(int moveValue : valuesToCheck) {
+            int level = 0;
+            Queue<Field> queue = new LinkedList<>();
+            queue.add(fieldToCheck);
+            queue.add(null);
             while (!queue.isEmpty() && level < moveValue) {
                 Field temp = queue.poll();
                 if (temp == null) {
