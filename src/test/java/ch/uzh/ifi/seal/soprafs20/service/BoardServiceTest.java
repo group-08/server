@@ -60,9 +60,11 @@ class BoardServiceTest {
         // create 2 players
         Player testPlayer1 = new Player();
         testPlayer1.setUser(testUser1);
+        testPlayer1.setId(1L);
 
         Player testPlayer2 = new Player();
         testPlayer2.setUser(testUser2);
+        testPlayer2.setId(2L);
 
         //create game
         Game testGame = new Game(testUser1, "testGame");
