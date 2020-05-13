@@ -1,9 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.user;
 
+
 import ch.uzh.ifi.seal.soprafs20.cards.Card;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.MovePostDTO;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.UserGetDTO;
-import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -12,15 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "PLAYER")
-public class Player implements Playable {
+@Table(name = "AI")
+public class AI implements Playable{
 
     @Id
     @GeneratedValue
     private long id;
-
-    @OneToOne(targetEntity = User.class)
-    User user;
 
     @Column
     Colour colour;
@@ -32,22 +27,14 @@ public class Player implements Playable {
     @OneToMany(targetEntity = Figure.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     List<Figure> figures;
 
-    public Player() {
+
+    public AI() {
         this.figures = new ArrayList<Figure>();
     }
 
     public void setHand(List<Card> cards) {
         this.hand = cards;
     }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public UserGetDTO getUser() {
-        return DTOMapper.INSTANCE.convertEntityToUserGetDTO(this.user);
-    }
-
     public List<Card> getHand() {
         return this.hand;
     }
@@ -71,6 +58,4 @@ public class Player implements Playable {
     public Colour getColour() {
         return this.colour;
     }
-
 }
-

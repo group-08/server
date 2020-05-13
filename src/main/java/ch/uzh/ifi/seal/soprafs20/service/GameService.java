@@ -14,6 +14,7 @@ import ch.uzh.ifi.seal.soprafs20.repository.*;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.GameGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.LobbyGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.MovePostDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.UserGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.user.Colour;
 import ch.uzh.ifi.seal.soprafs20.user.Figure;
@@ -161,6 +162,9 @@ public class GameService {
         if (checkIfPlayerFinished(game, currentPlayer)) {
             if (checkIfPlayerFinished(game, partner)) {
                 game.setGameState(GameState.FINISHED);
+                increaseScore(currentPlayer,partner);
+                //TODO save repo, after correctly finishing the game
+                //gameRepository.saveAndFlush(game);
             } else {
                 for (Figure playersFigure : partner.getFigures()) {
                     currentPlayer.addFigure(playersFigure);
@@ -215,6 +219,9 @@ public class GameService {
         // check if player is finished and if partner is finished
         if (checkIfPlayerFinished(game, currentPlayer)) {
             if (checkIfPlayerFinished(game, partner)) {
+                increaseScore(currentPlayer,partner);
+                //TODO save repo, after correctly finishing the game
+                //gameRepository.saveAndFlush(game);
                 game.setGameState(GameState.FINISHED);
             } else {
                 for (Figure playersFigure : partner.getFigures()) {
@@ -244,6 +251,20 @@ public class GameService {
     }
 
 
+    public void increaseScore(Player currentPlayer, Player partner){
+        /*if (currentPlayer instanceof Player){
+            UserGetDTO currentUserDTO = currentPlayer.getUser();
+            long currentPlayerId = currentUserDTO.getId();
+            User currentPlayerUser = userService.getUserById(currentPlayerId);
+            int currentPlayerUserScore = currentPlayerUser.getLeaderBoardScore();
+            currentPlayerUser.setLeaderBoardScore((currentPlayerUserScore+1));}
+        if(partner instanceof Player) {
+            UserGetDTO partnerUserDTO = partner.getUser();
+            long partnerId = partnerUserDTO.getId();
+            User partnerUser = userService.getUserById(partnerId);
+            int partnerUserScore = partnerUser.getLeaderBoardScore();
+            partnerUser.setLeaderBoardScore((partnerUserScore + 1));}*/
+    }
 
     public int moveSeven(Game game, Figure figure, Field targetField, int remaining)  {
         return boardService.moveSeven(game, figure, targetField, remaining);

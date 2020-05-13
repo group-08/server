@@ -37,6 +37,9 @@ public class User implements Serializable {
     @Column(nullable = false)
     private UserStatus status;
 
+    @Column(nullable = false)
+    private int leaderBoardScore;
+
     public Long getId() {
         return id;
     }
@@ -83,5 +86,13 @@ public class User implements Serializable {
 
     public void setPassword(String password) {
         this.password = BCrypt.hashpw(password, BCrypt.gensalt());
+    }
+
+    public int getLeaderBoardScore() {
+        return leaderBoardScore;
+    }
+
+    public void setLeaderBoardScore(int leaderBoardScore) {
+        this.leaderBoardScore = leaderBoardScore;
     }
 }

@@ -8,6 +8,7 @@ public class UserGetDTO {
     private String email;
     private String username;
     private UserStatus status;
+    private Integer leaderBoardScore;
 
     public Long getId() {
         return id;
@@ -39,5 +40,13 @@ public class UserGetDTO {
 
     public void setStatus(UserStatus status) {
         this.status = status;
+    }
+
+    public Integer getLeaderBoardScore() {
+        return leaderBoardScore;
+    }
+
+    public void setLeaderBoardScore(Integer leaderBoardScore) {
+        this.leaderBoardScore = leaderBoardScore;
     }
 }
