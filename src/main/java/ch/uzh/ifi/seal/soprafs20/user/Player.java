@@ -64,6 +64,10 @@ public class Player {
         return this.id;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public void setColour(Colour colour) {
         this.colour = colour;
     }
