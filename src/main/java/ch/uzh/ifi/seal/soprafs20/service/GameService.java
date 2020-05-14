@@ -332,11 +332,9 @@ public class GameService {
 
     private void fillGame(Game game){
         List<Player> humans = game.getPlayers();
-        if(humans.size()!=4){
-            for(int i=0; i<4-humans.size();i++) {
-                Player roboPlayer = createRoboPlayer();
-                humans.add(roboPlayer);
-            }
+        while (humans.size() < 4){
+            Player roboPlayer = createRoboPlayer();
+            humans.add(roboPlayer);
         }
         game.setPlayers(humans);
         gameRepository.saveAndFlush(game);
@@ -351,7 +349,7 @@ public class GameService {
         Game game = gameRepository.findById(gameId).orElse(null);
         assert game != null;
 
-        fillGame(game);
+        this.fillGame(game);
 
         game = gameRepository.findById(gameId).orElse(null);
         assert game != null;
