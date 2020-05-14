@@ -81,7 +81,7 @@ public class GameControllerTest {
 
         Game game = new Game(user, "testGame");
         game.setId((long)1);
-        game.setWeatherState(WeatherState.CASUAL);
+        game.setWeatherState(WeatherState.UNKNOWN);
         game.setBoard(null);
 
         GameGetDTO gameGetDTO = DTOMapper.INSTANCE.convertEntityToGameGetDTO(game);

@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -33,6 +34,7 @@ public class GameService {
     private UserService userService;
     private DeckService deckService;
     private PlayerService playerService;
+    private WeatherService weatherService;
     private final BoardService boardService;
     private final GameRepository gameRepository;
     private CardService cardService;
@@ -62,6 +64,7 @@ public class GameService {
         this.userService = new UserService(userRepository);
         this.cardService = new CardService(cardRepository);
         this.deckService = new DeckService(deckRepository, cardRepository);
+        this.weatherService = new WeatherService();
     }
 
     /**
@@ -175,6 +178,7 @@ public class GameService {
 
         // check if game still running and no cards left, distribute new cards
         while (!checkIfCardsLeft(game)) {
+            weatherService.updateWeather(game);
             distributeCards(game, game.getCardNum());
             game.decreaseCardNum();
             game.setExchangeCard(true);

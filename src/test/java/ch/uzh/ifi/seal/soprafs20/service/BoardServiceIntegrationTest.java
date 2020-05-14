@@ -24,7 +24,8 @@ public class BoardServiceIntegrationTest {
     private UserService userService;
 
     @BeforeEach
-    public void setup() {  boardRepository.deleteAll();
+    public void setup() {
+        boardRepository.deleteAll();
     }
 
     @Test

@@ -206,7 +206,7 @@ public class GameServiceIntegrationTest {
         Assertions.assertEquals(targetField.getOccupant().getId(), figureofPlayer.getId());
     }
 
-    @RepeatedTest(value = 1)
+    @RepeatedTest(value = 10)
     public void PlayRounds() {
         /////////// MOVE LOGIC ///////////
         List<Card> playedCards = new ArrayList<>();

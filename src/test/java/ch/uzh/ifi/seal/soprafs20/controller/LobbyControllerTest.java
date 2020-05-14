@@ -116,7 +116,7 @@ public class LobbyControllerTest {
 
         Game lobby = new Game(user, "testGame");
         lobby.setId((long)1);
-        lobby.setWeatherState(WeatherState.CASUAL);
+        lobby.setWeatherState(WeatherState.UNKNOWN);
 
         LobbyGetDTO lobbyGetDTO = DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(lobby);
 
