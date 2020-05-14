@@ -317,7 +317,7 @@ public class BoardService {
                     queue.add(null);
                 }
                 else {
-                    List<Field> adjFields = temp.getAdjacencyList();
+                    List<Field> adjFields = new ArrayList<>(temp.getAdjacencyList());
                     List<Field> adjFieldsCopyFirstState = new ArrayList<>(adjFields);
                     if (temp instanceof FirstField && ((FirstField) temp).getBlocked()) {
                         for (Field field1 : adjFieldsCopyFirstState) {
