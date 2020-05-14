@@ -179,14 +179,6 @@ public class BoardService {
         return count == 4;
     }
 
-    /**
-     * Takes a Figure and gets Figures current Field
-     * @param figure figure you want the current field of
-     * @return the current field of the figure
-     */
-    public Field getCurrentField(Figure figure) {
-        return figure.getField();
-    }
 
     private ArrayList<Integer> getMoveValues(Card card){
         ArrayList<Integer> possibleValues = new ArrayList<>();
@@ -312,12 +304,12 @@ public class BoardService {
     }
 
     public ArrayList<Field> getFieldsBoard(Field fieldToCheck, ArrayList<Integer> valuesToCheck){
-        int level = 0;
         ArrayList<Field> possibleFields = new ArrayList<>();
-        Queue<Field> queue = new LinkedList<>();
-        queue.add(fieldToCheck);
-        queue.add(null);
         for(int moveValue : valuesToCheck) {
+            int level = 0;
+            Queue<Field> queue = new LinkedList<>();
+            queue.add(fieldToCheck);
+            queue.add(null);
             while (!queue.isEmpty() && level < moveValue) {
                 Field temp = queue.poll();
                 if (temp == null) {
@@ -339,10 +331,12 @@ public class BoardService {
                         if (f instanceof FirstField && ((FirstField) f).getBlocked()) {
                             assert true;
                         }
-                        else if (f instanceof GoalField && ((GoalField) f).getPlayer() != fieldToCheck.getOccupant().getPlayer()) {
+                        else if (f instanceof GoalField &&
+                                ((GoalField) f).getPlayer().getId() != fieldToCheck.getOccupant().getPlayer().getId()) {
                             assert true;
                         }
-                        else if (f instanceof GoalField && ((GoalField) f).getPlayer() == fieldToCheck.getOccupant().getPlayer() && f.getOccupant() != null) {
+                        else if (f instanceof GoalField &&
+                                ((GoalField) f).getPlayer().getId() == fieldToCheck.getOccupant().getPlayer().getId() && f.getOccupant() != null) {
                             assert true;
                         }
                         else {
@@ -367,6 +361,14 @@ public class BoardService {
         ArrayList<Field> possibleFields = new ArrayList<>();
         Player playerOnField = field.getOccupant().getPlayer();
         Board board = actualGame.getBoard();
+        if(field instanceof FirstField){
+            if(((FirstField) field).getBlocked()){
+                return possibleFields;
+            }
+        }
+        if(field instanceof HomeField){
+            return possibleFields;
+        }
 
         for(Field iterField : board.getFields()){
             if(iterField.getOccupant()!=null){

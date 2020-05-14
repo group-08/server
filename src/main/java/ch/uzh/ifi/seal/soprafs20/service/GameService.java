@@ -122,8 +122,9 @@ public class GameService {
         Field currentField = figure.getField();
 
         if (card.getValue() == Value.SEVEN) {
-        return boardService.getPossibleFieldsSeven(card, currentField, move.getRemainingSeven());}
-         if (card.getValue() == Value.JACK) {
+            return boardService.getPossibleFieldsSeven(card, currentField, move.getRemainingSeven());
+        }
+        else if (card.getValue() == Value.JACK) {
             return boardService.getPossibleFieldsJack(actualGame, card, currentField);
         } else {
             return boardService.getPossibleFields(actualGame, card, currentField);
@@ -206,11 +207,6 @@ public class GameService {
         Field targetField = getFieldFromId(fieldId);
 
 
-        //remove card from player
-        if (move.getRemainingSeven() == 7) {
-            playerService.removeFromHand(currentPlayer, card);
-        }
-
         int remaining = this.moveSeven(game, figure, targetField, move.getRemainingSeven());
 
 
@@ -229,6 +225,10 @@ public class GameService {
         }
 
         if (remaining == 0) {
+            //remove card from player
+            if (move.getRemainingSeven() == 7) {
+                playerService.removeFromHand(currentPlayer, card);
+            }
             this.rotatePlayersUntilNextPossible(game);
             // check if game still running and no cards left, distribute new cards
 
