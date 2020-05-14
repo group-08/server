@@ -14,6 +14,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -85,7 +86,7 @@ public class GameControllerTest {
 
         GameGetDTO gameGetDTO = DTOMapper.INSTANCE.convertEntityToGameGetDTO(game);
 
-        given(gameService.getGameById(Mockito.anyLong())).willReturn(gameGetDTO);
+        given(gameService.getGameById(Mockito.anyLong(), Mockito.anyString())).willReturn(gameGetDTO);
 
         MockHttpServletRequestBuilder getRequest = get("/game/{id}", 1)
                 .contentType(MediaType.APPLICATION_JSON)

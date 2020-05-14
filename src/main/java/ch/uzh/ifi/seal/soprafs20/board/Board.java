@@ -29,8 +29,13 @@ public class Board implements Serializable {
     @OneToMany(targetEntity = Player.class, cascade = CascadeType.ALL)
     private List<Player> players = new ArrayList<>();
 
+    @Column
+    long passedTime;
+
     public Board() {
         // Create all the fields
+        this.passedTime = System.currentTimeMillis()/1000;
+
         for (int i = 0; i <= 63; i++){ // Casual fields
             if(i==0 || i==16 || i==32 || i==48){
                 FirstField firstField = new FirstField();
@@ -135,5 +140,12 @@ public class Board implements Serializable {
         this.fields = fields;
     }
 
+    public long getPassedTime() {
+        return passedTime;
+    }
+
+    public void setPassedTime(long passedTime) {
+        this.passedTime = passedTime;
+    }
 }
 
