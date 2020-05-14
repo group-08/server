@@ -541,7 +541,7 @@ public class GameService {
     public boolean timedelta(Game game){
         long time = game.getBoard().getPassedTime();
         long currentTime = System.currentTimeMillis()/1000;
-        return currentTime-time >5;
+        return currentTime-time > 1;
     }
 
     public boolean hostCheck(Game game, String token){
