@@ -77,14 +77,20 @@ public class WeatherService {
         return cities.get(i);
     }
 
-    public void updateWeather (Game game) throws IOException {
+    public void updateWeather (Game game){
         CityState randomCity = randomCityChooser();
         double[] coordinates = city.getHashMapCity().get(randomCity);
         String coordinatesString = Arrays.toString(coordinates);
         String lat = Arrays.asList(coordinatesString.split(",")).get(0);
         String lon = Arrays.asList(coordinatesString.split(",")).get(1);
-        String response = getAPIResponse(lat, lon);
-        WeatherState weatherState = getWeather(response);
+        WeatherState weatherState;
+        try {
+            String response = getAPIResponse(lat, lon);
+             weatherState = getWeather(response);
+        }
+        catch (IOException e) {
+            weatherState = WeatherState.UNKNOWN;
+        }
         game.setWeatherState(weatherState);
     }
 }
