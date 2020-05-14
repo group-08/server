@@ -290,12 +290,13 @@ public class BoardService {
         return possibleFields;
     }
 
-    public ArrayList<Field> getPossibleFieldsSeven(Card card, Field field, int value){
+    public ArrayList<Field> getPossibleFieldsSeven(Card card, Field field){
         ArrayList<Field> possibleFields = new ArrayList<>();
+        int remaining = card.getRemainingSteps();
             if (field instanceof HomeField) {
                 return possibleFields;
         }
-        for(int i=1; i<=value;i++) {
+        for(int i=1; i<=remaining;i++) {
             ArrayList<Integer> values = new ArrayList<>();
             values.add(i);
             possibleFields.addAll(this.getFieldsBoard(field, values));

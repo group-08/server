@@ -19,6 +19,10 @@ public abstract class Card implements Serializable {
     @Enumerated
     protected CardType type;
 
+    @Column
+    protected int remainingSteps;
+
+
     public abstract String toString();
 
     public Value getValue() {
@@ -33,4 +37,11 @@ public abstract class Card implements Serializable {
         return id;
     }
 
+    public int getRemainingSteps() {
+        return remainingSteps;
+    }
+
+    public void setRemainingSteps(int remainingSteps) {
+        this.remainingSteps = remainingSteps;
+    }
 }

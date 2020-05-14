@@ -151,6 +151,9 @@ public class DeckService {
         for(Suit suit : Suit.values()){
             for(Value myValue : Value.values()){
                 Card newNormalCard = new NormalCard(suit, myValue);
+                if(myValue == Value.SEVEN){
+                    newNormalCard.setRemainingSteps(7);
+                }
                 cards.add(newNormalCard);
             }
         }

@@ -122,7 +122,7 @@ public class GameService {
         Field currentField = figure.getField();
 
         if (card.getValue() == Value.SEVEN) {
-            return boardService.getPossibleFieldsSeven(card, currentField, move.getRemainingSeven());
+            return boardService.getPossibleFieldsSeven(card, currentField);
         }
         else if (card.getValue() == Value.JACK) {
             return boardService.getPossibleFieldsJack(actualGame, card, currentField);
@@ -206,9 +206,12 @@ public class GameService {
         Figure figure = getFigureFromId(figureId);
         Field targetField = getFieldFromId(fieldId);
 
+        int remainingSteps = card.getRemainingSteps();
 
-        int remaining = this.moveSeven(game, figure, targetField, move.getRemainingSeven());
 
+        int newRemaining = this.moveSeven(game, figure, targetField, remainingSteps);
+
+        card.setRemainingSteps(newRemaining);
 
         // check if player is finished and if partner is finished
         if (checkIfPlayerFinished(game, currentPlayer)) {
@@ -224,11 +227,12 @@ public class GameService {
             }
         }
 
-        if (remaining == 0) {
+
+        if (newRemaining == 0) {
             //remove card from player
-            if (move.getRemainingSeven() == 7) {
-                playerService.removeFromHand(currentPlayer, card);
-            }
+
+            playerService.removeFromHand(currentPlayer, card);
+
             this.rotatePlayersUntilNextPossible(game);
             // check if game still running and no cards left, distribute new cards
 
@@ -246,7 +250,7 @@ public class GameService {
 
         gameRepository.saveAndFlush(game);
 
-        return remaining;
+        return remainingSteps;
     }
 
 
@@ -433,11 +437,13 @@ public class GameService {
         Card card = getCardFromId(cardId);
         long playerId = player.getId();
         if (card.getValue() == Value.SEVEN) {
-            while (move.getRemainingSeven() > 0) {
-                int remaining = playPlayersMoveSeven(ID, move);
+            while (card.getRemainingSteps() > 0) {
                 player = playerService.findById(playerId);
+                card = cardRepository.findById(cardId).orElse(null);
+                assert card != null;
                 assert player != null;
-                move = automaticMoveSeven(ID, card, player, remaining);
+                move = automaticMoveSeven(ID, card, player);
+                playPlayersMoveSeven(game.getId(), move);
             }
         }
         else {
@@ -581,10 +587,6 @@ public class GameService {
         for (Figure figure : player.getFigures())  {
             for (Card card : player.getHand()) {
                 MovePostDTO move = new MovePostDTO();
-                if (card.getValue() == Value.SEVEN) {
-                    move.setRemainingSeven(7);
-                }
-
                 move.setCardId(card.getId());
                 move.setFigureId(figure.getId());
                 List<Field> fields = this.getPossibleFields(gameId, move);
@@ -599,12 +601,11 @@ public class GameService {
         return null;
     }
 
-    public MovePostDTO automaticMoveSeven(long gameId, Card card, Player player, int remaining) {
+    public MovePostDTO automaticMoveSeven(long gameId, Card card, Player player) {
         for (Figure figure : player.getFigures()) {
             MovePostDTO move = new MovePostDTO();
             move.setCardId(card.getId());
             move.setFigureId(figure.getId());
-            move.setRemainingSeven(remaining);
             List<Field> fields = this.getPossibleFields(gameId, move);
             if (!fields.isEmpty()) {
                 Collections.shuffle(fields);
