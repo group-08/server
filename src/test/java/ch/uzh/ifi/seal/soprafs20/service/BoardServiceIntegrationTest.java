@@ -23,10 +23,12 @@ public class BoardServiceIntegrationTest {
     @Autowired
     private UserService userService;
 
+    /*
     @BeforeEach
     public void setup() {
         boardRepository.deleteAll();
     }
+    */
 
     @Test
     public void setUpBoard() {
