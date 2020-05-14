@@ -371,6 +371,10 @@ public class BoardService {
             return possibleFields;
         }
 
+        if(field instanceof GoalField){
+            return possibleFields;
+        }
+
         for(Field iterField : board.getFields()){
             if(iterField.getOccupant()!=null){
                 if(iterField.getOccupant().getPlayer().getId()!=playerOnField.getId() && (iterField instanceof CasualField
