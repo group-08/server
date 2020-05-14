@@ -135,7 +135,7 @@ public class GameService {
         }
     }
 
-        public Board playPlayersMove(long gameId, MovePostDTO move) throws IOException {
+        public Board playPlayersMove(long gameId, MovePostDTO move) {
         // get the game from gameId
         Game game = gameRepository.findById(gameId).orElse(null);
         assert game != null;
