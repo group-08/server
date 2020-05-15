@@ -52,8 +52,8 @@ public class GameController {
     @GetMapping("/game/{id}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public GameGetDTO getGame(@PathVariable Long id) {
-        return gameService.getGameById(id);
+    public GameGetDTO getGame(@PathVariable Long id, @RequestHeader("X-Token") String token) {
+        return gameService.getGameById(id, token);
     }
     //get current game with id
 

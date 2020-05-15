@@ -9,6 +9,9 @@ public class NormalCard extends Card {
     @Enumerated
     private Suit suit;
 
+    @Column
+    private int remainingSteps;
+
     public NormalCard() {
         this.type = CardType.Normal;
     }
@@ -17,6 +20,7 @@ public class NormalCard extends Card {
         this.type = CardType.Normal;
         this.suit = suit;
         this.value = value;
+        this.remainingSteps = 0;
     }
 
     public String toString(){
@@ -33,6 +37,14 @@ public class NormalCard extends Card {
 
     public void setValue(Value value)  {
         this.value = value;
+    }
+
+    public int getRemainingSteps() {
+        return remainingSteps;
+    }
+
+    public void setRemainingSteps(int remainingSteps) {
+        this.remainingSteps = remainingSteps;
     }
 
     @Override

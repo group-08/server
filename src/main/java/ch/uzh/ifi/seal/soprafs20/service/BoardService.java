@@ -290,12 +290,13 @@ public class BoardService {
         return possibleFields;
     }
 
-    public ArrayList<Field> getPossibleFieldsSeven(Card card, Field field, int value){
+    public ArrayList<Field> getPossibleFieldsSeven(Card card, Field field){
         ArrayList<Field> possibleFields = new ArrayList<>();
+        int remaining = card.getRemainingSteps();
             if (field instanceof HomeField) {
                 return possibleFields;
         }
-        for(int i=1; i<=value;i++) {
+        for(int i=1; i<=remaining;i++) {
             ArrayList<Integer> values = new ArrayList<>();
             values.add(i);
             possibleFields.addAll(this.getFieldsBoard(field, values));
@@ -317,7 +318,7 @@ public class BoardService {
                     queue.add(null);
                 }
                 else {
-                    List<Field> adjFields = temp.getAdjacencyList();
+                    List<Field> adjFields = new ArrayList<>(temp.getAdjacencyList());
                     List<Field> adjFieldsCopyFirstState = new ArrayList<>(adjFields);
                     if (temp instanceof FirstField && ((FirstField) temp).getBlocked()) {
                         for (Field field1 : adjFieldsCopyFirstState) {
@@ -367,6 +368,10 @@ public class BoardService {
             }
         }
         if(field instanceof HomeField){
+            return possibleFields;
+        }
+
+        if(field instanceof GoalField){
             return possibleFields;
         }
 

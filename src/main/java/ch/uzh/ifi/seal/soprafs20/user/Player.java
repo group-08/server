@@ -34,6 +34,7 @@ public class Player {
 
     public Player() {
         this.figures = new ArrayList<Figure>();
+        this.hand = new ArrayList<Card>();
     }
 
     public void setHand(List<Card> cards) {

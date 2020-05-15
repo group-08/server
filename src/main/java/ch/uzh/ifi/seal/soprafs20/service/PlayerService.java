@@ -68,6 +68,10 @@ public class PlayerService {
         playerRepository.saveAndFlush(actualPlayer);
     }
 
+    public Player findById(long id){
+        return playerRepository.findById(id).orElse(null);
+    }
+
     public void exchange(long gameId, long playerId, Card card){
         Player player = playerRepository.findById(playerId).orElse(null);
         assert player != null;

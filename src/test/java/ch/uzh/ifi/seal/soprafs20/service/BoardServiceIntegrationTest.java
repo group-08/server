@@ -4,6 +4,7 @@ import ch.uzh.ifi.seal.soprafs20.board.Board;
 import ch.uzh.ifi.seal.soprafs20.field.Field;
 import ch.uzh.ifi.seal.soprafs20.repository.BoardRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.UserRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +24,10 @@ public class BoardServiceIntegrationTest {
     @Autowired
     private UserService userService;
 
-    @BeforeEach
-    public void setup() {  boardRepository.deleteAll();
+
+    @AfterEach
+    public void tearDown() {
+        boardRepository.deleteAll();
     }
 
     @Test

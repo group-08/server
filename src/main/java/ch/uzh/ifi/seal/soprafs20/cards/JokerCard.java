@@ -9,6 +9,7 @@ public class JokerCard extends Card {
 
     public JokerCard() {
         this.type = CardType.Joker;
+        this.remainingSteps = 0;
     }
 
     public void setValue(Value value){

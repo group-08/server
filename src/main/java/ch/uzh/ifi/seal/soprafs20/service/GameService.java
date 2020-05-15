@@ -2,8 +2,7 @@ package ch.uzh.ifi.seal.soprafs20.service;
 
 
 import ch.uzh.ifi.seal.soprafs20.board.Board;
-import ch.uzh.ifi.seal.soprafs20.cards.Card;
-import ch.uzh.ifi.seal.soprafs20.cards.Value;
+import ch.uzh.ifi.seal.soprafs20.cards.*;
 import ch.uzh.ifi.seal.soprafs20.field.Field;
 import ch.uzh.ifi.seal.soprafs20.field.FirstField;
 import ch.uzh.ifi.seal.soprafs20.field.GoalField;
@@ -14,11 +13,9 @@ import ch.uzh.ifi.seal.soprafs20.repository.*;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.GameGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.LobbyGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.MovePostDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.UserGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
-import ch.uzh.ifi.seal.soprafs20.user.Colour;
-import ch.uzh.ifi.seal.soprafs20.user.Figure;
-import ch.uzh.ifi.seal.soprafs20.user.Player;
-import ch.uzh.ifi.seal.soprafs20.user.User;
+import ch.uzh.ifi.seal.soprafs20.user.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -28,6 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -127,8 +125,9 @@ public class GameService {
         Field currentField = figure.getField();
 
         if (card.getValue() == Value.SEVEN) {
-        return boardService.getPossibleFieldsSeven(card, currentField, move.getRemainingSeven());}
-         else if (card.getValue() == Value.JACK) {
+            return boardService.getPossibleFieldsSeven(card, currentField);
+        }
+        else if (card.getValue() == Value.JACK) {
             return boardService.getPossibleFieldsJack(actualGame, card, currentField);
         } else {
             return boardService.getPossibleFields(actualGame, card, currentField);
@@ -164,6 +163,9 @@ public class GameService {
         if (checkIfPlayerFinished(game, currentPlayer)) {
             if (checkIfPlayerFinished(game, partner)) {
                 game.setGameState(GameState.FINISHED);
+                increaseScore(currentPlayer,partner);
+                //TODO save repo, after correctly finishing the game
+                //gameRepository.saveAndFlush(game);
             } else {
                 for (Figure playersFigure : partner.getFigures()) {
                     currentPlayer.addFigure(playersFigure);
@@ -185,6 +187,7 @@ public class GameService {
                 this.rotatePlayersUntilNextPossible(game);
             }
         }
+        game.getBoard().setPassedTime(System.currentTimeMillis()/1000);
 
         gameRepository.saveAndFlush(game);
 
@@ -207,13 +210,19 @@ public class GameService {
         Figure figure = getFigureFromId(figureId);
         Field targetField = getFieldFromId(fieldId);
 
+        int remainingSteps = card.getRemainingSteps();
 
-        int remaining = this.moveSeven(game, figure, targetField, move.getRemainingSeven());
 
+        int newRemaining = this.moveSeven(game, figure, targetField, remainingSteps);
+
+        card.setRemainingSteps(newRemaining);
 
         // check if player is finished and if partner is finished
         if (checkIfPlayerFinished(game, currentPlayer)) {
             if (checkIfPlayerFinished(game, partner)) {
+                increaseScore(currentPlayer,partner);
+                //TODO save repo, after correctly finishing the game
+                //gameRepository.saveAndFlush(game);
                 game.setGameState(GameState.FINISHED);
             } else {
                 for (Figure playersFigure : partner.getFigures()) {
@@ -222,11 +231,12 @@ public class GameService {
             }
         }
 
-        if (remaining == 0) {
+
+        if (newRemaining == 0) {
             //remove card from player
-            if (move.getRemainingSeven() == 7) {
-                playerService.removeFromHand(currentPlayer, card);
-            }
+
+            playerService.removeFromHand(currentPlayer, card);
+
             this.rotatePlayersUntilNextPossible(game);
             // check if game still running and no cards left, distribute new cards
 
@@ -239,14 +249,29 @@ public class GameService {
                     this.rotatePlayersUntilNextPossible(game);
                 }
             }
+            game.getBoard().setPassedTime(System.currentTimeMillis()/1000);
         }
 
         gameRepository.saveAndFlush(game);
 
-        return remaining;
+        return remainingSteps;
     }
 
 
+    public void increaseScore(Player currentPlayer, Player partner){
+        /*if (currentPlayer instanceof Player){
+            UserGetDTO currentUserDTO = currentPlayer.getUser();
+            long currentPlayerId = currentUserDTO.getId();
+            User currentPlayerUser = userService.getUserById(currentPlayerId);
+            int currentPlayerUserScore = currentPlayerUser.getLeaderBoardScore();
+            currentPlayerUser.setLeaderBoardScore((currentPlayerUserScore+1));}
+        if(partner instanceof Player) {
+            UserGetDTO partnerUserDTO = partner.getUser();
+            long partnerId = partnerUserDTO.getId();
+            User partnerUser = userService.getUserById(partnerId);
+            int partnerUserScore = partnerUser.getLeaderBoardScore();
+            partnerUser.setLeaderBoardScore((partnerUserScore + 1));}*/
+    }
 
     public int moveSeven(Game game, Figure figure, Field targetField, int remaining)  {
         return boardService.moveSeven(game, figure, targetField, remaining);
@@ -307,6 +332,22 @@ public class GameService {
         player.setColour(colour);
     }
 
+    public Player createRoboPlayer(){
+        Player roboPlayer = new Player();
+        return roboPlayer;
+    }
+
+
+    private void fillGame(Game game){
+        List<Player> humans = game.getPlayers();
+        while (humans.size() < 4){
+            Player roboPlayer = createRoboPlayer();
+            humans.add(roboPlayer);
+        }
+        game.setPlayers(humans);
+        gameRepository.saveAndFlush(game);
+    }
+
     /**
      * (TO DO)Prepares the game, fills game with bots, mixes players, assign colour and figures to players, shuffles deck and
      * sets the gameState to running
@@ -314,6 +355,11 @@ public class GameService {
      */
     public void setUpGame(long gameId){
         Game game = gameRepository.findById(gameId).orElse(null);
+        assert game != null;
+
+        this.fillGame(game);
+
+        game = gameRepository.findById(gameId).orElse(null);
         assert game != null;
 
         // Mix up the players
@@ -366,6 +412,47 @@ public class GameService {
 
         this.gameRepository.saveAndFlush(game);
 
+    }
+
+    public void playRoboMove(long gameId) {
+        Game game = gameRepository.findById(gameId).orElse(null);
+        assert game != null;
+        long ID = game.getId();
+
+        Player player = game.getPlayers().get(0);
+//      List<Card> playerHand = new ArrayList<>(player.getHand());
+//        for (Card card : playerHand) {
+//            if (card instanceof JokerCard) {
+//                player.getHand().remove(card);
+//                Card newCard = new NormalCard(Suit.SPADES, Value.ACE);
+//                cardRepository.saveAndFlush(newCard);
+//                player.getHand().add(newCard);
+//            }
+//        }
+        MovePostDTO move = automaticMove(player, ID);
+//        if (move == null) {
+//            player.getHand().remove(0);
+//            player.getHand().add(new NormalCard(Suit.SPADES, Value.ACE));
+//            move = automaticMove(player, ID);
+//        }
+
+//      playerRepository.saveAndFlush(player);
+        long cardId = move.getCardId();
+        Card card = getCardFromId(cardId);
+        long playerId = player.getId();
+        if (card.getValue() == Value.SEVEN) {
+            while (card.getRemainingSteps() > 0) {
+                player = playerService.findById(playerId);
+                card = cardRepository.findById(cardId).orElse(null);
+                assert card != null;
+                assert player != null;
+                move = automaticMoveSeven(ID, card, player);
+                playPlayersMoveSeven(game.getId(), move);
+            }
+        }
+        else {
+            playPlayersMove(game.getId(), move);
+            }
     }
 
     /**
@@ -461,8 +548,30 @@ public class GameService {
         return DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(game);
     }
 
-    public GameGetDTO getGameById(Long id){
+    public boolean timedelta(Game game){
+        long time = game.getBoard().getPassedTime();
+        long currentTime = System.currentTimeMillis()/1000;
+        return currentTime-time > 1;
+    }
+
+    public boolean hostCheck(Game game, String token){
+         User host = game.getHost();
+         User tokenOwner = getUserByToken(token);
+         return host.getId().equals(tokenOwner.getId());
+    }
+
+    public boolean roboCheck(Game game){
+        return game.getPlayer(0).getUser()==null;
+    }
+
+    public GameGetDTO getGameById(Long id, String token){
         Game game =  gameRepository.findById(id).orElse(null);
+        assert game != null;
+        long gameId = game.getId();
+
+        if (roboCheck(game) && hostCheck(game, token) && timedelta(game))
+            {playRoboMove(gameId);}
+
         return DTOMapper.INSTANCE.convertEntityToGameGetDTO(game);
     }
     /*
@@ -482,10 +591,6 @@ public class GameService {
         for (Figure figure : player.getFigures())  {
             for (Card card : player.getHand()) {
                 MovePostDTO move = new MovePostDTO();
-                if (card.getValue() == Value.SEVEN) {
-                    move.setRemainingSeven(7);
-                }
-
                 move.setCardId(card.getId());
                 move.setFigureId(figure.getId());
                 List<Field> fields = this.getPossibleFields(gameId, move);
@@ -500,12 +605,11 @@ public class GameService {
         return null;
     }
 
-    public MovePostDTO automaticMoveSeven(long gameId, Card card, Player player, int remaining) {
+    public MovePostDTO automaticMoveSeven(long gameId, Card card, Player player) {
         for (Figure figure : player.getFigures()) {
             MovePostDTO move = new MovePostDTO();
             move.setCardId(card.getId());
             move.setFigureId(figure.getId());
-            move.setRemainingSeven(remaining);
             List<Field> fields = this.getPossibleFields(gameId, move);
             if (!fields.isEmpty()) {
                 Collections.shuffle(fields);
