@@ -7,14 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CardTest {
 
-    @Test
-    public void createJokerCard() {
-        // given
-        Card testCard = new JokerCard();
 
-        // assert
-        assertEquals(testCard.getType(), CardType.Joker);
-    }
 
     @Test
     public void createNormalCard() {

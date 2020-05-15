@@ -138,7 +138,6 @@ public class DeckService {
 
         ///creating a list with all cards
         List<Card> normalCards = createCardsNormalPart();
-        List<Card> jokers = createJokers();
         List<Card> allCards = new ArrayList<>();
         allCards.addAll(normalCards);
         //allCards.addAll(jokers);
@@ -160,17 +159,8 @@ public class DeckService {
         return cards;
     }
 
-    ///creating Joker cards separately
-    private List<Card> createJokers(){
-        List<Card> jokers = new ArrayList<>();
-        int numberOfJokers = 2 * numberOfDecks;
-        int iter = 0;
-        while (iter < numberOfJokers ){
-            jokers.add(new JokerCard());
-            iter++;
-        }
-        return jokers;
-    }
+
+
 
 
 }
