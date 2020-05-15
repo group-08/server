@@ -30,7 +30,7 @@ public class PlayerRepositoryIntegrationTest {
     private PlayerRepository playerRepository;
 
     @AfterEach
-    public void teardown() {
+    public void tearDown() {
         playerRepository.deleteAll();
     }
 

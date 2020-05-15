@@ -23,7 +23,7 @@ public class UserRepositoryIntegrationTest {
     private UserRepository userRepository;
 
     @AfterEach
-    public void teardown() {
+    public void tearDown() {
         userRepository.deleteAll();
     }
 
