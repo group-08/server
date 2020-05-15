@@ -5,6 +5,7 @@ import ch.uzh.ifi.seal.soprafs20.cards.NormalCard;
 import ch.uzh.ifi.seal.soprafs20.cards.Suit;
 import ch.uzh.ifi.seal.soprafs20.cards.Value;
 import ch.uzh.ifi.seal.soprafs20.user.*;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,11 @@ public class PlayerRepositoryIntegrationTest {
     @Qualifier("playerRepository")
     @Autowired
     private PlayerRepository playerRepository;
+
+    @AfterEach
+    public void teardown() {
+        playerRepository.deleteAll();
+    }
 
     @Test
     public void getOnePlayerRepositoryTest() {

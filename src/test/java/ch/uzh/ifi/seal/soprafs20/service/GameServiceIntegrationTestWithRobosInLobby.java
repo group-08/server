@@ -8,6 +8,7 @@ import ch.uzh.ifi.seal.soprafs20.user.Player;
 import ch.uzh.ifi.seal.soprafs20.user.User;
 import ch.uzh.ifi.seal.soprafs20.user.UserStatus;
 import org.hibernate.annotations.Parameter;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -31,6 +32,11 @@ public class GameServiceIntegrationTestWithRobosInLobby {
     @Autowired
     private UserRepository userRepository;
 
+    @AfterEach
+    public void tearDown() {
+        gameRepository.deleteAll();
+        userRepository.deleteAll();
+    }
 
     @Test
     public void testLobbyFillingWithRobos(){

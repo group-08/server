@@ -29,9 +29,6 @@ class CardServiceTest {
 
     private Card testCard;
 
-
-
-
     @Test
     public void removeCard(){
         List<Card> hand = new ArrayList<>();
