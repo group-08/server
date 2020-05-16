@@ -26,7 +26,7 @@ public class GameGetDTO {
 
     private WeatherState weatherState;
 
-    private CityState cityState;
+    private CityState city;
 
     public Long getId() {
         return id;
@@ -90,11 +90,11 @@ public class GameGetDTO {
         this.weatherState = weatherState;
     }
 
-    public CityState getCityState() {
-        return cityState;
+    public CityState getCity() {
+        return city;
     }
 
-    public void setCityState(CityState cityState) {
-        this.cityState = cityState;
+    public void setCity(CityState city) {
+        this.city = city;
     }
 }
