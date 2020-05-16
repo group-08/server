@@ -6,7 +6,7 @@ public class ExchangePostDTO {
 
     private long id;
 
-    private Card card;
+    private long cardId;
 
     public long getId() {
         return id;
@@ -16,12 +16,12 @@ public class ExchangePostDTO {
         this.id = id;
     }
 
-    public Card getCard() {
-        return card;
+    public long getCardId() {
+        return cardId;
     }
 
-    public void setCard(Card card) {
-        this.card = card;
+    public void setCardId(long cardId) {
+        this.cardId = cardId;
     }
 }
 

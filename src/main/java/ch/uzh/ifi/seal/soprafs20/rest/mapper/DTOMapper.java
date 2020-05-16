@@ -68,5 +68,6 @@ public interface DTOMapper {
     @Mapping(source = "user", target = "user")
     @Mapping(source = "colour", target = "colour")
     @Mapping(source = "hand", target = "hand")
+    @Mapping(source = "exchangeCards", target = "exchangeCards")
     PlayerGetDTO convertEntityToPlayerGetDTO(Player player);
 }

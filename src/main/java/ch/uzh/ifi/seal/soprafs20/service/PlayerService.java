@@ -38,8 +38,10 @@ public class PlayerService {
 
     public void addGiftedCard(long gameId, long playerId, Card card){
 
-        Game actualGame = gameRepository.findById(gameId).get();
-        Player actualPlayer = playerRepository.findById(playerId).get();
+        Game actualGame = gameRepository.findById(gameId).orElse(null);
+        Player actualPlayer = playerRepository.findById(playerId).orElse(null);
+        assert actualGame != null;
+        assert actualPlayer != null;
 
         List<Player> players = actualGame.getPlayers();
         int indexOfActualPlayer = players.indexOf(actualPlayer);
@@ -75,8 +77,9 @@ public class PlayerService {
     public void exchange(long gameId, long playerId, Card card){
         Player player = playerRepository.findById(playerId).orElse(null);
         assert player != null;
-        addGiftedCard(gameId,playerId,card);
         removeFromHand(player,card);
+        addGiftedCard(gameId,playerId,card);
+
     }
 
     public void removeAllFromHand(Player player) {

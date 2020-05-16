@@ -7,6 +7,7 @@ import ch.uzh.ifi.seal.soprafs20.field.Field;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.service.GameService;
+import ch.uzh.ifi.seal.soprafs20.user.Player;
 import ch.uzh.ifi.seal.soprafs20.user.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -66,15 +67,15 @@ public class GameController {
     @ResponseBody
 
     public GameGetDTO exchangeCard(@RequestBody ExchangePostDTO exchangePostDTO,
-                                    @RequestHeader("X-Token") String token, @PathVariable String id) {
+                                    @RequestHeader("X-Token") String token, @PathVariable long id) {
         User userExchangingCard = gameService.getUserByToken(token);
-        long gameId = exchangePostDTO.getId();
-        Card cardToExchange = exchangePostDTO.getCard();
+        Player playerExchangingCard = gameService.getPlayerFromUser(userExchangingCard);
+        long cardId = exchangePostDTO.getCardId();
         GameGetDTO updatedGame = DTOMapper.INSTANCE.convertEntityToGameGetDTO(
                 gameService.letPlayersChangeCard(
-                        gameId,
-                        userExchangingCard.getId(),
-                        cardToExchange)
+                        id,
+                        playerExchangingCard.getId(),
+                        cardId)
         );
         return updatedGame;
     }

@@ -41,6 +41,7 @@ public class GameService {
     private FieldRepository fieldRepository;
     private FigureRepository figureRepository;
     private CardRepository cardRepository;
+    private PlayerRepository playerRepository;
 
     @Autowired
     public GameService(@Qualifier("gameRepository") GameRepository gameRepository,
@@ -59,6 +60,7 @@ public class GameService {
         this.figureRepository = figureRepository;
         this.gameRepository = gameRepository;
         this.fieldRepository = fieldRepository;
+        this.playerRepository = playerRepository;
         this.boardService = new BoardService(boardRepository, gameRepository);
         this.playerService = new PlayerService(playerRepository, boardRepository, gameRepository);
         this.userService = new UserService(userRepository);
@@ -77,6 +79,23 @@ public class GameService {
         Player currentPlayer = players.get(0);
         players.remove(currentPlayer);
         players.add(currentPlayer);
+
+        // Get player on top of the array
+        Player nextPlayer = players.get(0);
+
+        while ((!(playerService.checkIfCanPlay(game, nextPlayer.getId())) && this.checkIfCardsLeft(game))) {
+            playerService.removeAllFromHand(nextPlayer);
+            players.remove(nextPlayer);
+            players.add(nextPlayer);
+            nextPlayer = players.get(0);
+        }
+
+        this.gameRepository.saveAndFlush(game);
+    }
+
+    public void rotateIfNotPossible(Game game){
+
+        List<Player> players = game.getPlayers();
 
         // Get player on top of the array
         Player nextPlayer = players.get(0);
@@ -408,8 +427,6 @@ public class GameService {
             this.distributeCards(game, game.getCardNum());
             game.decreaseCardNum();
             this.setExchangeCard(game, true);
-
-            rotatePlayersUntilNextPossible(game);
         }
 
         // Set the gameState to running
@@ -461,15 +478,33 @@ public class GameService {
             }
     }
 
+    public Player getPlayerFromUser(User user) {
+        return playerRepository.findByUser(user);
+    }
+
     /**
      * (TO DO)Let's to players change a card.
      * @param gameId ID of game you want to let players exchange cards.
      */
-    public Game letPlayersChangeCard(long gameId, long userId, Card card) {
+    public Game letPlayersChangeCard(long gameId, long playerId, long cardId) {
         Game game = gameRepository.findById(gameId).orElse(null);
         assert game != null;
-        playerService.exchange(gameId, userId, card);
+        Card card = cardRepository.findById(cardId).orElse(null);
+        assert card != null;
+        playerService.exchange(gameId, playerId, card);
         this.setExchangeCard(game, false);
+        // Check if all players exchanged cards, if so, rotate if player cannot play
+        boolean allDone = true;
+        for (Player player : game.getPlayers()) {
+            if (player.getExchangeCards()) {
+                allDone = false;
+                break;
+            }
+        }
+        if (allDone) {
+            this.rotateIfNotPossible(game);
+        }
+        rotatePlayersUntilNextPossible(game);
         this.gameRepository.saveAndFlush(game);
         return game;
     }
