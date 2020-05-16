@@ -50,6 +50,8 @@ public interface DTOMapper {
     @Mapping(source = "players", target = "players")
     @Mapping(source = "host", target = "host")
     @Mapping(source = "board", target = "board")
+    @Mapping(source = "city", target = "city")
+    @Mapping(source = "weatherState", target = "weatherState")
     GameGetDTO convertEntityToGameGetDTO(Game game);
 
     @Mapping(source = "id", target = "id")

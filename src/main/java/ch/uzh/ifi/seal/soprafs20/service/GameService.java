@@ -182,7 +182,6 @@ public class GameService {
 
         // check if game still running and no cards left, distribute new cards
         while (!checkIfCardsLeft(game)) {
-            weatherService.updateWeather(game);
             distributeCards(game, game.getCardNum());
             game.decreaseCardNum();
             game.setExchangeCard(true);
@@ -486,6 +485,7 @@ public class GameService {
             List<Card> cards = deckService.drawCards(cardNum, game.getDeck().getId());
             player.setHand(cards);
         }
+        weatherService.updateWeather(game);
     }
 
     public boolean checkIfCardsLeft(Game game)   {

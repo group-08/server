@@ -223,6 +223,7 @@ public class GameServiceIntegrationTest {
                     player.getHand().add(newCard);
                 }
             }
+
             MovePostDTO move = gameService.automaticMove(player, ID);
             if (move == null) {
                 player.getHand().remove(0);
@@ -233,7 +234,8 @@ public class GameServiceIntegrationTest {
             long cardId = move.getCardId();
             Card card = gameService.getCardFromId(cardId);
             long playerId = player.getId();
-            /*if (card.getValue() == Value.SEVEN) {
+            /*
+            if (card.getValue() == Value.SEVEN) {
                 while (move.getRemainingSeven() > 0) {
                     int remaining = gameService.playPlayersMoveSeven(ID, move);
                     player = playerRepository.findById(playerId).orElse(null);
