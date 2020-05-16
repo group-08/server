@@ -157,6 +157,7 @@ public class GameService {
             this.swapFigure(game, figure, targetField);
         } else {
             this.moveFigure(game, figure, targetField);
+
         }
 
         // check if player is finished and if partner is finished
@@ -254,7 +255,7 @@ public class GameService {
 
         gameRepository.saveAndFlush(game);
 
-        return remainingSteps;
+        return newRemaining;
     }
 
 
@@ -420,23 +421,9 @@ public class GameService {
         long ID = game.getId();
 
         Player player = game.getPlayers().get(0);
-//      List<Card> playerHand = new ArrayList<>(player.getHand());
-//        for (Card card : playerHand) {
-//            if (card instanceof JokerCard) {
-//                player.getHand().remove(card);
-//                Card newCard = new NormalCard(Suit.SPADES, Value.ACE);
-//                cardRepository.saveAndFlush(newCard);
-//                player.getHand().add(newCard);
-//            }
-//        }
-        MovePostDTO move = automaticMove(player, ID);
-//        if (move == null) {
-//            player.getHand().remove(0);
-//            player.getHand().add(new NormalCard(Suit.SPADES, Value.ACE));
-//            move = automaticMove(player, ID);
-//        }
 
-//      playerRepository.saveAndFlush(player);
+        MovePostDTO move = automaticMove(player, ID);
+
         long cardId = move.getCardId();
         Card card = getCardFromId(cardId);
         long playerId = player.getId();
@@ -482,6 +469,9 @@ public class GameService {
             List<Card> cards = deckService.drawCards(cardNum, game.getDeck().getId());
             player.setHand(cards);
         }
+
+        weatherService.updateWeather(game);
+        boardService.checkFieldsWeatherChange(game);
     }
 
     public boolean checkIfCardsLeft(Game game)   {
