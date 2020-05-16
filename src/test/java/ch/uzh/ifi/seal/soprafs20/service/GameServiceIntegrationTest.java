@@ -214,15 +214,7 @@ public class GameServiceIntegrationTest {
             game = gameRepository.findById(ID).orElse(null);
             assert game!=null;
             Player player = game.getPlayers().get(0);
-            List<Card> playerHand = new ArrayList<>(player.getHand());
-            for (Card card : playerHand) {
-                if (card instanceof JokerCard) {
-                    player.getHand().remove(card);
-                    Card newCard = new NormalCard(Suit.SPADES, Value.ACE);
-                    cardRepository.saveAndFlush(newCard);
-                    player.getHand().add(newCard);
-                }
-            }
+
             MovePostDTO move = gameService.automaticMove(player, ID);
             if (move == null) {
                 player.getHand().remove(0);
