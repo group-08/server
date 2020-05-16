@@ -32,6 +32,8 @@ public class Player {
     @OneToMany(targetEntity = Figure.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     List<Figure> figures;
 
+    boolean exchangeCards;
+
     public Player() {
         this.figures = new ArrayList<Figure>();
         this.hand = new ArrayList<Card>();
@@ -75,6 +77,14 @@ public class Player {
 
     public Colour getColour() {
         return this.colour;
+    }
+
+    public boolean getExchangeCards() {
+        return this.exchangeCards;
+    }
+
+    public void setExchangeCards(boolean exchangeCards) {
+        this.exchangeCards = exchangeCards;
     }
 
 }

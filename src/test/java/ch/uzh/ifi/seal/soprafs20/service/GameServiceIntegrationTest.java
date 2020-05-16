@@ -152,7 +152,10 @@ public class GameServiceIntegrationTest {
         assertEquals(5, game.getCardNum());
 
         // Check if exchangeCard boolean is set to true
-        assertTrue(game.getExchangeCard());
+        for (Player player : game.getPlayers()) {
+            assertTrue(player.getExchangeCards());
+        }
+
 
         // Check if game state is set to running
         assertEquals(GameState.RUNNING, game.getGameState());

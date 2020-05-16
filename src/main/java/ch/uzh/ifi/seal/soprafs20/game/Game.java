@@ -47,8 +47,6 @@ public class Game implements Serializable {
 
     String name;
 
-    boolean exchangeCard;
-
     @Enumerated
     WeatherState weatherState;
 
@@ -61,7 +59,6 @@ public class Game implements Serializable {
         this.gameState = GameState.PENDING;
         this.host = user;
         this.cardNum = 6;
-        this.exchangeCard=false;
 
 
         Player hostPlayer = new Player();
@@ -97,14 +94,6 @@ public class Game implements Serializable {
         } else {
             // throw error
         }
-    }
-
-    public void setExchangeCard(boolean exchange) {
-        this.exchangeCard = exchange;
-    }
-
-    public boolean getExchangeCard() {
-        return this.exchangeCard;
     }
 
     public List<Player> getPlayers() {

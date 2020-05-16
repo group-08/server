@@ -181,7 +181,7 @@ public class GameService {
             weatherService.updateWeather(game);
             distributeCards(game, game.getCardNum());
             game.decreaseCardNum();
-            game.setExchangeCard(true);
+            this.setExchangeCard(game, true);
 
             if (!playerService.checkIfCanPlay(game, game.getPlayer(0).getId())) {
                 this.rotatePlayersUntilNextPossible(game);
@@ -192,6 +192,12 @@ public class GameService {
         gameRepository.saveAndFlush(game);
 
         return game.getBoard();
+    }
+
+    public void setExchangeCard(Game game, boolean exchangeCard) {
+        for (Player player : game.getPlayers()) {
+            player.setExchangeCards(exchangeCard);
+        }
     }
 
     public int playPlayersMoveSeven(long gameId, MovePostDTO move) {
@@ -243,7 +249,7 @@ public class GameService {
             while (game.getGameState() == GameState.RUNNING && !checkIfCardsLeft(game)) {
                 distributeCards(game, game.getCardNum());
                 game.decreaseCardNum();
-                game.setExchangeCard(true);
+                this.setExchangeCard(game, true);
 
                 if (!playerService.checkIfCanPlay(game, game.getPlayer(0).getId())) {
                     this.rotatePlayersUntilNextPossible(game);
@@ -401,7 +407,7 @@ public class GameService {
         while (!this.checkIfCardsLeft(game))    {
             this.distributeCards(game, game.getCardNum());
             game.decreaseCardNum();
-            game.setExchangeCard(true);
+            this.setExchangeCard(game, true);
 
             rotatePlayersUntilNextPossible(game);
         }
@@ -463,7 +469,7 @@ public class GameService {
         Game game = gameRepository.findById(gameId).orElse(null);
         assert game != null;
         playerService.exchange(gameId, userId, card);
-        game.setExchangeCard(false);
+        this.setExchangeCard(game, false);
         this.gameRepository.saveAndFlush(game);
         return game;
     }
