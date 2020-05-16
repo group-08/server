@@ -45,12 +45,17 @@ public class Game implements Serializable {
     @OneToOne
     User host;
 
+    @Column
     String name;
 
+    @Column
     boolean exchangeCard;
 
     @Enumerated
     WeatherState weatherState;
+
+    @Enumerated
+    CityState city;
 
     public Game(){}
 
@@ -173,5 +178,13 @@ public class Game implements Serializable {
 
     public void setWeatherState(WeatherState weatherState) {
         this.weatherState = weatherState;
+    }
+
+    public CityState getCity() {
+        return city;
+    }
+
+    public void setCity(CityState city) {
+        this.city = city;
     }
 }

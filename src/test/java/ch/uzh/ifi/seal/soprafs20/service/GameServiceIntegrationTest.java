@@ -206,23 +206,15 @@ public class GameServiceIntegrationTest {
         Assertions.assertEquals(targetField.getOccupant().getId(), figureofPlayer.getId());
     }
 
-    @RepeatedTest(value = 10)
+    @RepeatedTest(value = 2)
     public void PlayRounds() {
         /////////// MOVE LOGIC ///////////
         List<Card> playedCards = new ArrayList<>();
-        for (int i = 0; i < 100; i++)   {
+        for (int i = 0; i < 50; i++)   {
             game = gameRepository.findById(ID).orElse(null);
             assert game!=null;
             Player player = game.getPlayers().get(0);
-            List<Card> playerHand = new ArrayList<>(player.getHand());
-            for (Card card : playerHand) {
-                if (card instanceof JokerCard) {
-                    player.getHand().remove(card);
-                    Card newCard = new NormalCard(Suit.SPADES, Value.ACE);
-                    cardRepository.saveAndFlush(newCard);
-                    player.getHand().add(newCard);
-                }
-            }
+
             MovePostDTO move = gameService.automaticMove(player, ID);
             if (move == null) {
                 player.getHand().remove(0);

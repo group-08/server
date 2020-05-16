@@ -1,7 +1,9 @@
 package ch.uzh.ifi.seal.soprafs20.rest.dto;
 
 import ch.uzh.ifi.seal.soprafs20.board.Board;
+import ch.uzh.ifi.seal.soprafs20.game.CityState;
 import ch.uzh.ifi.seal.soprafs20.game.GameState;
+import ch.uzh.ifi.seal.soprafs20.game.WeatherState;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.user.Player;
 import ch.uzh.ifi.seal.soprafs20.user.User;
@@ -21,6 +23,10 @@ public class GameGetDTO {
     private List<Player> players;
 
     private Board board;
+
+    private WeatherState weatherState;
+
+    private CityState cityState;
 
     public Long getId() {
         return id;
@@ -74,5 +80,21 @@ public class GameGetDTO {
 
     public void setBoard(Board board) {
         this.board = board;
+    }
+
+    public WeatherState getWeatherState() {
+        return weatherState;
+    }
+
+    public void setWeatherState(WeatherState weatherState) {
+        this.weatherState = weatherState;
+    }
+
+    public CityState getCityState() {
+        return cityState;
+    }
+
+    public void setCityState(CityState cityState) {
+        this.cityState = cityState;
     }
 }
