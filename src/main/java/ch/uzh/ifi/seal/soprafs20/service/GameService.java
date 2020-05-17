@@ -511,10 +511,11 @@ public class GameService {
         if (allDone) {
             List<Player> players = game.getPlayers();
 
-            for(Player newPlayer : players){
-                if(newPlayer.getUser()==null && newPlayer.getExchangeCards()){
-                    Card newCard = player.getHand().get(0);
-                    letPlayersChangeCard(gameId, player.getId(), newCard.getId());
+            for(Player botPlayer : players){
+                if(botPlayer.getUser()==null && botPlayer.getExchangeCards()){
+                    playerService.exchange(gameId, botPlayer.getId(), botPlayer.getHand().get(0));
+                    botPlayer.setExchangeCards(false);
+                    playerRepository.saveAndFlush(botPlayer);
                 }
             }
             this.rotateIfNotPossible(game);
@@ -625,10 +626,23 @@ public class GameService {
         assert game != null;
         long gameId = game.getId();
 
-        if (roboCheck(game) && hostCheck(game, token) && timedelta(game))
+        if (allPlayersExchanged(game)) {
+            if (roboCheck(game) && hostCheck(game, token) && timedelta(game))
             {playRoboMove(gameId);}
+        }
 
         return DTOMapper.INSTANCE.convertEntityToGameGetDTO(game);
+    }
+
+    public boolean allPlayersExchanged(Game game) {
+        boolean exchanged = true;
+        for (Player player : game.getPlayers()) {
+            if (player.getExchangeCards()) {
+                exchanged = false;
+                break;
+            }
+        }
+        return exchanged;
     }
     /*
     public void deleteUser(Long id, UserPostDTO userToBeDeletedDTO){

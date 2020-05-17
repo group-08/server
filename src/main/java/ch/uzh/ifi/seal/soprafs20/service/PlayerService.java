@@ -45,7 +45,7 @@ public class PlayerService {
 
         List<Player> players = actualGame.getPlayers();
         int indexOfActualPlayer = players.indexOf(actualPlayer);
-        Player partner = players.get(indexOfActualPlayer+2);
+        Player partner = players.get((indexOfActualPlayer+2)%4);
 
         List<Card> hand = partner.getHand();
         hand.add(card);
