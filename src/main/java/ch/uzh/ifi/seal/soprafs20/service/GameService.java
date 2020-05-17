@@ -503,12 +503,20 @@ public class GameService {
         // Check if all players exchanged cards, if so, rotate if player cannot play
         boolean allDone = true;
         for (Player actualPlayer : game.getPlayers()) {
-            if (actualPlayer.getExchangeCards()) {
+            if (actualPlayer.getExchangeCards() && actualPlayer.getUser() != null) {
                 allDone = false;
                 break;
             }
         }
         if (allDone) {
+            List<Player> players = game.getPlayers();
+
+            for(Player newPlayer : players){
+                if(newPlayer.getUser()==null && newPlayer.getExchangeCards()){
+                    Card newCard = player.getHand().get(0);
+                    letPlayersChangeCard(gameId, player.getId(), newCard.getId());
+                }
+            }
             this.rotateIfNotPossible(game);
         }
         this.gameRepository.saveAndFlush(game);
@@ -616,15 +624,6 @@ public class GameService {
         Game game =  gameRepository.findById(id).orElse(null);
         assert game != null;
         long gameId = game.getId();
-
-        List<Player> players = game.getPlayers();
-
-        for(Player player : players){
-            if(player.getUser()==null && player.getExchangeCards() && hostCheck(game, token)){
-                Card card = player.getHand().get(0);
-                letPlayersChangeCard(gameId, player.getId(), card.getId());
-            }
-        }
 
         if (roboCheck(game) && hostCheck(game, token) && timedelta(game))
             {playRoboMove(gameId);}
