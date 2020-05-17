@@ -127,7 +127,6 @@ public class GameServiceIntegrationTest {
         game = gameRepository.findById(game.getId()).orElse(null);
         assert game != null;
         this.ID = game.getId();
-
     }
 
     @AfterEach
@@ -217,11 +216,16 @@ public class GameServiceIntegrationTest {
             game = gameRepository.findById(ID).orElse(null);
             assert game!=null;
             Player player = game.getPlayers().get(0);
-
             MovePostDTO move = gameService.automaticMove(player, ID);
+
+            // Todo why are there still moves where a player can't play?
+            // They should automatically be skipped over
             if (move == null) {
                 player.getHand().remove(0);
-                player.getHand().add(new NormalCard(Suit.SPADES, Value.ACE));
+                Card newCard = new NormalCard(Suit.SPADES, Value.ACE);
+                cardRepository.saveAndFlush(newCard);
+                player.getHand().add(newCard);
+                gameRepository.saveAndFlush(game);
                 move = gameService.automaticMove(player, ID);
             }
             playerRepository.saveAndFlush(player);
