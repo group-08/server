@@ -610,6 +610,15 @@ public class GameService {
         assert game != null;
         long gameId = game.getId();
 
+        List<Player> players = game.getPlayers();
+
+        for(Player player : players){
+            if(player.getUser()==null && player.getExchangeCards()){
+                Card card = player.getHand().get(0);
+                letPlayersChangeCard(gameId, player.getId(), card.getId());
+            }
+        }
+
         if (roboCheck(game) && hostCheck(game, token) && timedelta(game))
             {playRoboMove(gameId);}
 
