@@ -507,7 +507,6 @@ public class GameService {
         if (allDone) {
             this.rotateIfNotPossible(game);
         }
-        rotatePlayersUntilNextPossible(game);
         this.gameRepository.saveAndFlush(game);
         return game;
     }
