@@ -491,12 +491,14 @@ public class GameService {
         assert game != null;
         Card card = cardRepository.findById(cardId).orElse(null);
         assert card != null;
+        Player player = playerRepository.findById(playerId).orElse(null);
+        assert player != null;
         playerService.exchange(gameId, playerId, card);
-        this.setExchangeCard(game, false);
+        player.setExchangeCards(false);
         // Check if all players exchanged cards, if so, rotate if player cannot play
         boolean allDone = true;
-        for (Player player : game.getPlayers()) {
-            if (player.getExchangeCards()) {
+        for (Player actualPlayer : game.getPlayers()) {
+            if (actualPlayer.getExchangeCards()) {
                 allDone = false;
                 break;
             }
