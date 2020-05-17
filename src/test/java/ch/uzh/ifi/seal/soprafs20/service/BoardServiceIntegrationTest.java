@@ -50,11 +50,14 @@ public class BoardServiceIntegrationTest {
     @BeforeEach
     public void init() {
         gameRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @AfterEach
     public void tearDown() {
         boardRepository.deleteAll();
+        gameRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
@@ -82,23 +85,6 @@ public class BoardServiceIntegrationTest {
 
     @Test
     public void blowAwayFigureTests(){
-        User user = new User();
-        user.setUsername("firstname.lastname");
-        user.setEmail("firstname@lastname.ch");
-        user.setPassword("test");
-        user.setToken("asdf");
-        user.setStatus(UserStatus.ONLINE);
 
-        Player testPlayer = new Player();
-        testPlayer.setUser(user);
-
-        this.game = new Game(user, "testGame");
-        gameRepository.saveAndFlush(game);
-
-        gameService.setUpGame(game.getId());
-
-        userRepository.saveAndFlush(user);
-
-        gameRepository.saveAndFlush(game);
     }
 }
