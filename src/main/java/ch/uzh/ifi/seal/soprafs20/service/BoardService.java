@@ -3,10 +3,13 @@ package ch.uzh.ifi.seal.soprafs20.service;
 
 import ch.uzh.ifi.seal.soprafs20.board.Board;
 import ch.uzh.ifi.seal.soprafs20.cards.Card;
+import ch.uzh.ifi.seal.soprafs20.cards.NormalCard;
+import ch.uzh.ifi.seal.soprafs20.cards.Suit;
 import ch.uzh.ifi.seal.soprafs20.cards.Value;
 import ch.uzh.ifi.seal.soprafs20.field.*;
 import ch.uzh.ifi.seal.soprafs20.game.Game;
 import ch.uzh.ifi.seal.soprafs20.repository.BoardRepository;
+import ch.uzh.ifi.seal.soprafs20.repository.CardRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.user.Figure;
 import ch.uzh.ifi.seal.soprafs20.user.Player;
@@ -14,7 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import javax.print.attribute.standard.PDLOverrideSupported;
 import javax.transaction.Transactional;
+import java.nio.channels.FileLockInterruptionException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -289,6 +294,63 @@ public class BoardService {
         }
         return possibleFields;
     }
+
+    public ArrayList<Field> getPossibleFieldsJoker(Game actualGame,  Field field){
+        Card card2 = new NormalCard(Suit.CLUBS, Value.TWO);
+        Card card3 = new NormalCard(Suit.CLUBS, Value.THREE);
+        //four is special
+        Card card4 = new NormalCard(Suit.CLUBS, Value.FOUR);
+
+        Card card5 = new NormalCard(Suit.CLUBS, Value.FIVE);
+        Card card6 = new NormalCard(Suit.CLUBS, Value.SIX);
+
+        ///TODO ask Flurin if this works as I believe
+        Card card7 = new NormalCard(Suit.CLUBS,Value.SEVEN);
+
+        Card card8 = new NormalCard(Suit.CLUBS, Value.EIGHT);
+        Card card9 = new NormalCard(Suit.CLUBS, Value.NINE);
+        Card card10 = new NormalCard(Suit.CLUBS, Value.TEN);
+        //jack is special
+        Card cardJack = new NormalCard(Suit.CLUBS, Value.JACK);
+
+        Card cardQueen = new NormalCard(Suit.CLUBS, Value.QUEEN);
+        Card cardAce = new NormalCard(Suit.CLUBS, Value.ACE);
+        Card cardKing = new NormalCard(Suit.CLUBS, Value.KING);
+
+        ArrayList<Field> possibleMovesJoker = new ArrayList<>();
+
+        ///normal cards valid moves
+        possibleMovesJoker.addAll(getPossibleFields(actualGame, card2,field));
+        possibleMovesJoker.addAll(getPossibleFields(actualGame, card3,field));
+        possibleMovesJoker.addAll(getPossibleFields(actualGame, card5,field));
+        possibleMovesJoker.addAll(getPossibleFields(actualGame, card6,field));
+        ///TODO check if seven functions like this
+        possibleMovesJoker.addAll(getPossibleFields(actualGame,card7, field));
+
+        possibleMovesJoker.addAll(getPossibleFields(actualGame, card8,field));
+        possibleMovesJoker.addAll(getPossibleFields(actualGame, card9,field));
+        possibleMovesJoker.addAll(getPossibleFields(actualGame, card10,field));
+        possibleMovesJoker.addAll(getPossibleFields(actualGame, cardQueen,field));
+        possibleMovesJoker.addAll(getPossibleFields(actualGame, cardAce,field));
+        possibleMovesJoker.addAll(getPossibleFields(actualGame, cardKing,field));
+
+
+
+
+
+        ///fours valid moves
+        Board gameBoard = actualGame.getBoard();
+        possibleMovesJoker.addAll(getPossibleFieldsFour(card4, field, gameBoard));
+
+        ///Jacks valid move
+        possibleMovesJoker.addAll(getPossibleFieldsJack(actualGame,cardJack,field));
+
+
+        return possibleMovesJoker;
+
+    }
+
+
 
     public ArrayList<Field> getPossibleFieldsSeven(Card card, Field field){
         ArrayList<Field> possibleFields = new ArrayList<>();

@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -124,6 +125,9 @@ public class GameService {
         Figure figure = getFigureFromId(figureId);
         Field currentField = figure.getField();
 
+        if (card.getValue() == Value.JOKER) {
+            return boardService.getPossibleFieldsJoker(actualGame, currentField);
+        }
         if (card.getValue() == Value.SEVEN) {
             return boardService.getPossibleFieldsSeven(card, currentField);
         }
