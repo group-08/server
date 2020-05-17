@@ -1,5 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.game;
 
+
+
 import ch.uzh.ifi.seal.soprafs20.board.Board;
 import ch.uzh.ifi.seal.soprafs20.board.CasualBoard;
 import ch.uzh.ifi.seal.soprafs20.cards.Deck;
@@ -43,14 +45,10 @@ public class Game implements Serializable {
     @OneToOne
     User host;
 
-    @Column
     String name;
 
     @Enumerated
     WeatherState weatherState;
-
-    @Enumerated
-    CityState city;
 
     public Game(){}
 
@@ -164,13 +162,5 @@ public class Game implements Serializable {
 
     public void setWeatherState(WeatherState weatherState) {
         this.weatherState = weatherState;
-    }
-
-    public CityState getCity() {
-        return city;
-    }
-
-    public void setCity(CityState city) {
-        this.city = city;
     }
 }
