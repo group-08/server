@@ -197,6 +197,7 @@ public class GameService {
 
         // check if game still running and no cards left, distribute new cards
         while (!checkIfCardsLeft(game)) {
+            weatherService.updateWeather(game);
             distributeCards(game, game.getCardNum());
             game.decreaseCardNum();
             this.setExchangeCard(game, true);
@@ -426,8 +427,6 @@ public class GameService {
             this.distributeCards(game, game.getCardNum());
             game.decreaseCardNum();
             this.setExchangeCard(game, true);
-
-            //rotate players?
         }
 
         // Set the gameState to running
@@ -507,7 +506,6 @@ public class GameService {
         if (allDone) {
             this.rotateIfNotPossible(game);
         }
-        rotatePlayersUntilNextPossible(game);
         this.gameRepository.saveAndFlush(game);
         return game;
     }
@@ -526,7 +524,6 @@ public class GameService {
             List<Card> cards = deckService.drawCards(cardNum, game.getDeck().getId());
             player.setHand(cards);
         }
-        weatherService.updateWeather(game);
     }
 
     public boolean checkIfCardsLeft(Game game)   {
@@ -613,15 +610,6 @@ public class GameService {
         Game game =  gameRepository.findById(id).orElse(null);
         assert game != null;
         long gameId = game.getId();
-
-        List<Player> players = game.getPlayers();
-
-        for(Player player : players){
-            if(player.getUser()==null && player.getExchangeCards() && hostCheck(game, token)){
-                Card card = player.getHand().get(0);
-                letPlayersChangeCard(gameId, player.getId(), card.getId());
-            }
-        }
 
         if (roboCheck(game) && hostCheck(game, token) && timedelta(game))
             {playRoboMove(gameId);}

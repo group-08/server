@@ -61,7 +61,7 @@ public class WeatherService {
 
     public WeatherState getWeather(String response){
 
-        String[] words = response.split("\"");
+        String[] words = response.split(" ");
         for(String word : words){
             if(weatherHashMap.containsKey(word)){
                 return weatherHashMap.get(word);
@@ -79,12 +79,8 @@ public class WeatherService {
 
     public void updateWeather (Game game){
         CityState randomCity = randomCityChooser();
-        game.setCity(randomCity);
         double[] coordinates = city.getHashMapCity().get(randomCity);
         String coordinatesString = Arrays.toString(coordinates);
-        coordinatesString = coordinatesString.replace("[","");
-        coordinatesString = coordinatesString.replace("]", "");
-
         String lat = Arrays.asList(coordinatesString.split(",")).get(0);
         String lon = Arrays.asList(coordinatesString.split(",")).get(1);
         WeatherState weatherState;
