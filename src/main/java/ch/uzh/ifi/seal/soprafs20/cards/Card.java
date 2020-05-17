@@ -16,8 +16,6 @@ public abstract class Card implements Serializable {
     @Enumerated
     protected Value value;
 
-    @Enumerated
-    protected CardType type;
 
     @Column
     protected int remainingSteps;
@@ -29,9 +27,7 @@ public abstract class Card implements Serializable {
         return this.value;
     }
 
-    public CardType getType() {
-        return this.type;
-    }
+
 
     public long getId() {
         return id;

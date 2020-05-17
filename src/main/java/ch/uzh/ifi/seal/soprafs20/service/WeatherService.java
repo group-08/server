@@ -12,6 +12,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
+import org.json.*;
 
 
 @Service
@@ -22,11 +23,9 @@ public class WeatherService {
     City city = new City();
     HashMap<String, WeatherState> weatherHashMap= weather.getHashMapWeather();
 
+    public String getAPIResponse(int woeid) throws IOException {
 
-    public String getAPIResponse(String lat, String lon) throws IOException {
-
-        String urlBuild = String.format("https://api.climacell.co/v3/" +
-                "weather/realtime?lat=%s&lon=%s&unit_system=si&fields=weather_code&apikey=mbskomA6aqcmzuv4EMgg7ANB2OEyoOGi", lat, lon);
+        String urlBuild = String.format("https://www.metaweather.com/api/location/%d/", woeid);
 
         URL url = new URL(urlBuild);
 
@@ -60,12 +59,16 @@ public class WeatherService {
     }
 
     public WeatherState getWeather(String response){
-
-        String[] words = response.split("\"");
-        for(String word : words){
-            if(weatherHashMap.containsKey(word)){
-                return weatherHashMap.get(word);
+        try {
+            JSONObject obj = new JSONObject(response);
+            JSONArray array = (JSONArray) obj.get("consolidated_weather");
+            JSONObject today_weather = (JSONObject) array.get(1);
+            String weather_state_name = (String) today_weather.get("weather_state_name");
+            if(weatherHashMap.containsKey(weather_state_name)){
+                return weatherHashMap.get(weather_state_name);
             }
+        }
+        catch (Exception e) {
         }
         return null;
     }
@@ -80,17 +83,12 @@ public class WeatherService {
     public void updateWeather (Game game){
         CityState randomCity = randomCityChooser();
         game.setCity(randomCity);
-        double[] coordinates = city.getHashMapCity().get(randomCity);
-        String coordinatesString = Arrays.toString(coordinates);
-        coordinatesString = coordinatesString.replace("[","");
-        coordinatesString = coordinatesString.replace("]", "");
+        int woeid = city.getHashMapCity().get(randomCity);
 
-        String lat = Arrays.asList(coordinatesString.split(",")).get(0);
-        String lon = Arrays.asList(coordinatesString.split(",")).get(1);
         WeatherState weatherState;
         try {
-            String response = getAPIResponse(lat, lon);
-             weatherState = getWeather(response);
+            String response = getAPIResponse(woeid);
+            weatherState = getWeather(response);
         }
         catch (IOException e) {
             weatherState = WeatherState.UNKNOWN;

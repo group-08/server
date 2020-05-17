@@ -216,6 +216,15 @@ public class GameServiceIntegrationTest {
             game = gameRepository.findById(ID).orElse(null);
             assert game!=null;
             Player player = game.getPlayers().get(0);
+            List<Card> playerHand = new ArrayList<>(player.getHand());
+            for (Card card : playerHand) {
+                if (card.getValue() == Value.JOKER) {
+                    player.getHand().remove(card);
+                    Card newCard = new NormalCard(Suit.SPADES, Value.ACE);
+                    cardRepository.saveAndFlush(newCard);
+                    player.getHand().add(newCard);
+                }
+            }
 
             MovePostDTO move = gameService.automaticMove(player, ID);
 
@@ -233,7 +242,8 @@ public class GameServiceIntegrationTest {
             long cardId = move.getCardId();
             Card card = gameService.getCardFromId(cardId);
             long playerId = player.getId();
-            /*if (card.getValue() == Value.SEVEN) {
+            /*
+            if (card.getValue() == Value.SEVEN) {
                 while (move.getRemainingSeven() > 0) {
                     int remaining = gameService.playPlayersMoveSeven(ID, move);
                     player = playerRepository.findById(playerId).orElse(null);
