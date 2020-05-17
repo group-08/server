@@ -426,6 +426,8 @@ public class GameService {
             this.distributeCards(game, game.getCardNum());
             game.decreaseCardNum();
             this.setExchangeCard(game, true);
+
+            //rotate players?
         }
 
         // Set the gameState to running
@@ -613,7 +615,7 @@ public class GameService {
         List<Player> players = game.getPlayers();
 
         for(Player player : players){
-            if(player.getUser()==null && player.getExchangeCards()){
+            if(player.getUser()==null && player.getExchangeCards() && hostCheck(game, token)){
                 Card card = player.getHand().get(0);
                 letPlayersChangeCard(gameId, player.getId(), card.getId());
             }
