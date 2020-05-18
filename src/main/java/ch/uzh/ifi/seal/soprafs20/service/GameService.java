@@ -10,10 +10,7 @@ import ch.uzh.ifi.seal.soprafs20.field.HomeField;
 import ch.uzh.ifi.seal.soprafs20.game.Game;
 import ch.uzh.ifi.seal.soprafs20.game.GameState;
 import ch.uzh.ifi.seal.soprafs20.repository.*;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.GameGetDTO;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.LobbyGetDTO;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.MovePostDTO;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.UserGetDTO;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.user.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -690,6 +687,37 @@ public class GameService {
         MovePostDTO move = new MovePostDTO();
         move.setRemainingSeven(0);
         return move;
+    }
+
+    public GameFinishedDTO findWinners(long gameID){
+
+        Game game = gameRepository.findById(gameID).orElse(null);
+        assert game != null;
+
+        List<Player> players = game.getPlayers();
+
+        GameFinishedDTO gameFinishedDTO = new GameFinishedDTO();
+
+        for (Player itPlayer : players){
+
+            if (checkIfPlayerFinished(game, itPlayer)){
+
+                int indexOfPlayer = players.indexOf(itPlayer);
+                Player partner = players.get((indexOfPlayer + 2) % 4);
+
+                if(checkIfPlayerFinished(game,partner)){
+
+                    UserGetDTO playerUser = itPlayer.getUser();
+                    UserGetDTO partnerUser = partner.getUser();
+
+                    List<UserGetDTO> userList = new ArrayList<>();
+                    userList.add(playerUser);
+                    userList.add(partnerUser);
+                    gameFinishedDTO.setWinners(userList);
+                    return gameFinishedDTO;
+                }
+            }
+        }return null;
     }
 
 
