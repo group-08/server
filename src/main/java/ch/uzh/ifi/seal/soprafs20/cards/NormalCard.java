@@ -56,5 +56,13 @@ public class NormalCard extends Card {
         return false;
     }
 
+    @Override
+    public int hashCode() {
+        int result = 17;
+
+        result = (int) (31 * result + suit.hashCode());
+        result = (int) (31 * result + value.hashCode());
+        return result;
+    }
 
 }
