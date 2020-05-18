@@ -58,9 +58,15 @@ public class GameController {
     }
     //get current game with id
 
+    @PostMapping("/game/{id}/finished")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public GameFinishedDTO getGameFinished(@PathVariable Long id) {
+        return gameService.findWinners(id);
+    }
 
-    /** TODO: Frontend check when to exchange!
-     *        show card after swap!*/
+
+
     //switching cards
     @PostMapping("/game/{id}/exchange")
     @ResponseStatus(HttpStatus.CREATED)

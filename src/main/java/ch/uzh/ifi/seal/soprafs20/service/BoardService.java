@@ -352,7 +352,7 @@ public class BoardService {
                     if(temp instanceof FirstField){
                         for(Field pField : temp.getAdjacencyList()){
                             if(pField instanceof GoalField && pField.getOccupant() == null){
-                                if(((GoalField) pField).getPlayer()==player){
+                                if(((GoalField) pField).getPlayer()==player && !((FirstField) temp).getBlocked()){
                                     queue.add(pField);
                                 }
                             }
@@ -380,7 +380,7 @@ public class BoardService {
         Card card5 = new NormalCard(Suit.CLUBS, Value.FIVE);
         Card card6 = new NormalCard(Suit.CLUBS, Value.SIX);
 
-        ///TODO ask Flurin if this works as I believe
+
         Card card7 = new NormalCard(Suit.CLUBS,Value.SEVEN);
 
         Card card8 = new NormalCard(Suit.CLUBS, Value.EIGHT);
@@ -400,7 +400,6 @@ public class BoardService {
         possibleMovesJoker.addAll(getPossibleFields(actualGame, card3,field));
         possibleMovesJoker.addAll(getPossibleFields(actualGame, card5,field));
         possibleMovesJoker.addAll(getPossibleFields(actualGame, card6,field));
-        ///TODO check if seven functions like this
         possibleMovesJoker.addAll(getPossibleFields(actualGame,card7, field));
 
         possibleMovesJoker.addAll(getPossibleFields(actualGame, card8,field));
@@ -416,7 +415,7 @@ public class BoardService {
 
         ///fours valid moves
         Board gameBoard = actualGame.getBoard();
-        possibleMovesJoker.addAll(getPossibleFieldsFour(card4, field, gameBoard));
+        possibleMovesJoker.addAll(getPossibleFields(actualGame, card4, field));
 
         ///Jacks valid move
         possibleMovesJoker.addAll(getPossibleFieldsJack(actualGame,cardJack,field));
