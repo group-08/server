@@ -2,8 +2,13 @@ package ch.uzh.ifi.seal.soprafs20.service;
 
 import ch.uzh.ifi.seal.soprafs20.board.Board;
 import ch.uzh.ifi.seal.soprafs20.field.Field;
+import ch.uzh.ifi.seal.soprafs20.game.Game;
 import ch.uzh.ifi.seal.soprafs20.repository.BoardRepository;
+import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.UserRepository;
+import ch.uzh.ifi.seal.soprafs20.user.Player;
+import ch.uzh.ifi.seal.soprafs20.user.User;
+import ch.uzh.ifi.seal.soprafs20.user.UserStatus;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,13 +26,38 @@ public class BoardServiceIntegrationTest {
     @Autowired
     private BoardRepository boardRepository;
 
+    @Qualifier("gameRepository")
+    @Autowired
+    private GameRepository gameRepository;
+
     @Autowired
     private UserService userService;
 
 
+    @Qualifier("userRepository")
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private GameService gameService;
+
+
+
+
+
+    private Game game;
+
+    @BeforeEach
+    public void init() {
+        gameRepository.deleteAll();
+        userRepository.deleteAll();
+    }
+
     @AfterEach
     public void tearDown() {
         boardRepository.deleteAll();
+        gameRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
@@ -51,5 +81,10 @@ public class BoardServiceIntegrationTest {
                 assertEquals(field, field.getOccupant().getField());
             }
         }
+    }
+
+    @Test
+    public void blowAwayFigureTests(){
+
     }
 }

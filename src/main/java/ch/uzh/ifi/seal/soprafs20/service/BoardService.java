@@ -8,6 +8,7 @@ import ch.uzh.ifi.seal.soprafs20.cards.Suit;
 import ch.uzh.ifi.seal.soprafs20.cards.Value;
 import ch.uzh.ifi.seal.soprafs20.field.*;
 import ch.uzh.ifi.seal.soprafs20.game.Game;
+import ch.uzh.ifi.seal.soprafs20.game.WeatherState;
 import ch.uzh.ifi.seal.soprafs20.repository.BoardRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.CardRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import javax.print.attribute.standard.PDLOverrideSupported;
 import javax.transaction.Transactional;
+import java.util.*;
 import java.nio.channels.FileLockInterruptionException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -63,6 +65,30 @@ public class BoardService {
                 }
             }
         }
+    }
+
+    public void blowFigureAway(Game game, Figure figure){
+        List<Long> specialFieldIds = getSpecialFieldIds(game);
+        Board board = this.getBoard(game);
+        Field currentField = this.getFieldfromFigure(game, figure);
+        Figure currentFigure = currentField.getOccupant();
+        List<Field> casualFields = new ArrayList<>();
+        for(Field field : board.getFields()){
+            if(field instanceof CasualField && !specialFieldIds.contains(field.getId())) {
+                casualFields.add(field);
+            }
+        }
+        Random rand = new Random();
+
+        Field randomCasualField = casualFields.get(rand.nextInt(casualFields.size()));
+
+        if(randomCasualField.getOccupant()!=null){
+            Figure figureOfField = randomCasualField.getOccupant();
+            sendFigureHome(game, figureOfField);
+        }
+        currentField.setOccupant(null);
+        randomCasualField.setOccupant(currentFigure);
+        currentFigure.setField(randomCasualField);
     }
 
 
@@ -137,6 +163,18 @@ public class BoardService {
         for (Field field : fieldsToMove) {
             this.move(game, occ, field);
         }
+
+        List<Long> specialFieldIds = getSpecialFieldIds(game);
+
+        if(specialFieldIds.contains(targetFieldObject.getId())) {
+            if (game.getWeatherState() == WeatherState.RAINY) {
+                sendFigureHome(game, occ);
+            }
+            if (game.getWeatherState() == WeatherState.WINDY) {
+                blowFigureAway(game, occ);
+            }
+        }
+
         return remaining - distance;
     }
 
@@ -169,6 +207,44 @@ public class BoardService {
         }
         if (currentField instanceof FirstField) {
             ((FirstField) currentField).setBlocked(false);
+        }
+
+        List<Long> specialFieldIds = getSpecialFieldIds(game);
+
+        if(specialFieldIds.contains(targetFieldObject.getId())) {
+            if (game.getWeatherState() == WeatherState.RAINY) {
+                sendFigureHome(game, occ);
+            }
+            if (game.getWeatherState() == WeatherState.WINDY) {
+                blowFigureAway(game, occ);
+            }
+        }
+    }
+
+    public List<Long> getSpecialFieldIds(Game game){
+        List<Field> fields = game.getBoard().getFields();
+        List<Long> specialFields = new ArrayList<>();
+        specialFields.add(fields.get(8).getId());
+        specialFields.add(fields.get(24).getId());
+        specialFields.add(fields.get(40).getId());
+        specialFields.add(fields.get(56).getId());
+        return specialFields;
+    }
+
+    public void checkFieldsWeatherChange(Game game){
+        Board board = game.getBoard();
+        List<Long> specialFieldIds = getSpecialFieldIds(game);
+
+        for(Field field : board.getFields()){
+            if(field.getOccupant() != null && specialFieldIds.contains(field.getId())){
+                Figure figure = field.getOccupant();
+                if(game.getWeatherState() == WeatherState.WINDY){
+                    blowFigureAway(game, figure);
+                }
+                if(game.getWeatherState() == WeatherState.RAINY){
+                    sendFigureHome(game,figure);
+                }
+            }
         }
     }
 
