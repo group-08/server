@@ -2,6 +2,7 @@ package ch.uzh.ifi.seal.soprafs20.service;
 
 import ch.uzh.ifi.seal.soprafs20.cards.*;
 import ch.uzh.ifi.seal.soprafs20.field.Field;
+import ch.uzh.ifi.seal.soprafs20.field.HomeField;
 import ch.uzh.ifi.seal.soprafs20.game.Game;
 import ch.uzh.ifi.seal.soprafs20.game.GameState;
 import ch.uzh.ifi.seal.soprafs20.repository.*;
@@ -310,4 +311,118 @@ public class GameServiceIntegrationTest {
         assertEquals(figure2.getId(), homeField2new.getOccupant().getId());
     }
 
+
+    @Test
+    public void playPlayersMoveSevenTest(){
+
+        long gameId = game.getId();
+        Figure figure1 = game.getPlayer(0).getFigures().get(0);
+        long figure1Id = figure1.getId();
+        Field field10 = game.getBoard().getField(10);
+        long field10Id = field10.getId();
+        Field field17 = game.getBoard().getField(17);
+        long field17Id = field17.getId();
+        figure1.getField().setOccupant(null);
+        field10.setOccupant(figure1);
+        figure1.setField(field10);
+
+        Figure figure2 = game.getPlayer(1).getFigures().get(0);
+        long figure2Id = figure2.getId();
+        Field field15 = game.getBoard().getField(15);
+        long field15Id = field15.getId();
+        Field homeField2 = figure2.getField();
+        long homeField2Id = homeField2.getId();
+        figure2.getField().setOccupant(null);
+        field15.setOccupant(figure2);
+        figure2.setField(field15);
+
+        Card card = new NormalCard(Suit.HEARTS, Value.SEVEN);
+        card.setRemainingSteps(7);
+        cardRepository.saveAndFlush(card);
+
+
+        MovePostDTO move = new MovePostDTO();
+        move.setFigureId(figure1.getId());
+        move.setCardId(card.getId());
+        move.setTargetFieldId(field17.getId());
+        move.setRemainingSeven(7);
+        gameRepository.saveAndFlush(game);
+
+        int remaining = gameService.playPlayersMoveSeven(gameId,move);
+
+        Field field10new = fieldRepository.findById(field10Id).orElse(null);
+        assert field10new != null;
+        Field field15new = fieldRepository.findById(field15Id).orElse(null);
+        assert field15new != null;
+        Figure figure2new = figureRepository.findById(figure2Id).orElse(null);
+        assert figure2new != null;
+        Field homeField2new = fieldRepository.findById(homeField2Id).orElse(null);
+        assert homeField2new != null;
+        Figure figure1new = figureRepository.findById(figure1Id).orElse(null);
+        assert figure1new != null;
+        Field field17new = fieldRepository.findById(field17Id).orElse(null);
+        assert field17new != null;
+
+        Assertions.assertNull(field10new.getOccupant());
+        Assertions.assertEquals(field17new.getOccupant().getId(), figure1Id);
+        Assertions.assertNull(field15new.getOccupant());
+        Assertions.assertEquals(0, remaining);
+
+    }
+
+    @Test
+    public void playPlayersMoveSevenRemainingTest(){
+
+        long gameId = game.getId();
+        Figure figure1 = game.getPlayer(0).getFigures().get(0);
+        long figure1Id = figure1.getId();
+        Field field10 = game.getBoard().getField(10);
+        long field10Id = field10.getId();
+        figure1.getField().setOccupant(null);
+        field10.setOccupant(figure1);
+        figure1.setField(field10);
+
+        Figure figure2 = game.getPlayer(1).getFigures().get(0);
+        long figure2Id = figure2.getId();
+        Field field15 = game.getBoard().getField(15);
+        long field15Id = field15.getId();
+        Field homeField2 = figure2.getField();
+        long homeField2Id = homeField2.getId();
+        figure2.getField().setOccupant(null);
+        field15.setOccupant(figure2);
+        figure2.setField(field15);
+
+        Card card = new NormalCard(Suit.HEARTS, Value.SEVEN);
+        card.setRemainingSteps(7);
+        cardRepository.saveAndFlush(card);
+
+
+        MovePostDTO move = new MovePostDTO();
+        move.setFigureId(figure1.getId());
+        move.setCardId(card.getId());
+        move.setTargetFieldId(field15.getId());
+        move.setRemainingSeven(7);
+        gameRepository.saveAndFlush(game);
+
+        int remaining = gameService.playPlayersMoveSeven(gameId,move);
+
+        Field field10new = fieldRepository.findById(field10Id).orElse(null);
+        assert field10new != null;
+        Field field15new = fieldRepository.findById(field15Id).orElse(null);
+        assert field15new != null;
+        Figure figure2new = figureRepository.findById(figure2Id).orElse(null);
+        assert figure2new != null;
+        Field homeField2new = fieldRepository.findById(homeField2Id).orElse(null);
+        assert homeField2new != null;
+        Figure figure1new = figureRepository.findById(figure1Id).orElse(null);
+        assert figure1new != null;
+
+
+        Assertions.assertNull(field10new.getOccupant());
+        Assertions.assertEquals(field15new.getOccupant().getId(), figure1Id);
+        Assertions.assertEquals(2, remaining);
+        Assertions.assertTrue(figure2new.getField() instanceof HomeField);
+        assertEquals(field15new.getId(), figure1new.getField().getId());
+
+    }
 }
