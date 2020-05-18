@@ -1,7 +1,5 @@
 package ch.uzh.ifi.seal.soprafs20.game;
 
-
-
 import ch.uzh.ifi.seal.soprafs20.board.Board;
 import ch.uzh.ifi.seal.soprafs20.board.CasualBoard;
 import ch.uzh.ifi.seal.soprafs20.cards.Deck;
@@ -48,9 +46,6 @@ public class Game implements Serializable {
     @Column
     String name;
 
-    @Column
-    boolean exchangeCard;
-
     @Enumerated
     WeatherState weatherState;
 
@@ -66,7 +61,6 @@ public class Game implements Serializable {
         this.gameState = GameState.PENDING;
         this.host = user;
         this.cardNum = 6;
-        this.exchangeCard=false;
 
 
         Player hostPlayer = new Player();
@@ -102,14 +96,6 @@ public class Game implements Serializable {
         } else {
             // throw error
         }
-    }
-
-    public void setExchangeCard(boolean exchange) {
-        this.exchangeCard = exchange;
-    }
-
-    public boolean getExchangeCard() {
-        return this.exchangeCard;
     }
 
     public List<Player> getPlayers() {
