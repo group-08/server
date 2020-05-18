@@ -184,7 +184,6 @@ public class GameService {
             if (checkIfPlayerFinished(game, partner)) {
                 game.setGameState(GameState.FINISHED);
                 increaseScore(currentPlayer,partner);
-                //TODO save repo, after correctly finishing the game
                 //gameRepository.saveAndFlush(game);
             } else {
                 for (Figure playersFigure : partner.getFigures()) {
@@ -279,7 +278,7 @@ public class GameService {
 
         gameRepository.saveAndFlush(game);
 
-        return remainingSteps;
+        return newRemaining;
     }
 
 
