@@ -18,6 +18,8 @@ public class PlayerGetDTO {
 
     private List<Card> hand;
 
+    private boolean exchangeCards;
+
     public long getId() {
         return id;
     }
@@ -49,5 +51,13 @@ public class PlayerGetDTO {
 
     public void setHand(List<Card> hand) {
         this.hand = hand;
+    }
+
+    public boolean getExchangeCards() {
+        return exchangeCards;
+    }
+
+    public void setExchangeCards(boolean exchangeCards) {
+        this.exchangeCards = exchangeCards;
     }
 }

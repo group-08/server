@@ -127,7 +127,6 @@ public class GameServiceIntegrationTest {
         game = gameRepository.findById(game.getId()).orElse(null);
         assert game != null;
         this.ID = game.getId();
-
     }
 
     @AfterEach
@@ -152,7 +151,10 @@ public class GameServiceIntegrationTest {
         assertEquals(5, game.getCardNum());
 
         // Check if exchangeCard boolean is set to true
-        assertTrue(game.getExchangeCard());
+        for (Player player : game.getPlayers()) {
+            assertTrue(player.getExchangeCards());
+        }
+
 
         // Check if game state is set to running
         assertEquals(GameState.RUNNING, game.getGameState());
@@ -206,26 +208,42 @@ public class GameServiceIntegrationTest {
         Assertions.assertEquals(targetField.getOccupant().getId(), figureofPlayer.getId());
     }
 
-    @RepeatedTest(value = 2)
+    @RepeatedTest(value = 10)
     public void PlayRounds() {
         /////////// MOVE LOGIC ///////////
         List<Card> playedCards = new ArrayList<>();
-        for (int i = 0; i < 50; i++)   {
+        for (int i = 0; i < 100; i++)   {
             game = gameRepository.findById(ID).orElse(null);
             assert game!=null;
             Player player = game.getPlayers().get(0);
+            List<Card> playerHand = new ArrayList<>(player.getHand());
+            for (Card card : playerHand) {
+                if (card.getValue() == Value.JOKER) {
+                    player.getHand().remove(card);
+                    Card newCard = new NormalCard(Suit.SPADES, Value.ACE);
+                    cardRepository.saveAndFlush(newCard);
+                    player.getHand().add(newCard);
+                }
+            }
 
             MovePostDTO move = gameService.automaticMove(player, ID);
+
+            // Todo why are there still moves where a player can't play?
+            // They should automatically be skipped over
             if (move == null) {
                 player.getHand().remove(0);
-                player.getHand().add(new NormalCard(Suit.SPADES, Value.ACE));
+                Card newCard = new NormalCard(Suit.SPADES, Value.ACE);
+                cardRepository.saveAndFlush(newCard);
+                player.getHand().add(newCard);
+                gameRepository.saveAndFlush(game);
                 move = gameService.automaticMove(player, ID);
             }
             playerRepository.saveAndFlush(player);
             long cardId = move.getCardId();
             Card card = gameService.getCardFromId(cardId);
             long playerId = player.getId();
-            /*if (card.getValue() == Value.SEVEN) {
+            /*
+            if (card.getValue() == Value.SEVEN) {
                 while (move.getRemainingSeven() > 0) {
                     int remaining = gameService.playPlayersMoveSeven(ID, move);
                     player = playerRepository.findById(playerId).orElse(null);

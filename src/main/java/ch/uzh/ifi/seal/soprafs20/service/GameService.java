@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -41,6 +42,7 @@ public class GameService {
     private FieldRepository fieldRepository;
     private FigureRepository figureRepository;
     private CardRepository cardRepository;
+    private PlayerRepository playerRepository;
 
     @Autowired
     public GameService(@Qualifier("gameRepository") GameRepository gameRepository,
@@ -59,6 +61,7 @@ public class GameService {
         this.figureRepository = figureRepository;
         this.gameRepository = gameRepository;
         this.fieldRepository = fieldRepository;
+        this.playerRepository = playerRepository;
         this.boardService = new BoardService(boardRepository, gameRepository);
         this.playerService = new PlayerService(playerRepository, boardRepository, gameRepository);
         this.userService = new UserService(userRepository);
@@ -77,6 +80,23 @@ public class GameService {
         Player currentPlayer = players.get(0);
         players.remove(currentPlayer);
         players.add(currentPlayer);
+
+        // Get player on top of the array
+        Player nextPlayer = players.get(0);
+
+        while ((!(playerService.checkIfCanPlay(game, nextPlayer.getId())) && this.checkIfCardsLeft(game))) {
+            playerService.removeAllFromHand(nextPlayer);
+            players.remove(nextPlayer);
+            players.add(nextPlayer);
+            nextPlayer = players.get(0);
+        }
+
+        this.gameRepository.saveAndFlush(game);
+    }
+
+    public void rotateIfNotPossible(Game game){
+
+        List<Player> players = game.getPlayers();
 
         // Get player on top of the array
         Player nextPlayer = players.get(0);
@@ -124,6 +144,9 @@ public class GameService {
         Figure figure = getFigureFromId(figureId);
         Field currentField = figure.getField();
 
+        if (card.getValue() == Value.JOKER) {
+            return boardService.getPossibleFieldsJoker(actualGame, currentField);
+        }
         if (card.getValue() == Value.SEVEN) {
             return boardService.getPossibleFieldsSeven(card, currentField);
         }
@@ -177,12 +200,14 @@ public class GameService {
 
         this.rotatePlayersUntilNextPossible(game);
 
+        // check if game still running and no cards left, distribute new cards
+
 
         if(!checkIfCardsLeft(game)) {
                 while (!checkIfCardsLeft(game)) {
                     distributeCards(game, game.getCardNum());
                     game.decreaseCardNum();
-                    game.setExchangeCard(true);
+                    this.setExchangeCard(game,true);
 
                     if (!playerService.checkIfCanPlay(game, game.getPlayer(0).getId())) {
                         this.rotatePlayersUntilNextPossible(game);
@@ -196,6 +221,12 @@ public class GameService {
         gameRepository.saveAndFlush(game);
 
         return game.getBoard();
+    }
+
+    public void setExchangeCard(Game game, boolean exchangeCard) {
+        for (Player player : game.getPlayers()) {
+            player.setExchangeCards(exchangeCard);
+        }
     }
 
     public int playPlayersMoveSeven(long gameId, MovePostDTO move) {
@@ -251,16 +282,18 @@ public class GameService {
 
             this.rotatePlayersUntilNextPossible(game);
             // check if game still running and no cards left, distribute new cards
+
             if(game.getGameState() == GameState.RUNNING && !checkIfCardsLeft(game)) {
                 while (game.getGameState() == GameState.RUNNING && !checkIfCardsLeft(game)) {
                     distributeCards(game, game.getCardNum());
                     game.decreaseCardNum();
-                    game.setExchangeCard(true);
+                    this.setExchangeCard(game, true);
 
                     if (!playerService.checkIfCanPlay(game, game.getPlayer(0).getId())) {
                         this.rotatePlayersUntilNextPossible(game);
                     }
                 }
+
                 weatherService.updateWeather(game);
                 boardService.checkFieldsWeatherChange(game);
             }
@@ -439,9 +472,9 @@ public class GameService {
         while (!this.checkIfCardsLeft(game))    {
             this.distributeCards(game, game.getCardNum());
             game.decreaseCardNum();
-            game.setExchangeCard(true);
+            this.setExchangeCard(game, true);
 
-            rotatePlayersUntilNextPossible(game);
+            //rotate players?
         }
 
         // Set the gameState to running
@@ -479,15 +512,43 @@ public class GameService {
             }
     }
 
+    public Player getPlayerFromUser(User user) {
+        return playerRepository.findByUser(user);
+    }
+
     /**
      * (TO DO)Let's to players change a card.
      * @param gameId ID of game you want to let players exchange cards.
      */
-    public Game letPlayersChangeCard(long gameId, long userId, Card card) {
+    public Game letPlayersChangeCard(long gameId, long playerId, long cardId) {
         Game game = gameRepository.findById(gameId).orElse(null);
         assert game != null;
-        playerService.exchange(gameId, userId, card);
-        game.setExchangeCard(false);
+        Card card = cardRepository.findById(cardId).orElse(null);
+        assert card != null;
+        Player player = playerRepository.findById(playerId).orElse(null);
+        assert player != null;
+        playerService.exchange(gameId, playerId, card);
+        player.setExchangeCards(false);
+        // Check if all players exchanged cards, if so, rotate if player cannot play
+        boolean allDone = true;
+        for (Player actualPlayer : game.getPlayers()) {
+            if (actualPlayer.getExchangeCards() && actualPlayer.getUser() != null) {
+                allDone = false;
+                break;
+            }
+        }
+        if (allDone) {
+            List<Player> players = game.getPlayers();
+
+            for(Player botPlayer : players){
+                if(botPlayer.getUser()==null && botPlayer.getExchangeCards()){
+                    playerService.exchange(gameId, botPlayer.getId(), botPlayer.getHand().get(0));
+                    botPlayer.setExchangeCards(false);
+                    playerRepository.saveAndFlush(botPlayer);
+                }
+            }
+            this.rotateIfNotPossible(game);
+        }
         this.gameRepository.saveAndFlush(game);
         return game;
     }
@@ -593,10 +654,23 @@ public class GameService {
         assert game != null;
         long gameId = game.getId();
 
-        if (roboCheck(game) && hostCheck(game, token) && timedelta(game))
+        if (allPlayersExchanged(game)) {
+            if (roboCheck(game) && hostCheck(game, token) && timedelta(game))
             {playRoboMove(gameId);}
+        }
 
         return DTOMapper.INSTANCE.convertEntityToGameGetDTO(game);
+    }
+
+    public boolean allPlayersExchanged(Game game) {
+        boolean exchanged = true;
+        for (Player player : game.getPlayers()) {
+            if (player.getExchangeCards()) {
+                exchanged = false;
+                break;
+            }
+        }
+        return exchanged;
     }
     /*
     public void deleteUser(Long id, UserPostDTO userToBeDeletedDTO){

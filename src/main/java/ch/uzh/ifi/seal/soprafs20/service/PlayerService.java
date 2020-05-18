@@ -2,7 +2,7 @@ package ch.uzh.ifi.seal.soprafs20.service;
 
 
 import ch.uzh.ifi.seal.soprafs20.cards.Card;
-import ch.uzh.ifi.seal.soprafs20.cards.JokerCard;
+
 import ch.uzh.ifi.seal.soprafs20.cards.Value;
 import ch.uzh.ifi.seal.soprafs20.game.Game;
 import ch.uzh.ifi.seal.soprafs20.repository.BoardRepository;
@@ -38,12 +38,14 @@ public class PlayerService {
 
     public void addGiftedCard(long gameId, long playerId, Card card){
 
-        Game actualGame = gameRepository.findById(gameId).get();
-        Player actualPlayer = playerRepository.findById(playerId).get();
+        Game actualGame = gameRepository.findById(gameId).orElse(null);
+        Player actualPlayer = playerRepository.findById(playerId).orElse(null);
+        assert actualGame != null;
+        assert actualPlayer != null;
 
         List<Player> players = actualGame.getPlayers();
         int indexOfActualPlayer = players.indexOf(actualPlayer);
-        Player partner = players.get(indexOfActualPlayer+2);
+        Player partner = players.get((indexOfActualPlayer+2)%4);
 
         List<Card> hand = partner.getHand();
         hand.add(card);
@@ -75,8 +77,9 @@ public class PlayerService {
     public void exchange(long gameId, long playerId, Card card){
         Player player = playerRepository.findById(playerId).orElse(null);
         assert player != null;
-        addGiftedCard(gameId,playerId,card);
         removeFromHand(player,card);
+        addGiftedCard(gameId,playerId,card);
+
     }
 
     public void removeAllFromHand(Player player) {
@@ -107,7 +110,7 @@ public class PlayerService {
                     if (!(boardService.getPossibleFieldsJack(game, card, figure.getField()).isEmpty())) {
                         return true;
                     }
-                } else if (card instanceof JokerCard){
+                } else if (card.getValue() == Value.JOKER){
                     return true;
                 } else {
                     if (!(boardService.getPossibleFields(game, card, figure.getField()).isEmpty())) {

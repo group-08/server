@@ -12,12 +12,9 @@ public class NormalCard extends Card {
     @Column
     private int remainingSteps;
 
-    public NormalCard() {
-        this.type = CardType.Normal;
-    }
+    public NormalCard(){}
 
     public NormalCard(Suit suit, Value value) {
-        this.type = CardType.Normal;
         this.suit = suit;
         this.value = value;
         this.remainingSteps = 0;
