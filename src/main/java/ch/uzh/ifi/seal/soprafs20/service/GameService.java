@@ -306,21 +306,23 @@ public class GameService {
 
     public int checkIfFurtherMovesPossible(int newRemaining, Game game, Figure figure, MovePostDTO move, Long cardId){
         long gameID = game.getId();
-        if (newRemaining!=0){
+        if (newRemaining!=0) {
             Board board = game.getBoard();
             Player player = figure.getPlayer();
             int counter = 0;
-            for(Field field : board.getFields()){
-                if(field.getOccupant().getPlayer().getId()==player.getId()){
-                    move.setCardId(cardId);
-                    move.setFigureId(field.getOccupant().getId());
-                    if(getPossibleFields(gameID,move).isEmpty()){
-                        counter++;
+            for (Field field : board.getFields()) {
+                if (field.getOccupant() != null) {
+                    if (field.getOccupant().getPlayer().getId() == player.getId()) {
+                        move.setCardId(cardId);
+                        move.setFigureId(field.getOccupant().getId());
+                        if (getPossibleFields(gameID, move).isEmpty()) {
+                            counter++;
+                        }
                     }
                 }
-            }
-            if(counter == 4){
-                newRemaining=0;
+                if (counter == 4) {
+                    newRemaining = 0;
+                }
             }
         }
         return newRemaining;
