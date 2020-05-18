@@ -706,13 +706,19 @@ public class GameService {
                 Player partner = players.get((indexOfPlayer + 2) % 4);
 
                 if(checkIfPlayerFinished(game,partner)){
-
-                    UserGetDTO playerUser = itPlayer.getUser();
-                    UserGetDTO partnerUser = partner.getUser();
-
                     List<UserGetDTO> userList = new ArrayList<>();
-                    userList.add(playerUser);
-                    userList.add(partnerUser);
+                    if (itPlayer.getUser() != null){
+                        UserGetDTO playerUser = itPlayer.getUser();
+                        userList.add(playerUser);
+                    }
+
+                    if (partner.getUser() != null){
+                        UserGetDTO partnerUser = partner.getUser();
+                        userList.add(partnerUser);
+                    }
+
+
+                    
                     gameFinishedDTO.setWinners(userList);
                     return gameFinishedDTO;
                 }
