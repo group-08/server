@@ -61,10 +61,12 @@ import java.util.UUID;
                 User logoutUser = this.userRepository.findByToken(userToken);
                 logoutUser.setStatus(UserStatus.OFFLINE);
                 logoutUser.setToken(null);
+                this.userRepository.saveAndFlush(logoutUser);
             }
             catch (NullPointerException e){
 
             }
+
         }
 
         public User getUserByUsername(String username) {

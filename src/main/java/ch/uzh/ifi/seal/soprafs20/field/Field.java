@@ -30,6 +30,7 @@ public abstract class Field implements Serializable {
     @ManyToMany(targetEntity = Field.class, cascade = CascadeType.ALL)
     private List<Field> adjacencyList = new ArrayList<>();
 
+
     public void addAdjacency(Field adjacentField){
         if (!this.adjacencyList.contains(adjacentField)) {
             this.adjacencyList.add(adjacentField);
@@ -93,4 +94,5 @@ public abstract class Field implements Serializable {
     public void setColour(Colour colour) {
         this.colour = colour;
     }
+
 }

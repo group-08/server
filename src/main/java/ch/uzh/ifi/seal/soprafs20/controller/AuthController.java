@@ -63,9 +63,6 @@ public class AuthController {
     @ResponseBody
     public void logout(@RequestHeader String token) {
         authService.logout(token);
-        // TODO require token from user
-        // TODO remove (invalidate) token
-        // TODO Set status to offline
     }
 
 }
