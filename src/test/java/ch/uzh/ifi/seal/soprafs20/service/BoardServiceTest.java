@@ -1,5 +1,6 @@
 package ch.uzh.ifi.seal.soprafs20.service;
 
+import ch.uzh.ifi.seal.soprafs20.field.FirstField;
 import ch.uzh.ifi.seal.soprafs20.field.GoalField;
 import ch.uzh.ifi.seal.soprafs20.user.User;
 
@@ -22,6 +23,7 @@ import ch.uzh.ifi.seal.soprafs20.user.*;
 import org.junit.jupiter.api.Test;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 class BoardServiceTest {
@@ -212,50 +214,228 @@ class BoardServiceTest {
     @Test
     public void getPossibleFieldsSEVEN() {
 
-            //create User 1
-            testUser1 = new User();
-            testUser1.setId(1L);
-            testUser1.setEmail("test@Name.tld");
-            testUser1.setUsername("testUsername");
+        //create User 1
+        testUser1 = new User();
+        testUser1.setId(1L);
+        testUser1.setEmail("test@Name.tld");
+        testUser1.setUsername("testUsername");
 
-            //create Player with User 1
-            Player testPlayer = new Player();
-            testPlayer.setUser(testUser1);
+        //create Player with User 1
+        Player testPlayer = new Player();
+        testPlayer.setUser(testUser1);
 
-            //create new game
-            Game testGame = new Game(testUser1, "testGame");
+        //create Figure with Player
+        Figure figure = new Figure();
+        figure.setPlayer(testPlayer);
 
-            Mockito.when(gameRepository.findById(Mockito.any())).thenReturn(java.util.Optional.of(testGame));
+        testPlayer.addFigure(figure);
 
-            //create Figure with Player
-            Figure figure = new Figure();
-            figure.setPlayer(testPlayer);
+        //create new game
+        Game testGame = new Game(testUser1, "testGame");
 
-            //give all field id's, because they are not saved in JPA
-            long id = 0;
-            for (Field fieldSetId : testGame.getBoard().getFields()) {
-                fieldSetId.setId(id);
-                id++;
-            }
+        Mockito.when(gameRepository.findById(Mockito.any())).thenReturn(java.util.Optional.of(testGame));
 
-            //get second field from board
-            Field field = testGame.getBoard().getField(1);
 
-            field.setOccupant(figure);
+        //give all field id's, because they are not saved in JPA
+        long id = 0;
+        for (Field fieldSetId : testGame.getBoard().getFields()) {
+            fieldSetId.setId(id);
+            id++;
+        }
 
-            //create card seven
-            //Card cardSEVEN = new NormalCard(Suit.CLUBS, Value.SEVEN);
+        //get second field from board
+        FirstField field = (FirstField) testGame.getBoard().getField(1);
+        field.setBlocked(true);
 
-        //List<Field> possibleFieldsSEVEN = boardService.getPossibleFieldsSeven(cardSEVEN, field, 7);
-        //List<Field> possibleFieldsFOUR = boardService.getPossibleFieldsSeven(cardSEVEN, field, 4);
+        field.setOccupant(figure);
 
-        //check if all fields were added to the possible fields
-        //assertEquals(7, possibleFieldsSEVEN.size());
-        //assertEquals(4, possibleFieldsFOUR.size());
+        GoalField goalField1 = (GoalField) testGame.getBoard().getField(65);
+        GoalField goalField2 = (GoalField) testGame.getBoard().getField(66);
+        GoalField goalField3 = (GoalField) testGame.getBoard().getField(67);
+        GoalField goalField4 = (GoalField) testGame.getBoard().getField(68);
 
+        //set the player to fields
+        goalField1.setPlayer(testPlayer);
+        goalField2.setPlayer(testPlayer);
+        goalField3.setPlayer(testPlayer);
+        goalField4.setPlayer(testPlayer);
+
+        //fields to be reached
+        List<Field> fieldListSEVEN = new ArrayList<>();
+        for (int i = 2; i<=8;i++){
+            fieldListSEVEN.add(testGame.getBoard().getField(i));
+        }
+
+        List<Field> fieldListFOUR = new ArrayList<>();
+        for (int i = 2; i<=5;i++){
+            fieldListFOUR.add(testGame.getBoard().getField(i));
         }
 
 
 
+        //create card seven
+        Card cardSEVEN = new NormalCard(Suit.CLUBS, Value.SEVEN);
+        cardSEVEN.setRemainingSteps(7);
+
+
+        Card cardFOUR = new NormalCard(Suit.CLUBS, Value.SEVEN);
+        cardFOUR.setRemainingSteps(4);
+
+
+
+        List<Field> possibleFieldsSEVEN = boardService.getPossibleFieldsSeven(cardSEVEN, field);
+        List<Field> possibleFieldsFOUR = boardService.getPossibleFieldsSeven(cardFOUR, field);
+
+        //check if all fields were added to the possible fields
+        assertEquals(7, possibleFieldsSEVEN.size());
+        assertEquals(4, possibleFieldsFOUR.size());
+        //check if the right fields were added
+        assertEquals(fieldListSEVEN, possibleFieldsSEVEN);
+        assertEquals(fieldListFOUR, possibleFieldsFOUR);
+
     }
+
+    @Test
+    public void getPossibleFieldsJokerTestBlocked(){
+
+        //create User 1
+        testUser1 = new User();
+        testUser1.setId(1L);
+        testUser1.setEmail("test@Name.tld");
+        testUser1.setUsername("testUsername");
+
+        //create Player with User 1
+        Player testPlayer = new Player();
+        testPlayer.setUser(testUser1);
+
+        //create Figure with Player
+        Figure figure = new Figure();
+        figure.setPlayer(testPlayer);
+
+        testPlayer.addFigure(figure);
+
+        //create new game
+        Game testGame = new Game(testUser1, "testGame");
+
+        Mockito.when(gameRepository.findById(Mockito.any())).thenReturn(java.util.Optional.of(testGame));
+
+
+        //give all field id's, because they are not saved in JPA
+        long id = 0;
+        for (Field fieldSetId : testGame.getBoard().getFields()) {
+            fieldSetId.setId(id);
+            id++;
+        }
+
+        //get second field from board
+        FirstField field = (FirstField) testGame.getBoard().getField(1);
+        field.setPlayer(testPlayer);
+        field.setBlocked(true);
+
+        field.setOccupant(figure);
+
+        GoalField goalField1 = (GoalField) testGame.getBoard().getField(65);
+        GoalField goalField2 = (GoalField) testGame.getBoard().getField(66);
+        GoalField goalField3 = (GoalField) testGame.getBoard().getField(67);
+        GoalField goalField4 = (GoalField) testGame.getBoard().getField(68);
+
+        //set the player to fields
+        goalField1.setPlayer(testPlayer);
+        goalField2.setPlayer(testPlayer);
+        goalField3.setPlayer(testPlayer);
+        goalField4.setPlayer(testPlayer);
+
+
+        List<Field> jokerFieldsExpectedBlocked = new ArrayList<>();
+        for (int i= 2; i<=14; i++){
+            jokerFieldsExpectedBlocked.add(testGame.getBoard().getField(i)); }
+        jokerFieldsExpectedBlocked.add(testGame.getBoard().getField(61));
+
+
+        List<Field> jokerFieldsActualBlocked = boardService.getPossibleFieldsJoker(testGame,field);
+
+        //tests while goal fields blocked
+        assertEquals(jokerFieldsExpectedBlocked.size(), jokerFieldsActualBlocked.size());
+        assertTrue(jokerFieldsExpectedBlocked.containsAll(jokerFieldsActualBlocked));
+
+
+
+
+    }
+
+
+    @Test
+    public void getPossibleFieldsJokerTestUnblocked(){
+
+        //create User 1
+        testUser1 = new User();
+        testUser1.setId(1L);
+        testUser1.setEmail("test@Name.tld");
+        testUser1.setUsername("testUsername");
+
+        //create Player with User 1
+        Player testPlayer = new Player();
+        testPlayer.setId(1L);
+        testPlayer.setUser(testUser1);
+
+        //create Figure with Player
+        Figure figure = new Figure();
+        figure.setPlayer(testPlayer);
+
+        testPlayer.addFigure(figure);
+
+        //create new game
+        Game testGame = new Game(testUser1, "testGame");
+
+        Mockito.when(gameRepository.findById(Mockito.any())).thenReturn(java.util.Optional.of(testGame));
+
+
+        //give all field id's, because they are not saved in JPA
+        long id = 0;
+        for (Field fieldSetId : testGame.getBoard().getFields()) {
+            fieldSetId.setId(id);
+            id++;
+        }
+
+        //get second field from board
+        FirstField field = (FirstField) testGame.getBoard().getField(1);
+        field.setBlocked(true);
+
+        field.setOccupant(figure);
+        field.setPlayer(testPlayer);
+
+
+        GoalField goalField1 = (GoalField) testGame.getBoard().getField(65);
+        GoalField goalField2 = (GoalField) testGame.getBoard().getField(66);
+        GoalField goalField3 = (GoalField) testGame.getBoard().getField(67);
+        GoalField goalField4 = (GoalField) testGame.getBoard().getField(68);
+
+        //set the player to fields
+        goalField1.setPlayer(testPlayer);
+        goalField2.setPlayer(testPlayer);
+        goalField3.setPlayer(testPlayer);
+        goalField4.setPlayer(testPlayer);
+
+
+        //test for unblocked goalfields
+        field.setBlocked(false);
+
+
+        List<Field> jokerFieldsExpectedUnblocked = new ArrayList<>();
+        for (int i= 2; i<=14; i++){
+            jokerFieldsExpectedUnblocked.add(testGame.getBoard().getField(i)); }
+        jokerFieldsExpectedUnblocked.add(testGame.getBoard().getField(61));
+        jokerFieldsExpectedUnblocked.add(testGame.getBoard().getField(65));
+        jokerFieldsExpectedUnblocked.add(testGame.getBoard().getField(66));
+        jokerFieldsExpectedUnblocked.add(testGame.getBoard().getField(67));
+        jokerFieldsExpectedUnblocked.add(testGame.getBoard().getField(68));
+
+        List<Field> jokerFieldsActualUnblocked = boardService.getPossibleFieldsJoker(testGame,field);
+
+        assertEquals(jokerFieldsExpectedUnblocked.size(),jokerFieldsActualUnblocked.size());
+        assertTrue(jokerFieldsExpectedUnblocked.containsAll(jokerFieldsActualUnblocked));
+    }
+
+}
+
 
