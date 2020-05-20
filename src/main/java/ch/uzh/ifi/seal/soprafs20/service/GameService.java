@@ -305,9 +305,10 @@ public class GameService {
         long gameID = game.getId();
         game = gameRepository.findById(gameID).orElse(null);
         assert game != null;
+        Player player = figure.getPlayer();
         boolean movePossible = false;
         if (newRemaining!=0) {
-            for (Figure figureOfPlayer : figure.getPlayer().getFigures()) {
+            for (Figure figureOfPlayer : playerService.getOwnOrPartnerFigures(game, player)) {
                 MovePostDTO newMove = new MovePostDTO();
                 newMove.setCardId(cardId);
                 newMove.setFigureId(figureOfPlayer.getId());
