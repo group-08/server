@@ -26,7 +26,7 @@ public class Player {
     Colour colour;
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @ManyToMany(targetEntity = Card.class, cascade = CascadeType.ALL)
+    @OneToMany(targetEntity = Card.class, cascade = CascadeType.ALL)
     List<Card> hand;
 
     @OneToMany(targetEntity = Figure.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -40,6 +40,8 @@ public class Player {
     }
 
     public void setHand(List<Card> cards) {
+        //repairs handbug, that player has 2 hands
+        this.hand = null;
         this.hand = cards;
     }
 

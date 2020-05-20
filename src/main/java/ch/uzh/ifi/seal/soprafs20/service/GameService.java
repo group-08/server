@@ -195,7 +195,9 @@ public class GameService {
 
 
         this.rotatePlayersUntilNextPossible(game);
-
+        //gameRepository.saveAndFlush(game);
+        //game = gameRepository.findById(gameId).orElse(null);
+        //assert game != null;
         // check if game still running and no cards left, distribute new cards
 
 
@@ -562,6 +564,7 @@ public class GameService {
                 distributeCards(game, game.getCardNum());
                 this.setExchangeCard(game, true);
             }
+            game.getBoard().setPassedTime(System.currentTimeMillis()/1000);
 
         }
         this.gameRepository.saveAndFlush(game);
@@ -714,7 +717,6 @@ public class GameService {
                 }
             }
         }
-        Game game = gameRepository.findById(gameId).orElse(null);
         return null;
     }
 
