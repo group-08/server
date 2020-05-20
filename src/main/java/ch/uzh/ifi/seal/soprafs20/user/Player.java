@@ -40,8 +40,6 @@ public class Player {
     }
 
     public void setHand(List<Card> cards) {
-        //repairs handbug, that player has 2 hands
-        this.hand = null;
         this.hand = cards;
     }
 
