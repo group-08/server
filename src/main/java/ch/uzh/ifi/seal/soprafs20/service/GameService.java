@@ -582,7 +582,6 @@ public class GameService {
             List<Card> cards = deckService.drawCards(cardNum, game.getDeck().getId());
             player.setHand(cards);
         }
-        gameRepository.saveAndFlush(game);
     }
 
     public boolean checkIfCardsLeft(Game game)   {
