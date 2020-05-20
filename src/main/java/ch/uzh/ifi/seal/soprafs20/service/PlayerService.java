@@ -98,14 +98,14 @@ public class PlayerService {
             return false;
         }
         for (Card card : player.getHand()) {
-            for (Figure figure : player.getFigures()) {
-//                if (card.getValue() == Value.SEVEN) {
-//                    for (int i=1; i <= 7; i++) {
-//                        if (!(boardService.getPossibleFieldsSeven(card, figure.getField(), i).isEmpty())) {
-//                            return true;
-//                        }
-//                    }
-//                } else
+            for (Figure figure : getOwnOrPartnerFigures(game,player)) {
+                if (card.getValue() == Value.SEVEN) {
+                    for (int i=1; i <= 7; i++) {
+                       if (!(boardService.getPossibleFieldsSeven(card, figure.getField()).isEmpty())) {
+                            return true;
+                        }
+                    }
+                } else
                 if (card.getValue() == Value.JACK) {
                     if (!(boardService.getPossibleFieldsJack(game, card, figure.getField()).isEmpty())) {
                         return true;
@@ -121,4 +121,25 @@ public class PlayerService {
         }
         return false;
     }
+
+    public Player getPartner(Game game, Player player){
+        List<Player> players = game.getPlayers();
+        int indexOfPlayer = players.indexOf(player);
+        return players.get((indexOfPlayer + 2) % 4);
+    }
+
+    public List<Figure> getOwnOrPartnerFigures(Game game, Player player){
+        Player partner = getPartner(game,player);
+        if(checkIfPlayerFinished(game, player)){
+            return partner.getFigures();
+        }
+        else{
+            return player.getFigures();
+        }
+    }
+
+    public Boolean checkIfPlayerFinished(Game game, Player currentPlayer){
+        return boardService.checkIfAllTargetFieldsOccupied(game, currentPlayer);
+    }
+
 }

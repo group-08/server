@@ -35,6 +35,7 @@ public class GameService {
     private WeatherService weatherService;
     private final BoardService boardService;
     private final GameRepository gameRepository;
+    private UserRepository userRepository;
     private CardService cardService;
     private FieldRepository fieldRepository;
     private FigureRepository figureRepository;
@@ -59,6 +60,7 @@ public class GameService {
         this.gameRepository = gameRepository;
         this.fieldRepository = fieldRepository;
         this.playerRepository = playerRepository;
+        this.userRepository = userRepository;
         this.boardService = new BoardService(boardRepository, gameRepository);
         this.playerService = new PlayerService(playerRepository, boardRepository, gameRepository);
         this.userService = new UserService(userRepository);
@@ -161,7 +163,7 @@ public class GameService {
 
         // set currentPlayer, partner, and rotate players
         Player currentPlayer = game.getPlayer(0);
-        Player partner = game.getPlayer(2);
+        Player partner = playerService.getPartner(game, currentPlayer);
 
         //remove card from player
         long cardId = move.getCardId();
@@ -181,15 +183,10 @@ public class GameService {
         }
 
         // check if player is finished and if partner is finished
-        if (checkIfPlayerFinished(game, currentPlayer)) {
-            if (checkIfPlayerFinished(game, partner)) {
-                game.setGameState(GameState.FINISHED);
+        if (playerService.checkIfPlayerFinished(game, currentPlayer)) {
+            if (playerService.checkIfPlayerFinished(game, partner)) {
                 increaseScore(currentPlayer,partner);
-                //gameRepository.saveAndFlush(game);
-            } else {
-                for (Figure playersFigure : partner.getFigures()) {
-                    currentPlayer.addFigure(playersFigure);
-                }
+                game.setGameState(GameState.FINISHED);
             }
         }
 
@@ -257,16 +254,10 @@ public class GameService {
         newRemaining = checkIfFurtherMovesPossible(newRemaining, game, figure, move, cardId);
 
         // check if player is finished and if partner is finished
-        if (checkIfPlayerFinished(game, currentPlayer)) {
-            if (checkIfPlayerFinished(game, partner)) {
+        if (playerService.checkIfPlayerFinished(game, currentPlayer)) {
+            if (playerService.checkIfPlayerFinished(game, partner)) {
                 increaseScore(currentPlayer,partner);
-                //TODO save repo, after correctly finishing the game
-                //gameRepository.saveAndFlush(game);
                 game.setGameState(GameState.FINISHED);
-            } else {
-                for (Figure playersFigure : partner.getFigures()) {
-                    currentPlayer.addFigure(playersFigure);
-                }
             }
         }
 
@@ -330,18 +321,21 @@ public class GameService {
 
 
     public void increaseScore(Player currentPlayer, Player partner){
-        /*if (currentPlayer instanceof Player){
+        if (currentPlayer.getUser()!=null){
             UserGetDTO currentUserDTO = currentPlayer.getUser();
             long currentPlayerId = currentUserDTO.getId();
             User currentPlayerUser = userService.getUserById(currentPlayerId);
             int currentPlayerUserScore = currentPlayerUser.getLeaderBoardScore();
-            currentPlayerUser.setLeaderBoardScore((currentPlayerUserScore+1));}
-        if(partner instanceof Player) {
+            currentPlayerUser.setLeaderBoardScore((currentPlayerUserScore+1));
+            userRepository.saveAndFlush(currentPlayerUser);
+            }
+        if(partner.getUser()!=null) {
             UserGetDTO partnerUserDTO = partner.getUser();
             long partnerId = partnerUserDTO.getId();
             User partnerUser = userService.getUserById(partnerId);
             int partnerUserScore = partnerUser.getLeaderBoardScore();
-            partnerUser.setLeaderBoardScore((partnerUserScore + 1));}*/
+            partnerUser.setLeaderBoardScore((partnerUserScore + 1));
+            userRepository.saveAndFlush(partnerUser);}
     }
 
     public int moveSeven(Game game, Figure figure, Field targetField, int remaining)  {
@@ -578,15 +572,6 @@ public class GameService {
         return false;
     }
 
-    /**
-     * Checks if all target fields of a player are occupied.
-     * @param currentPlayer player whose targetfields you want to check
-     * @param game ID of game you want to check if player has finished
-     * @return boolean if true
-     */
-    public Boolean checkIfPlayerFinished(Game game, Player currentPlayer){
-        return boardService.checkIfAllTargetFieldsOccupied(game, currentPlayer);
-    }
 
     public LobbyGetDTO getLobbyById(long id){
         Game game = gameRepository.findById(id).orElse(null);
@@ -686,7 +671,9 @@ public class GameService {
 
     // For testing reasons
     public MovePostDTO automaticMove(Player player, long gameId) {
-        for (Figure figure : player.getFigures())  {
+        Game game = gameRepository.findById(gameId).orElse(null);
+        assert game != null;
+        for (Figure figure : playerService.getOwnOrPartnerFigures(game, player))  {
             for (Card card : player.getHand()) {
                 MovePostDTO move = new MovePostDTO();
                 move.setCardId(card.getId());
@@ -699,12 +686,13 @@ public class GameService {
                 }
             }
         }
-        Game game = gameRepository.findById(gameId).orElse(null);
         return null;
     }
 
     public MovePostDTO automaticMoveSeven(long gameId, Card card, Player player) {
-        for (Figure figure : player.getFigures()) {
+        Game game = gameRepository.findById(gameId).orElse(null);
+        assert game != null;
+        for (Figure figure : playerService.getOwnOrPartnerFigures(game, player)) {
             MovePostDTO move = new MovePostDTO();
             move.setCardId(card.getId());
             move.setFigureId(figure.getId());
@@ -731,12 +719,12 @@ public class GameService {
 
         for (Player itPlayer : players){
 
-            if (checkIfPlayerFinished(game, itPlayer)){
+            if (playerService.checkIfPlayerFinished(game, itPlayer)){
 
                 int indexOfPlayer = players.indexOf(itPlayer);
                 Player partner = players.get((indexOfPlayer + 2) % 4);
 
-                if(checkIfPlayerFinished(game,partner)){
+                if(playerService.checkIfPlayerFinished(game,partner)){
                     List<UserGetDTO> userList = new ArrayList<>();
                     if (itPlayer.getUser() != null){
                         UserGetDTO playerUser = itPlayer.getUser();
@@ -756,6 +744,7 @@ public class GameService {
             }
         }return null;
     }
+
 
 
 }
