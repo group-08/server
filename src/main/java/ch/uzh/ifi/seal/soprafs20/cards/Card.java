@@ -16,7 +16,6 @@ public abstract class Card implements Serializable {
     @Enumerated
     protected Value value;
 
-
     @Column
     protected int remainingSteps;
 
@@ -34,7 +33,7 @@ public abstract class Card implements Serializable {
     }
 
     public int getRemainingSteps() {
-        return remainingSteps;
+            return remainingSteps;
     }
 
     public void setRemainingSteps(int remainingSteps) {

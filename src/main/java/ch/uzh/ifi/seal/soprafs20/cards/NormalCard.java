@@ -9,9 +9,6 @@ public class NormalCard extends Card {
     @Enumerated
     private Suit suit;
 
-    @Column
-    private int remainingSteps;
-
     public NormalCard(){}
 
     public NormalCard(Suit suit, Value value) {

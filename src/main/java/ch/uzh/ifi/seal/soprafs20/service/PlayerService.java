@@ -88,7 +88,7 @@ public class PlayerService {
         }
         List<Card> playersHand = new ArrayList<>(player.getHand());
         for (Card card : playersHand) {
-            removeCardFromHand(player.getHand(), card);
+            removeFromHand(player, card);
         }
     }
 
@@ -106,6 +106,7 @@ public class PlayerService {
                         }
                     }
                 } else
+
                 if (card.getValue() == Value.JACK) {
                     if (!(boardService.getPossibleFieldsJack(game, card, figure.getField()).isEmpty())) {
                         return true;
