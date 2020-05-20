@@ -88,7 +88,7 @@ public class PlayerService {
         }
         List<Card> playersHand = new ArrayList<>(player.getHand());
         for (Card card : playersHand) {
-            removeCardFromHand(player.getHand(), card);
+            removeFromHand(player, card);
         }
     }
 
@@ -99,13 +99,13 @@ public class PlayerService {
         }
         for (Card card : player.getHand()) {
             for (Figure figure : player.getFigures()) {
-//                if (card.getValue() == Value.SEVEN) {
-//                    for (int i=1; i <= 7; i++) {
-//                        if (!(boardService.getPossibleFieldsSeven(card, figure.getField(), i).isEmpty())) {
-//                            return true;
-//                        }
-//                    }
-//                } else
+                if (card.getValue() == Value.SEVEN) {
+                    for (int i = 1; i <= 7; i++) {
+                        if (!(boardService.getPossibleFieldsSeven(card, figure.getField()).isEmpty())) {
+                            return true;
+                        }
+                    }
+                }else
                 if (card.getValue() == Value.JACK) {
                     if (!(boardService.getPossibleFieldsJack(game, card, figure.getField()).isEmpty())) {
                         return true;

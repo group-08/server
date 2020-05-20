@@ -26,7 +26,7 @@ public class Player {
     Colour colour;
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(targetEntity = Card.class, cascade = CascadeType.ALL)
+    @ManyToMany(targetEntity = Card.class, cascade = CascadeType.ALL)
     List<Card> hand;
 
     @OneToMany(targetEntity = Figure.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)

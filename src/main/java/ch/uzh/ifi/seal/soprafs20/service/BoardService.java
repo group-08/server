@@ -211,7 +211,7 @@ public class BoardService {
 
         List<Long> specialFieldIds = getSpecialFieldIds(game);
 
-        if(specialFieldIds.contains(targetFieldObject.getId())) {
+        if(specialFieldIds.contains(targetField.getId())) {
             if (game.getWeatherState() == WeatherState.RAINY) {
                 sendFigureHome(game, occ);
             }
