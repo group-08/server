@@ -52,6 +52,9 @@ public class Game implements Serializable {
     @Enumerated
     CityState city;
 
+    @OneToOne(targetEntity = LogItem.class, cascade = CascadeType.ALL)
+    LogItem logItem;
+
     public Game(){}
 
     public Game(User user, String name){
@@ -61,6 +64,7 @@ public class Game implements Serializable {
         this.gameState = GameState.PENDING;
         this.host = user;
         this.cardNum = 6;
+        this.logItem = new LogItem();
 
 
         Player hostPlayer = new Player();
@@ -172,5 +176,13 @@ public class Game implements Serializable {
 
     public void setCity(CityState city) {
         this.city = city;
+    }
+
+    public LogItem getLogItem() {
+        return logItem;
+    }
+
+    public void setLogItem(LogItem logItem) {
+        this.logItem = logItem;
     }
 }
