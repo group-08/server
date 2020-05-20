@@ -52,8 +52,9 @@ public class Game implements Serializable {
     @Enumerated
     CityState city;
 
-    @OneToOne(targetEntity = LogItem.class, cascade = CascadeType.ALL)
-    LogItem logItem;
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(targetEntity = LogItem.class, cascade = CascadeType.ALL)
+    List<LogItem> logItems;
 
     public Game(){}
 
@@ -64,7 +65,7 @@ public class Game implements Serializable {
         this.gameState = GameState.PENDING;
         this.host = user;
         this.cardNum = 6;
-        this.logItem = new LogItem();
+        this.logItems = new ArrayList<>();
 
 
         Player hostPlayer = new Player();
@@ -178,11 +179,11 @@ public class Game implements Serializable {
         this.city = city;
     }
 
-    public LogItem getLogItem() {
-        return logItem;
+    public List<LogItem> getLogItems() {
+        return logItems;
     }
 
-    public void setLogItem(LogItem logItem) {
-        this.logItem = logItem;
+    public void setLogItems(List<LogItem> logItems) {
+        this.logItems = logItems;
     }
 }

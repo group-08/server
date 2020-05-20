@@ -305,19 +305,13 @@ public class GameService {
     }
 
     public void updateLogItem(Card card, Player player, Game game){
-        List<Card> cardArray = game.getLogItem().getCards();
-        cardArray.add(card);
-        LogItem logItem = game.getLogItem();
-        if(cardArray.size()>10){
-            cardArray.remove(0);
+        List<LogItem> logItems = game.getLogItems();
+        LogItem logItem = new LogItem(card.getSuit() ,card.getValue(), player.getId());
+        logItems.add(logItem);
+        if(logItems.size()>10){
+            logItems.remove(0);
         }
-        List<Player> playerArray = game.getLogItem().getPlayers();
-        playerArray.add(player);
-        if(playerArray.size()>10){
-            playerArray.remove(0);
-        }
-        logItem.setCards(cardArray);
-        logItem.setPlayers(playerArray);
+        gameRepository.saveAndFlush(game);
     }
 
     public int checkIfFurtherMovesPossible(int newRemaining, Game game, Figure figure, MovePostDTO move, Long cardId){

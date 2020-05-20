@@ -29,7 +29,7 @@ public class GameGetDTO {
 
     private CityState city;
 
-    private LogItem logItem;
+    private List<LogItem> logItems;
 
     private int cardNum;
 
@@ -103,12 +103,12 @@ public class GameGetDTO {
         this.city = city;
     }
 
-    public LogItem getLogItem() {
-        return logItem;
+    public List<LogItem> getLogItems() {
+        return logItems;
     }
 
-    public void setLogItem(LogItem logItem) {
-        this.logItem = logItem;
+    public void setLogItems(List<LogItem> logItems) {
+        this.logItems = logItems;
     }
 
     public int getCardNum() {
