@@ -514,7 +514,8 @@ public class BoardService {
 
         for(Field iterField : board.getFields()){
             if(iterField.getOccupant()!=null){
-                if(iterField.getOccupant().getPlayer().getId()!=playerOnField.getId() && (iterField instanceof CasualField
+                if(iterField.getOccupant().getPlayer().getId()!=playerOnField.getId()
+                        && (iterField instanceof CasualField
                         || (iterField instanceof FirstField && !(((FirstField) iterField).getBlocked())))){
                     possibleFields.add(iterField);
                 }
