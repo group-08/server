@@ -257,6 +257,7 @@ public class GameService {
         if (checkIfPlayerFinished(game, currentPlayer)) {
             currentPlayer.setFinished(true);
             if (checkIfPlayerFinished(game, partner)) {
+                partner.setFinished(true);
                 increaseScore(currentPlayer,partner);
                 //TODO save repo, after correctly finishing the game
                 //gameRepository.saveAndFlush(game);
