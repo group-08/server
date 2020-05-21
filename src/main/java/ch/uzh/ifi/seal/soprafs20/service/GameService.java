@@ -179,7 +179,6 @@ public class GameService {
             this.swapFigure(game, figure, targetField);
         } else {
             this.moveFigure(game, figure, targetField);
-
         }
 
         // check if player is finished and if partner is finished
