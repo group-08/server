@@ -6,8 +6,6 @@ import javax.persistence.*;
 @Table( name = "NormalCard")
 public class NormalCard extends Card {
 
-    @Enumerated
-    private Suit suit;
 
     public NormalCard(){}
 
@@ -24,6 +22,8 @@ public class NormalCard extends Card {
     public Suit getSuit() {
         return suit;
     }
+
+
 
     public Value getValue(){
         return this.value;

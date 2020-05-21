@@ -26,7 +26,9 @@ public abstract class Card implements Serializable {
         return this.value;
     }
 
-
+    public Suit getSuit() {
+        return suit;
+    }
 
     public long getId() {
         return id;
