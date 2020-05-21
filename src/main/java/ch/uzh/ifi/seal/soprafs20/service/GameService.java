@@ -180,6 +180,7 @@ public class GameService {
 
         // check if player is finished and if partner is finished
         if (checkIfPlayerFinished(game, currentPlayer)) {
+            currentPlayer.setFinished(true);
             if (checkIfPlayerFinished(game, partner)) {
                 game.setGameState(GameState.FINISHED);
                 increaseScore(currentPlayer,partner);
@@ -254,7 +255,9 @@ public class GameService {
 
         // check if player is finished and if partner is finished
         if (checkIfPlayerFinished(game, currentPlayer)) {
+            currentPlayer.setFinished(true);
             if (checkIfPlayerFinished(game, partner)) {
+                partner.setFinished(true);
                 increaseScore(currentPlayer,partner);
                 //TODO save repo, after correctly finishing the game
                 //gameRepository.saveAndFlush(game);
@@ -445,6 +448,11 @@ public class GameService {
         this.setColourOfPlayer(game.getPlayer(1), Colour.GREEN);
         this.setColourOfPlayer(game.getPlayer(2), Colour.YELLOW);
         this.setColourOfPlayer(game.getPlayer(3), Colour.RED);
+
+        // set boolean finished of all players on false
+        for (Player player : game.getPlayers()) {
+            player.setFinished(false);
+        }
 
         // Assign figures to players
         for (int playerIndex = 0; playerIndex < 4; playerIndex++) {
