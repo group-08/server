@@ -207,8 +207,6 @@ public class GameService {
                         this.rotatePlayersUntilNextPossible(game);
                     }
                 }
-            weatherService.updateWeather(game);
-            boardService.checkFieldsWeatherChange(game);
         }
         game.getBoard().setPassedTime(System.currentTimeMillis()/1000);
 
@@ -289,9 +287,6 @@ public class GameService {
                         this.rotatePlayersUntilNextPossible(game);
                     }
                 }
-
-                weatherService.updateWeather(game);
-                boardService.checkFieldsWeatherChange(game);
             }
 
             game.getBoard().setPassedTime(System.currentTimeMillis()/1000);
@@ -569,6 +564,8 @@ public class GameService {
      * @param game ID of game you want to distribute cards
      */
     public void distributeCards(Game game, int cardNum) {
+        weatherService.updateWeather(game);
+        boardService.checkFieldsWeatherChange(game);
         ///this function checks if the deck contains enough cards. if not it refills the deck
         deckService.checkIfEnoughCardsLeft( cardNum, game.getDeck().getId());
         for (Player player : game.getPlayers()) {
