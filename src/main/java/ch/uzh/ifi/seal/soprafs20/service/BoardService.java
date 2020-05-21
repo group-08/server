@@ -211,7 +211,7 @@ public class BoardService {
 
         List<Long> specialFieldIds = getSpecialFieldIds(game);
 
-        if(specialFieldIds.contains(targetFieldObject.getId())) {
+        if(specialFieldIds.contains(targetField.getId())) {
             if (game.getWeatherState() == WeatherState.RAINY) {
                 sendFigureHome(game, occ);
             }
@@ -253,7 +253,7 @@ public class BoardService {
         List<Field> fieldsOfBoard = board.getFields();
         int count = 0;
         for (Field field : fieldsOfBoard) {
-            if (field instanceof GoalField && ((GoalField) field).getPlayer() == player && field.getOccupant() != null) {
+            if (field instanceof GoalField && ((GoalField) field).getPlayer().getId() == player.getId() && field.getOccupant() != null) {
                 count++;
             }
         }
@@ -514,7 +514,8 @@ public class BoardService {
 
         for(Field iterField : board.getFields()){
             if(iterField.getOccupant()!=null){
-                if(iterField.getOccupant().getPlayer().getId()!=playerOnField.getId() && (iterField instanceof CasualField
+                if(iterField.getOccupant().getPlayer().getId()!=playerOnField.getId()
+                        && (iterField instanceof CasualField
                         || (iterField instanceof FirstField && !(((FirstField) iterField).getBlocked())))){
                     possibleFields.add(iterField);
                 }

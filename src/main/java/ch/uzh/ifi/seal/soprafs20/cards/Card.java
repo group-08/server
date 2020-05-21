@@ -33,12 +33,13 @@ public abstract class Card implements Serializable {
         return suit;
     }
 
+
     public long getId() {
         return id;
     }
 
     public int getRemainingSteps() {
-        return remainingSteps;
+            return remainingSteps;
     }
 
     public void setRemainingSteps(int remainingSteps) {

@@ -2,6 +2,7 @@ package ch.uzh.ifi.seal.soprafs20.service;
 
 import ch.uzh.ifi.seal.soprafs20.cards.*;
 import ch.uzh.ifi.seal.soprafs20.field.Field;
+import ch.uzh.ifi.seal.soprafs20.field.FirstField;
 import ch.uzh.ifi.seal.soprafs20.field.HomeField;
 import ch.uzh.ifi.seal.soprafs20.game.Game;
 import ch.uzh.ifi.seal.soprafs20.game.GameState;
@@ -50,6 +51,9 @@ public class GameServiceIntegrationTest {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private PlayerService playerService;
 
     @Autowired
     private DeckService deckService;
@@ -213,50 +217,45 @@ public class GameServiceIntegrationTest {
     public void PlayRounds() {
         /////////// MOVE LOGIC ///////////
         List<Card> playedCards = new ArrayList<>();
+        List<Player> players = new ArrayList<>();
         for (int i = 0; i < 100; i++)   {
             game = gameRepository.findById(ID).orElse(null);
             assert game!=null;
-            Player player = game.getPlayers().get(0);
-            List<Card> playerHand = new ArrayList<>(player.getHand());
-            for (Card card : playerHand) {
-                if (card.getValue() == Value.JOKER) {
-                    player.getHand().remove(card);
-                    Card newCard = new NormalCard(Suit.SPADES, Value.ACE);
-                    cardRepository.saveAndFlush(newCard);
-                    player.getHand().add(newCard);
+            List<Player> gamePlayers = game.getPlayers();
+            if(!gameService.allPlayersExchanged(game)){
+                for(Player gamePlayer : gamePlayers){
+                    gameService.letPlayersChangeCard(ID, gamePlayer.getId(), gamePlayer.getHand().get(0).getId());
+                    game = gameRepository.findById(ID).orElse(null);
                 }
             }
 
+            game = gameRepository.findById(ID).orElse(null);
+            assert game!=null;
+            Player player = game.getPlayers().get(0);
             MovePostDTO move = gameService.automaticMove(player, ID);
 
-            // Todo why are there still moves where a player can't play?
-            // They should automatically be skipped over
-            if (move == null) {
-                player.getHand().remove(0);
-                Card newCard = new NormalCard(Suit.SPADES, Value.ACE);
-                cardRepository.saveAndFlush(newCard);
-                player.getHand().add(newCard);
-                gameRepository.saveAndFlush(game);
-                move = gameService.automaticMove(player, ID);
-            }
             playerRepository.saveAndFlush(player);
+            assert move != null;
             long cardId = move.getCardId();
             Card card = gameService.getCardFromId(cardId);
             long playerId = player.getId();
-            /*
+
             if (card.getValue() == Value.SEVEN) {
-                while (move.getRemainingSeven() > 0) {
-                    int remaining = gameService.playPlayersMoveSeven(ID, move);
-                    player = playerRepository.findById(playerId).orElse(null);
+                while (card.getRemainingSteps() > 0) {
+                    player = playerService.findById(playerId);
                     assert player != null;
-                    move = gameService.automaticMoveSeven(ID, card, player, remaining);
+                    move = gameService.automaticMoveSeven(ID, card, player);
+                    gameService.playPlayersMoveSeven(game.getId(), move);
+                    card = cardRepository.findById(cardId).orElse(null);
+                    assert card != null;
+
                 }
                 playedCards.add(card);
-            } *///else
-                //{
+            } else
+                {
                 playedCards.add(card);
                 gameService.playPlayersMove(game.getId(), move);
-            //}
+            }
         }
     }
 
@@ -345,7 +344,6 @@ public class GameServiceIntegrationTest {
         move.setFigureId(figure1.getId());
         move.setCardId(card.getId());
         move.setTargetFieldId(field17.getId());
-        move.setRemainingSeven(7);
         gameRepository.saveAndFlush(game);
 
         int remaining = gameService.playPlayersMoveSeven(gameId,move);
@@ -401,7 +399,6 @@ public class GameServiceIntegrationTest {
         move.setFigureId(figure1.getId());
         move.setCardId(card.getId());
         move.setTargetFieldId(field15.getId());
-        move.setRemainingSeven(7);
         gameRepository.saveAndFlush(game);
 
         int remaining = gameService.playPlayersMoveSeven(gameId,move);
@@ -424,5 +421,236 @@ public class GameServiceIntegrationTest {
         Assertions.assertTrue(figure2new.getField() instanceof HomeField);
         assertEquals(field15new.getId(), figure1new.getField().getId());
 
+    }
+
+    @Test
+    public void testTakeOverPartnersFigures(){
+
+        Player player1 = game.getPlayer(0);
+
+        long gameId = game.getId();
+        Figure figure1 = game.getPlayer(0).getFigures().get(0);
+        Field field65 = game.getBoard().getField(65);
+
+        figure1.getField().setOccupant(null);
+        field65.setOccupant(figure1);
+        figure1.setField(field65);
+        Figure figure2 = game.getPlayer(0).getFigures().get(1);
+        Field field66 = game.getBoard().getField(66);
+        Field homeField2 = figure2.getField();
+
+        figure2.getField().setOccupant(null);
+        field66.setOccupant(figure2);
+        figure2.setField(field66);
+
+        Figure figure3 = game.getPlayer(0).getFigures().get(2);
+        Field field67 = game.getBoard().getField(67);
+        Field homeField3 = figure3.getField();
+
+        figure3.getField().setOccupant(null);
+        field67.setOccupant(figure3);
+        figure3.setField(field67);
+
+        Figure figure4 = game.getPlayer(0).getFigures().get(3);
+
+        Field field68 = game.getBoard().getField(68);
+
+        Field homeField4 = figure4.getField();
+
+        figure4.getField().setOccupant(null);
+        field68.setOccupant(figure4);
+        figure4.setField(field68);
+
+        gameRepository.saveAndFlush(game);
+        game = gameRepository.findById(gameId).orElse(null);
+        assert game != null;
+
+        Assertions.assertTrue(playerService.checkIfPlayerFinished(game, player1));
+    }
+
+    @Test
+    public void getFiguresFromPartner(){
+
+        Player player1 = game.getPlayer(0);
+        Player partner = game.getPlayer(2);
+
+        long gameId = game.getId();
+        Figure figure1 = game.getPlayer(0).getFigures().get(0);
+        Field field65 = game.getBoard().getField(65);
+
+        figure1.getField().setOccupant(null);
+        field65.setOccupant(figure1);
+        figure1.setField(field65);
+        Figure figure2 = game.getPlayer(0).getFigures().get(1);
+        Field field66 = game.getBoard().getField(66);
+        Field homeField2 = figure2.getField();
+
+        figure2.getField().setOccupant(null);
+        field66.setOccupant(figure2);
+        figure2.setField(field66);
+
+        Figure figure3 = game.getPlayer(0).getFigures().get(2);
+        Field field67 = game.getBoard().getField(67);
+        Field homeField3 = figure3.getField();
+
+        figure3.getField().setOccupant(null);
+        field67.setOccupant(figure3);
+        figure3.setField(field67);
+
+        Figure figure4 = game.getPlayer(0).getFigures().get(3);
+
+        Field field68 = game.getBoard().getField(68);
+
+        Field homeField4 = figure4.getField();
+
+        figure4.getField().setOccupant(null);
+        field68.setOccupant(figure4);
+        figure4.setField(field68);
+
+        gameRepository.saveAndFlush(game);
+        game = gameRepository.findById(gameId).orElse(null);
+        assert game != null;
+
+        List<Figure> figuresOfPartner = playerService.getOwnOrPartnerFigures(game, player1);
+
+        assertEquals(figuresOfPartner.get(0).getPlayer().getId(), partner.getId());
+    }
+
+    @Test
+    public void checkPossibleMovesWithPartnerFigures() {
+
+        Player player1 = game.getPlayer(0);
+        Player partner = game.getPlayer(2);
+
+        long gameId = game.getId();
+        Figure figure1 = game.getPlayer(0).getFigures().get(0);
+        Field field65 = game.getBoard().getField(65);
+
+        figure1.getField().setOccupant(null);
+        field65.setOccupant(figure1);
+        figure1.setField(field65);
+        Figure figure2 = game.getPlayer(0).getFigures().get(1);
+        Field field66 = game.getBoard().getField(66);
+        Field homeField2 = figure2.getField();
+
+        figure2.getField().setOccupant(null);
+        field66.setOccupant(figure2);
+        figure2.setField(field66);
+
+        Figure figure3 = game.getPlayer(0).getFigures().get(2);
+        Field field67 = game.getBoard().getField(67);
+        Field homeField3 = figure3.getField();
+
+        figure3.getField().setOccupant(null);
+        field67.setOccupant(figure3);
+        figure3.setField(field67);
+
+        Figure figure4 = game.getPlayer(0).getFigures().get(3);
+
+        Field field68 = game.getBoard().getField(68);
+
+        Field homeField4 = figure4.getField();
+
+        figure4.getField().setOccupant(null);
+        field68.setOccupant(figure4);
+        figure4.setField(field68);
+
+        gameRepository.saveAndFlush(game);
+        game = gameRepository.findById(gameId).orElse(null);
+        assert game != null;
+
+        Card card = new NormalCard(Suit.HEARTS, Value.ACE);
+        cardRepository.saveAndFlush(card);
+
+        long expectedFigureId = partner.getFigures().get(0).getId();
+        player1.getHand().add(card);
+        gameRepository.saveAndFlush(game);
+
+        MovePostDTO move = gameService.automaticMove(player1, gameId);
+
+
+        Assertions.assertEquals(expectedFigureId, move.getFigureId());
+
+    }
+
+
+    @Test
+    public void checkIfGameFinishes() {
+
+        Player player1 = game.getPlayer(0);
+        Player partner = game.getPlayer(2);
+
+        long gameId = game.getId();
+        Figure figure1 = game.getPlayer(0).getFigures().get(0);
+        Field field65 = game.getBoard().getField(65);
+
+        figure1.getField().setOccupant(null);
+        field65.setOccupant(figure1);
+        figure1.setField(field65);
+        Figure figure2 = game.getPlayer(0).getFigures().get(1);
+        Field field66 = game.getBoard().getField(66);
+        Field homeField2 = figure2.getField();
+
+        figure2.getField().setOccupant(null);
+        field66.setOccupant(figure2);
+        figure2.setField(field66);
+
+        Figure figure3 = game.getPlayer(0).getFigures().get(2);
+        Field field67 = game.getBoard().getField(67);
+        Field homeField3 = figure3.getField();
+
+        figure3.getField().setOccupant(null);
+        field67.setOccupant(figure3);
+        figure3.setField(field67);
+
+        Figure figure4 = game.getPlayer(0).getFigures().get(3);
+        Field field68 = game.getBoard().getField(68);
+        figure4.getField().setOccupant(null);
+        field68.setOccupant(figure4);
+        figure4.setField(field68);
+
+        Figure partnerFigure1 = partner.getFigures().get(0);
+        Figure partnerFigure2 = partner.getFigures().get(1);
+        Figure partnerFigure3 = partner.getFigures().get(2);
+        Figure partnerFigure4 = partner.getFigures().get(3);
+
+        FirstField firstFieldPartner33 = (FirstField) game.getBoard().getField(33);
+        Field goalField73 = game.getBoard().getField(73);
+        Field goalField74 = game.getBoard().getField(74);
+        Field goalField75 = game.getBoard().getField(75);
+        Field goalField76 = game.getBoard().getField(76);
+
+        partnerFigure1.getField().setOccupant(null);
+        firstFieldPartner33.setOccupant(partnerFigure1);
+        partnerFigure1.setField(firstFieldPartner33);
+        partnerFigure2.getField().setOccupant(null);
+        goalField74.setOccupant(partnerFigure1);
+        partnerFigure2.setField(goalField74);
+        partnerFigure3.getField().setOccupant(null);
+        goalField75.setOccupant(partnerFigure1);
+        partnerFigure3.setField(goalField75);
+        partnerFigure4.getField().setOccupant(null);
+        goalField76.setOccupant(partnerFigure1);
+        partnerFigure4.setField(goalField76);
+
+        Card card = new NormalCard(Suit.HEARTS, Value.ACE);
+        cardRepository.saveAndFlush(card);
+
+        gameRepository.saveAndFlush(game);
+        game = gameRepository.findById(gameId).orElse(null);
+        assert game != null;
+
+        player1.getHand().add(card);
+        gameRepository.saveAndFlush(game);
+
+        MovePostDTO move = new MovePostDTO();
+        move.setCardId(card.getId());
+        move.setFigureId(partnerFigure1.getId());
+        move.setTargetFieldId(goalField73.getId());
+        gameService.playPlayersMove(gameId, move);
+
+        game = gameRepository.findById(gameId).orElse(null);
+        assert game != null;
+        Assertions.assertEquals(GameState.FINISHED, game.getGameState());
     }
 }

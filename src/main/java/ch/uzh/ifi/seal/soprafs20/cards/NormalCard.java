@@ -7,9 +7,6 @@ import javax.persistence.*;
 public class NormalCard extends Card {
 
 
-    @Column
-    private int remainingSteps;
-
     public NormalCard(){}
 
     public NormalCard(Suit suit, Value value) {
