@@ -253,7 +253,7 @@ public class BoardService {
         List<Field> fieldsOfBoard = board.getFields();
         int count = 0;
         for (Field field : fieldsOfBoard) {
-            if (field instanceof GoalField && ((GoalField) field).getPlayer() == player && field.getOccupant() != null) {
+            if (field instanceof GoalField && ((GoalField) field).getPlayer().getId() == player.getId() && field.getOccupant() != null) {
                 count++;
             }
         }
