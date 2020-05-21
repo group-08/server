@@ -421,4 +421,56 @@ public class GameServiceIntegrationTest {
         assertEquals(field15new.getId(), figure1new.getField().getId());
 
     }
+
+    @Test
+    public void testTakeOverPartnersFigures(){
+
+        Player player1 = game.getPlayer(0);
+
+        long gameId = game.getId();
+        Figure figure1 = game.getPlayer(0).getFigures().get(0);
+        long figure1Id = figure1.getId();
+        Field field65 = game.getBoard().getField(65);
+        long field65Id = field65.getId();
+        figure1.getField().setOccupant(null);
+        field65.setOccupant(figure1);
+        figure1.setField(field65);
+
+        Figure figure2 = game.getPlayer(0).getFigures().get(1);
+        long figure2Id = figure2.getId();
+        Field field66 = game.getBoard().getField(66);
+        long field66Id = field66.getId();
+        Field homeField2 = figure2.getField();
+        long homeField2Id = homeField2.getId();
+        figure2.getField().setOccupant(null);
+        field66.setOccupant(figure2);
+        figure2.setField(field66);
+
+        Figure figure3 = game.getPlayer(0).getFigures().get(2);
+        long figure3Id = figure3.getId();
+        Field field67 = game.getBoard().getField(67);
+        long field67Id = field67.getId();
+        Field homeField3 = figure3.getField();
+        long homeField3Id = homeField3.getId();
+        figure3.getField().setOccupant(null);
+        field67.setOccupant(figure3);
+        figure3.setField(field67);
+
+        Figure figure4 = game.getPlayer(0).getFigures().get(3);
+        long figure4Id = figure4.getId();
+        Field field68 = game.getBoard().getField(68);
+        long field68Id = field68.getId();
+        Field homeField4 = figure4.getField();
+        long homeField4Id = homeField4.getId();
+        figure4.getField().setOccupant(null);
+        field68.setOccupant(figure4);
+        figure4.setField(field68);
+
+        gameRepository.saveAndFlush(game);
+        game = gameRepository.findById(gameId).orElse(null);
+        assert game != null;
+
+        Assertions.assertTrue(playerService.checkIfPlayerFinished(game, player1));
+
+    }
 }
