@@ -27,7 +27,7 @@ public class Figure {
         this.field = field;
     }
 
-    public void moveToNewField(Field targetField){
+  /*  public void moveToNewField(Field targetField){
         try {
             this.field = targetField;
         }
@@ -37,7 +37,7 @@ public class Figure {
             return;
         }
 
-    }
+    }*/
 
     public long getId(){
         return this.id;

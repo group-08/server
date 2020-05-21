@@ -38,19 +38,19 @@ public abstract class Field implements Serializable {
     }
 
 
-    public void removeAdjacency(Field removeField) {
+   /* public void removeAdjacency(Field removeField) {
         if (this.adjacencyList.contains(removeField)) {
             this.adjacencyList.remove(removeField);
         }
-    }
+    }*/
 
     public List<Field> getAdjacencyList() {
         return this.adjacencyList;
     }
 
-    public void setAdjacencyList(List<Field> adjacencyList) {
+    /*public void setAdjacencyList(List<Field> adjacencyList) {
         this.adjacencyList = adjacencyList;
-    }
+    }*/
 
     public Figure getOccupant() {
         return occupant;
