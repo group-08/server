@@ -9,9 +9,6 @@ public class NormalCard extends Card {
 
     public NormalCard(){}
 
-    @Enumerated
-    protected Suit suit;
-
     public NormalCard(Suit suit, Value value) {
         this.suit = suit;
         this.value = value;

@@ -16,6 +16,9 @@ public abstract class Card implements Serializable {
     @Enumerated
     protected Value value;
 
+    @Enumerated
+    protected Suit suit;
+
     @Column
     protected int remainingSteps;
 
@@ -24,6 +27,10 @@ public abstract class Card implements Serializable {
 
     public Value getValue() {
         return this.value;
+    }
+
+    public Suit getSuit() {
+        return suit;
     }
 
 
