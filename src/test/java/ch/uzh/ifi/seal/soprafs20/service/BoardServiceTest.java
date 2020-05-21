@@ -387,6 +387,12 @@ class BoardServiceTest {
         //create new game
         Game testGame = new Game(testUser1, "testGame");
 
+        for(Field fieldOfBoard : testGame.getBoard().getFields()){
+            if(fieldOfBoard.getOccupant()!=null){
+                fieldOfBoard.getOccupant().setPlayer(testPlayer);
+            }
+        }
+
         Mockito.when(gameRepository.findById(Mockito.any())).thenReturn(java.util.Optional.of(testGame));
 
 
