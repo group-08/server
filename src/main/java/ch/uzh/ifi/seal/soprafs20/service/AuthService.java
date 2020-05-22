@@ -44,7 +44,7 @@ import java.util.UUID;
 
             // Check the password
             if (!loginUser.checkPassword(loginPostUser.getPassword())) {
-                throw new IllegalAccessException();
+                throw new IllegalAccessException("wrong password");
             }
 
             // Update a token and set user online
