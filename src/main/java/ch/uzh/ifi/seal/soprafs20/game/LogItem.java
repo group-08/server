@@ -37,11 +37,11 @@ public class LogItem {
         this.value=value;
     }
 
-    public long getPlayer() {
+    public Long getPlayerId() {
         return playerId;
     }
 
-    public void setPlayer(long playerId) {
+    public void setPlayerId(Long playerId) {
         this.playerId = playerId;
     }
 
@@ -59,5 +59,13 @@ public class LogItem {
 
     public void setValue(Value value) {
         this.value = value;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
