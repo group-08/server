@@ -6,12 +6,14 @@ import ch.uzh.ifi.seal.soprafs20.game.GameState;
 import ch.uzh.ifi.seal.soprafs20.repository.CardRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.DeckRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
+import ch.uzh.ifi.seal.soprafs20.repository.UserRepository;
+import ch.uzh.ifi.seal.soprafs20.rest.dto.UserGetDTO;
 import ch.uzh.ifi.seal.soprafs20.user.Colour;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 import ch.uzh.ifi.seal.soprafs20.user.Player;
 import ch.uzh.ifi.seal.soprafs20.user.User;
@@ -22,6 +24,7 @@ import org.mockito.MockitoAnnotations;
 import static org.mockito.BDDMockito.given;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 
 //@SpringBootTest
@@ -36,27 +39,59 @@ class GameServiceTest {
     @Mock
     private DeckRepository deckRepository;
 
+    @Mock
+    private UserService userService;
+
+    @Mock
+    private UserRepository userRepository;
+
     @InjectMocks
     private GameService gameService;
 
-    private User user;
+    private User user1;
     private User user2;
     private User user3;
     private User user4;
 
     private Game game;
 
-    private Player testPlayer;
+    private Player testPlayer1;
     private Player testPlayer2;
     private Player testPlayer3;
     private Player testPlayer4;
 
+
+
     @BeforeEach
-    private void setup(){
+    public void setup() {
         MockitoAnnotations.initMocks(this);
 
-    }
+        int leaderBoardScore1 = 0;
+        int leaderBoardScore2 = 1;
 
+
+        // given
+        user1 = new User();
+        user1.setId(1L);
+        user1.setEmail("test@Name.tld");
+        user1.setUsername("testUsername");
+        user1.setLeaderBoardScore(leaderBoardScore1);
+
+        user2 = new User();
+        user2.setId(2L);
+        user2.setEmail("test@Name.tld");
+        user2.setUsername("testUsername");
+        user2.setLeaderBoardScore(leaderBoardScore2);
+
+        testPlayer1 = new Player();
+        testPlayer1.setUser(user1);
+        testPlayer1.setId(user1.getId());
+
+        testPlayer2 = new Player();
+        testPlayer2.setUser(user2);
+        testPlayer2.setId(user2.getId());
+
+    }
     @Test
     public void initGame_Test(){
         User user = new User();
@@ -77,6 +112,32 @@ class GameServiceTest {
         assertEquals(GameState.PENDING, game.getGameState());
         assertNotNull(game.getDeck());
         assertNotNull(game.getBoard());
+    }
+
+    @Test
+    public void increaseScoreTest(){
+
+
+        Mockito.when(userRepository.findById(1l)).thenReturn(java.util.Optional.ofNullable(user1));
+        Mockito.when(userRepository.findById(2L)).thenReturn(java.util.Optional.ofNullable(user2));
+
+        Mockito.when(userRepository.saveAndFlush(user1)).thenReturn(user1);
+        Mockito.when(userRepository.saveAndFlush(user2)).thenReturn(user2);
+
+        Mockito.when(userService.getUserById(testPlayer1.getId())).thenReturn(user1);
+        Mockito.when(userService.getUserById(testPlayer2.getId())).thenReturn(user2);
+
+        assert user1 != null;
+        assert user2 != null;
+
+        gameService.increaseScore(testPlayer1, testPlayer2);
+
+        Assertions.assertEquals(1, user1.getLeaderBoardScore());
+        Assertions.assertEquals(2, user2.getLeaderBoardScore());
+
+
+
+
     }
 }
 
