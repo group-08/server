@@ -24,6 +24,7 @@ import org.mockito.MockitoAnnotations;
 import static org.mockito.BDDMockito.given;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 
@@ -76,12 +77,14 @@ class GameServiceTest {
         user1.setEmail("test@Name.tld");
         user1.setUsername("testUsername");
         user1.setLeaderBoardScore(leaderBoardScore1);
+        user1.setToken("token1");
 
         user2 = new User();
         user2.setId(2L);
         user2.setEmail("test@Name.tld");
         user2.setUsername("testUsername");
         user2.setLeaderBoardScore(leaderBoardScore2);
+        user2.setToken("token2");
 
         testPlayer1 = new Player();
         testPlayer1.setUser(user1);
@@ -135,8 +138,32 @@ class GameServiceTest {
         Assertions.assertEquals(1, user1.getLeaderBoardScore());
         Assertions.assertEquals(2, user2.getLeaderBoardScore());
 
+    }
+
+    public boolean checkToken(Long gameId, String tokenToCheck){
+        Game actualGameToCheck = gameRepository.findById(gameId).get();
+        User Host = actualGameToCheck.getHost();
+        User UserBelongingToToken = userService.getUserByToken(tokenToCheck);
+        return Host == UserBelongingToToken;
+    }
 
 
+    @Test
+    public void checkTokenTest(){
+        long gameID = 1L;
+        Game game = new Game();
+        game.setHost(user1);
+
+
+        Mockito.when(gameRepository.findById(gameID)).thenReturn(java.util.Optional.of((game)));
+        assert game != null;
+
+        Mockito.when(userRepository.findByToken(user1.getToken())).thenReturn(user1);
+        Mockito.when(userRepository.findByToken(user2.getToken())).thenReturn(user2);
+
+
+        assertTrue(gameService.checkToken(gameID, user1.getToken()));
+        assertFalse(gameService.checkToken(gameID, user2.getToken()));
 
     }
 }
