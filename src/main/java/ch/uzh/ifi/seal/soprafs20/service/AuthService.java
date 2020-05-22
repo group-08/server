@@ -64,7 +64,7 @@ import java.util.UUID;
                 this.userRepository.saveAndFlush(logoutUser);
             }
             catch (NullPointerException e){
-
+                e.printStackTrace();
             }
 
         }

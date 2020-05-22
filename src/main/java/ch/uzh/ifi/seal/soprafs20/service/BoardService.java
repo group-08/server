@@ -183,9 +183,6 @@ public class BoardService {
         Field targetField = this.matchFields(game, targetFieldObject);
         Field currentField = getFieldfromFigure(game, figure);
         Figure occ = currentField.getOccupant();
-        if (occ == null) {
-            System.out.println();
-        }
         assert occ != null;
 
         if (targetField.getOccupant() != null) {
@@ -414,7 +411,6 @@ public class BoardService {
 
 
         ///fours valid moves
-        Board gameBoard = actualGame.getBoard();
         possibleMovesJoker.addAll(getPossibleFields(actualGame, card4, field));
 
         ///Jacks valid move
