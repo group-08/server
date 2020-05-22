@@ -18,9 +18,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Transactional
@@ -153,6 +151,27 @@ public class GameService {
         }
     }
 
+    public boolean swapCheck(Field targetField, Field currentField){
+        int level = 0;
+        Queue<Field> queue = new LinkedList<>();
+        queue.add(currentField);
+        queue.add(null);
+        Field temp = currentField;
+        assert temp != null;
+        while(!queue.isEmpty() && temp.getId()!=targetField.getId()){
+            temp = queue.poll();
+            if(temp == null){
+                level++;
+                queue.add(null);
+            }
+            else{
+                List<Field> adjFields = new ArrayList<>(temp.getAdjacencyList());
+                queue.addAll(adjFields);
+            }
+        }
+        return level>=14&&level!=60;
+    }
+
         public Board playPlayersMove(long gameId, MovePostDTO move) {
         // get the game from gameId
         Game game = gameRepository.findById(gameId).orElse(null);
@@ -173,7 +192,8 @@ public class GameService {
         updateLogItem(card,currentPlayer,game);
         playerService.removeFromHand(currentPlayer, card);
 
-        if (card.getValue() == Value.JACK ) {
+        if (card.getValue() == Value.JACK || (card.getValue()==Value.JOKER && swapCheck(targetField, figure.getField()))
+                || (targetField.getOccupant() != null && targetField.getOccupant().getId()==partner.getId())) {
             this.swapFigure(game, figure, targetField);
         } else {
             this.moveFigure(game, figure, targetField);
