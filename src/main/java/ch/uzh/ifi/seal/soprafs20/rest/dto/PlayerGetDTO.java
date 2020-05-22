@@ -20,6 +20,8 @@ public class PlayerGetDTO {
 
     private boolean exchangeCards;
 
+    private boolean finished;
+
     public long getId() {
         return id;
     }
@@ -59,5 +61,13 @@ public class PlayerGetDTO {
 
     public void setExchangeCards(boolean exchangeCards) {
         this.exchangeCards = exchangeCards;
+    }
+
+    public boolean isFinished() {
+        return finished;
+    }
+
+    public void setFinished(boolean finished) {
+        this.finished = finished;
     }
 }
