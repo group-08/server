@@ -6,6 +6,7 @@ import ch.uzh.ifi.seal.soprafs20.cards.*;
 import ch.uzh.ifi.seal.soprafs20.field.Field;
 import ch.uzh.ifi.seal.soprafs20.field.FirstField;
 import ch.uzh.ifi.seal.soprafs20.field.GoalField;
+import ch.uzh.ifi.seal.soprafs20.field.HomeField;
 import ch.uzh.ifi.seal.soprafs20.game.Game;
 import ch.uzh.ifi.seal.soprafs20.game.GameState;
 import ch.uzh.ifi.seal.soprafs20.game.LogItem;
@@ -18,9 +19,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Transactional
@@ -153,6 +152,36 @@ public class GameService {
         }
     }
 
+    public boolean swapCheck(Field targetField, Field currentField, Player partner){
+        if(currentField instanceof HomeField){
+            return false;
+        }
+        if(targetField.getOccupant()!=null && targetField.getOccupant().getPlayer().getId()==partner.getId()){
+            return true;
+        }
+        int level = 0;
+        Queue<Field> queue = new LinkedList<>();
+        queue.add(currentField);
+        queue.add(null);
+        Field temp = currentField;
+        assert temp != null;
+        while(!queue.isEmpty()){
+            temp = queue.poll();
+            if(temp == null){
+                level++;
+                queue.add(null);
+            }
+            else{
+                if(temp.getId()==targetField.getId()){
+                    return level>=14&&level!=60;
+                }
+                List<Field> adjFields = new ArrayList<>(temp.getAdjacencyList());
+                queue.addAll(adjFields);
+            }
+        }
+        return level>=14&&level!=60;
+    }
+
         public Board playPlayersMove(long gameId, MovePostDTO move) {
         // get the game from gameId
         Game game = gameRepository.findById(gameId).orElse(null);
@@ -173,7 +202,7 @@ public class GameService {
         updateLogItem(card,currentPlayer,game);
         playerService.removeFromHand(currentPlayer, card);
 
-        if (card.getValue() == Value.JACK ) {
+        if (card.getValue() == Value.JACK || (card.getValue()==Value.JOKER && swapCheck(targetField, figure.getField(), partner))) {
             this.swapFigure(game, figure, targetField);
         } else {
             this.moveFigure(game, figure, targetField);

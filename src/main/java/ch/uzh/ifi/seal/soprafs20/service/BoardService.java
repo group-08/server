@@ -446,7 +446,7 @@ public class BoardService {
             queue.add(fieldToCheck);
             queue.add(null);
             while (!queue.isEmpty() && level < moveValue) {
-                Field temp = queue.poll();
+                    Field temp = queue.poll();
                 if (temp == null) {
                     level++;
                     queue.add(null);
