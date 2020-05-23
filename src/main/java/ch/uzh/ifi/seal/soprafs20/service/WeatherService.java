@@ -22,6 +22,7 @@ public class WeatherService {
     Weather weather = new Weather();
     City city = new City();
     HashMap<String, WeatherState> weatherHashMap= weather.getHashMapWeather();
+    Random random = new Random();
 
     public String getAPIResponse(int woeid) throws IOException {
 
@@ -75,8 +76,7 @@ public class WeatherService {
 
     public CityState randomCityChooser(){
         List<CityState> cities = new ArrayList<>(city.getHashMapCity().keySet());
-        Random r = new Random();
-        int i = r.nextInt(cities.size());
+        int i = random.nextInt(cities.size());
         return cities.get(i);
     }
 

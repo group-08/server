@@ -19,12 +19,13 @@ public class NormalCard extends Card {
         return String.format("Suit: %s Value: %s", this.suit, this.value);
     }
 
+    @Override
     public Suit getSuit() {
         return suit;
     }
 
 
-
+    @Override
     public Value getValue(){
         return this.value;
     }
@@ -33,10 +34,12 @@ public class NormalCard extends Card {
         this.value = value;
     }
 
+    @Override
     public int getRemainingSteps() {
         return remainingSteps;
     }
 
+    @Override
     public void setRemainingSteps(int remainingSteps) {
         this.remainingSteps = remainingSteps;
     }

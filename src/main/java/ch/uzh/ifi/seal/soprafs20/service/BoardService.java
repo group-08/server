@@ -33,12 +33,14 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final GameRepository gameRepository;
+    private Random random;
 
     @Autowired
     public BoardService(@Qualifier("boardRepository") BoardRepository boardRepository,
                         @Qualifier("gameRepository") GameRepository gameRepository){
         this.boardRepository = boardRepository;
         this.gameRepository = gameRepository;
+        this.random = new Random();
     }
 
     public Board getBoard(Game game) {
@@ -78,9 +80,8 @@ public class BoardService {
                 casualFields.add(field);
             }
         }
-        Random rand = new Random();
 
-        Field randomCasualField = casualFields.get(rand.nextInt(casualFields.size()));
+        Field randomCasualField = casualFields.get(random.nextInt(casualFields.size()));
 
         if(randomCasualField.getOccupant()!=null){
             Figure figureOfField = randomCasualField.getOccupant();
@@ -183,9 +184,6 @@ public class BoardService {
         Field targetField = this.matchFields(game, targetFieldObject);
         Field currentField = getFieldfromFigure(game, figure);
         Figure occ = currentField.getOccupant();
-        if (occ == null) {
-            System.out.println();
-        }
         assert occ != null;
 
         if (targetField.getOccupant() != null) {
@@ -414,7 +412,6 @@ public class BoardService {
 
 
         ///fours valid moves
-        Board gameBoard = actualGame.getBoard();
         possibleMovesJoker.addAll(getPossibleFields(actualGame, card4, field));
 
         ///Jacks valid move

@@ -656,7 +656,8 @@ public class GameService {
     }
 
     public boolean checkToken(Long gameId, String tokenToCheck){
-        Game actualGameToCheck = gameRepository.findById(gameId).get();
+        Game actualGameToCheck = gameRepository.findById(gameId).orElse(null);
+        assert actualGameToCheck != null;
         User Host = actualGameToCheck.getHost();
         User UserBelongingToToken = userService.getUserByToken(tokenToCheck);
         return Host == UserBelongingToToken;

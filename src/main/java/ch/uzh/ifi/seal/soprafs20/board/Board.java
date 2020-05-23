@@ -65,49 +65,49 @@ public class Board implements Serializable {
     }
 
     private void forwardGraph(List<Field> fields) {
-        for(int id=0; id<63;id++){
-            Field first = fields.get(id);
-            Field second = fields.get(id+1);
+        for(int index=0; index<63;index++){
+            Field first = fields.get(index);
+            Field second = fields.get(index+1);
             first.addAdjacency(second);
         }
 
-        for(int id=64; id<67;id++){
-            Field first = fields.get(id);
-            Field second = fields.get(id+1);
+        for(int index=64; index<67;index++){
+            Field first = fields.get(index);
+            Field second = fields.get(index+1);
             first.addAdjacency(second);
         }
-        for(int id=68; id<71;id++){
-            Field first = fields.get(id);
-            Field second = fields.get(id+1);
+        for(int index=68; index<71;index++){
+            Field first = fields.get(index);
+            Field second = fields.get(index+1);
             first.addAdjacency(second);
         }
-        for(int id=72; id<75;id++){
-            Field first = fields.get(id);
-            Field second = fields.get(id+1);
+        for(int index=72; index<75;index++){
+            Field first = fields.get(index);
+            Field second = fields.get(index+1);
             first.addAdjacency(second);
         }
-        for(int id=76; id<79;id++){
-            Field first = fields.get(id);
-            Field second = fields.get(id+1);
+        for(int index=76; index<79;index++){
+            Field first = fields.get(index);
+            Field second = fields.get(index+1);
             first.addAdjacency(second);
         }
-        for(int id=80; id<84;id++){
-            Field first = fields.get(id);
+        for(int index=80; index<84;index++){
+            Field first = fields.get(index);
             Field second = fields.get(0);
             first.addAdjacency(second);
         }
-        for(int id=84; id<88;id++){
-            Field first = fields.get(id);
+        for(int index=84; index<88;index++){
+            Field first = fields.get(index);
             Field second = fields.get(16);
             first.addAdjacency(second);
         }
-        for(int id=88; id<92;id++){
-            Field first = fields.get(id);
+        for(int index=88; index<92;index++){
+            Field first = fields.get(index);
             Field second = fields.get(32);
             first.addAdjacency(second);
         }
-        for(int id=92; id<96;id++){
-            Field first = fields.get(id);
+        for(int index=92; index<96;index++){
+            Field first = fields.get(index);
             Field second = fields.get(48);
             first.addAdjacency(second);
         }
