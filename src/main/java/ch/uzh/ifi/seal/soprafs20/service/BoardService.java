@@ -33,12 +33,14 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final GameRepository gameRepository;
+    private Random random;
 
     @Autowired
     public BoardService(@Qualifier("boardRepository") BoardRepository boardRepository,
                         @Qualifier("gameRepository") GameRepository gameRepository){
         this.boardRepository = boardRepository;
         this.gameRepository = gameRepository;
+        this.random = new Random();
     }
 
     public Board getBoard(Game game) {
@@ -78,9 +80,8 @@ public class BoardService {
                 casualFields.add(field);
             }
         }
-        Random rand = new Random();
 
-        Field randomCasualField = casualFields.get(rand.nextInt(casualFields.size()));
+        Field randomCasualField = casualFields.get(random.nextInt(casualFields.size()));
 
         if(randomCasualField.getOccupant()!=null){
             Figure figureOfField = randomCasualField.getOccupant();
