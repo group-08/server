@@ -52,6 +52,8 @@ public interface DTOMapper {
     @Mapping(source = "board", target = "board")
     @Mapping(source = "city", target = "city")
     @Mapping(source = "weatherState", target = "weatherState")
+    @Mapping(source = "logItems", target = "logItems")
+    @Mapping(source = "cardNum", target = "cardNum")
     GameGetDTO convertEntityToGameGetDTO(Game game);
 
     @Mapping(source = "id", target = "id")
@@ -71,5 +73,6 @@ public interface DTOMapper {
     @Mapping(source = "colour", target = "colour")
     @Mapping(source = "hand", target = "hand")
     @Mapping(source = "exchangeCards", target = "exchangeCards")
+    @Mapping(source = "finished", target = "finished")
     PlayerGetDTO convertEntityToPlayerGetDTO(Player player);
 }

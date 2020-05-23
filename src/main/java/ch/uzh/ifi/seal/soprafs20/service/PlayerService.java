@@ -125,7 +125,15 @@ public class PlayerService {
 
     public Player getPartner(Game game, Player player){
         List<Player> players = game.getPlayers();
-        int indexOfPlayer = players.indexOf(player);
+        int indexOfPlayer=0;
+        for(Player indexPlayer : players){
+            if (indexPlayer.getId() == player.getId()){
+                break;
+            }
+            else{
+                indexOfPlayer++;
+            }
+        }
         return players.get((indexOfPlayer + 2) % 4);
     }
 

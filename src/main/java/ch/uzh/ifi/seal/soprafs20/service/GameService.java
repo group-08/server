@@ -6,9 +6,9 @@ import ch.uzh.ifi.seal.soprafs20.cards.*;
 import ch.uzh.ifi.seal.soprafs20.field.Field;
 import ch.uzh.ifi.seal.soprafs20.field.FirstField;
 import ch.uzh.ifi.seal.soprafs20.field.GoalField;
-import ch.uzh.ifi.seal.soprafs20.field.HomeField;
 import ch.uzh.ifi.seal.soprafs20.game.Game;
 import ch.uzh.ifi.seal.soprafs20.game.GameState;
+import ch.uzh.ifi.seal.soprafs20.game.LogItem;
 import ch.uzh.ifi.seal.soprafs20.repository.*;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
@@ -18,12 +18,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @Transactional
@@ -173,18 +170,21 @@ public class GameService {
         Field targetField = getFieldFromId(fieldId);
         Figure figure = getFigureFromId(figureId);
 
+        updateLogItem(card,currentPlayer,game);
         playerService.removeFromHand(currentPlayer, card);
 
         if (card.getValue() == Value.JACK ) {
             this.swapFigure(game, figure, targetField);
         } else {
             this.moveFigure(game, figure, targetField);
-
         }
 
         // check if player is finished and if partner is finished
+
         if (playerService.checkIfPlayerFinished(game, currentPlayer)) {
+            currentPlayer.setFinished(true);
             if (playerService.checkIfPlayerFinished(game, partner)) {
+                game.setGameState(GameState.FINISHED);
                 increaseScore(currentPlayer,partner);
                 game.setGameState(GameState.FINISHED);
             }
@@ -261,7 +261,9 @@ public class GameService {
 
         // check if player is finished and if partner is finished
         if (playerService.checkIfPlayerFinished(game, currentPlayer)) {
+            currentPlayer.setFinished(true);
             if (playerService.checkIfPlayerFinished(game, partner)) {
+                partner.setFinished(true);
                 increaseScore(currentPlayer,partner);
                 game.setGameState(GameState.FINISHED);
             }
@@ -271,6 +273,8 @@ public class GameService {
         if (newRemaining == 0) {
             //remove card from player
 
+
+            updateLogItem(card,currentPlayer,game);
             playerService.removeFromHand(currentPlayer, card);
 
             this.rotatePlayersUntilNextPossible(game);
@@ -299,6 +303,16 @@ public class GameService {
         return newRemaining;
 
 
+    }
+
+    public void updateLogItem(Card card, Player player, Game game){
+        List<LogItem> logItems = game.getLogItems();
+        LogItem logItem = new LogItem(card.getSuit() ,card.getValue(), player.getId());
+        logItems.add(logItem);
+        if(logItems.size()>10){
+            logItems.remove(0);
+        }
+        gameRepository.saveAndFlush(game);
     }
 
     public int checkIfFurtherMovesPossible(int newRemaining, Game game, Figure figure, MovePostDTO move, Long cardId){
@@ -442,6 +456,11 @@ public class GameService {
         this.setColourOfPlayer(game.getPlayer(2), Colour.YELLOW);
         this.setColourOfPlayer(game.getPlayer(3), Colour.RED);
 
+        // set boolean finished of all players on false
+        for (Player player : game.getPlayers()) {
+            player.setFinished(false);
+        }
+
         // Assign figures to players
         for (int playerIndex = 0; playerIndex < 4; playerIndex++) {
             Player player = game.getPlayer(playerIndex);
@@ -572,6 +591,8 @@ public class GameService {
      * @param game ID of game you want to distribute cards
      */
     public void distributeCards(Game game, int cardNum) {
+        weatherService.updateWeather(game);
+        boardService.checkFieldsWeatherChange(game);
         ///this function checks if the deck contains enough cards. if not it refills the deck
         deckService.checkIfEnoughCardsLeft( cardNum, game.getDeck().getId());
         for (Player player : game.getPlayers()) {

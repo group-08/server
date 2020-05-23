@@ -34,6 +34,8 @@ public class Player {
 
     boolean exchangeCards;
 
+    boolean finished = false;
+
     public Player() {
         this.figures = new ArrayList<Figure>();
         this.hand = new ArrayList<Card>();
@@ -87,5 +89,12 @@ public class Player {
         this.exchangeCards = exchangeCards;
     }
 
+    public void setFinished(boolean finished) {
+        this.finished = finished;
+    }
+
+    public boolean isFinished() {
+        return finished;
+    }
 }
 
