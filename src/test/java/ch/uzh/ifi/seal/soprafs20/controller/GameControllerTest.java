@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(GameController.class)
-public class GameControllerTest {
+class GameControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -42,7 +42,7 @@ public class GameControllerTest {
     private GameService gameService;
 
     @Test
-    public void getPossibleFields_Test () throws Exception{
+    void getPossibleFields_Test () throws Exception{
 
         MovePostDTO move = new MovePostDTO();
         Figure figure = new Figure();
@@ -73,7 +73,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void getGameById_Test() throws Exception{
+    void getGameById_Test() throws Exception{
         User user = new User();
         user.setUsername("firstname.lastname");
         user.setEmail("firstname@lastname.ch");

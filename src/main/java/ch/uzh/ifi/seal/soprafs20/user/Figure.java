@@ -27,18 +27,6 @@ public class Figure {
         this.field = field;
     }
 
-  /*  public void moveToNewField(Field targetField){
-        try {
-            this.field = targetField;
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            System.out.printf("invalid field exeption");
-            return;
-        }
-
-    }*/
-
     public long getId(){
         return this.id;
     }

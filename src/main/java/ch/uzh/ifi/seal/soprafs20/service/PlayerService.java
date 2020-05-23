@@ -8,7 +8,6 @@ import ch.uzh.ifi.seal.soprafs20.game.Game;
 import ch.uzh.ifi.seal.soprafs20.repository.BoardRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.PlayerRepository;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.MovePostDTO;
 import ch.uzh.ifi.seal.soprafs20.user.Figure;
 import ch.uzh.ifi.seal.soprafs20.user.Player;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,7 +107,7 @@ public class PlayerService {
                 } else
 
                 if (card.getValue() == Value.JACK) {
-                    if (!(boardService.getPossibleFieldsJack(game, card, figure.getField()).isEmpty())) {
+                    if (!(boardService.getPossibleFieldsJack(game, figure.getField()).isEmpty())) {
                         return true;
                     }
                 } else if (card.getValue() == Value.JOKER){

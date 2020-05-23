@@ -42,12 +42,12 @@ class BoardServiceTest {
     private User testUser2;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         MockitoAnnotations.initMocks(this);
     }
 
     @Test
-    public void getPossibleFields_Test() {
+    void getPossibleFields_Test() {
         // create 2 users
         testUser1 = new User();
         testUser1.setId(1L);
@@ -137,7 +137,7 @@ class BoardServiceTest {
     }
 
     @Test
-    public void getPossibleFieldsFOUR(){
+    void getPossibleFieldsFOUR(){
         // create 2 users
         testUser1 = new User();
         testUser1.setId(1L);
@@ -212,7 +212,7 @@ class BoardServiceTest {
     }
 
     @Test
-    public void getPossibleFieldsSEVEN() {
+    void getPossibleFieldsSEVEN() {
 
         //create User 1
         testUser1 = new User();
@@ -296,7 +296,7 @@ class BoardServiceTest {
     }
 
     @Test
-    public void getPossibleFieldsJokerTestBlocked(){
+    void getPossibleFieldsJokerTestBlocked(){
 
         //create User 1
         testUser1 = new User();
@@ -365,7 +365,7 @@ class BoardServiceTest {
 
 
     @Test
-    public void getPossibleFieldsJokerTestUnblocked(){
+    void getPossibleFieldsJokerTestUnblocked(){
 
         //create User 1
         testUser1 = new User();

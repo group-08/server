@@ -1,15 +1,11 @@
 package ch.uzh.ifi.seal.soprafs20.game;
 
-import ch.uzh.ifi.seal.soprafs20.cards.Card;
+
 import ch.uzh.ifi.seal.soprafs20.cards.Suit;
 import ch.uzh.ifi.seal.soprafs20.cards.Value;
-import ch.uzh.ifi.seal.soprafs20.user.Player;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
+
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "LOGITEM")
@@ -29,7 +25,7 @@ public class LogItem {
     @Enumerated
     Value value;
 
-    public LogItem(){};
+    public LogItem(){}
 
     public LogItem(Suit suit, Value value, long playerId){
         this.suit=suit;

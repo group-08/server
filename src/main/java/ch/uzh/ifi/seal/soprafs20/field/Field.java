@@ -53,7 +53,7 @@ public abstract class Field implements Serializable {
         this.occupant = occupant;
     }
 
-    public long getId(){return id;};
+    public long getId(){return id;}
 
     public void setId(long id) {
         this.id = id;

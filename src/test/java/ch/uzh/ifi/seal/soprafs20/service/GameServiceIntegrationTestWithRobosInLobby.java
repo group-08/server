@@ -19,7 +19,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 @WebAppConfiguration
 @SpringBootTest
-public class GameServiceIntegrationTestWithRobosInLobby {
+class GameServiceIntegrationTestWithRobosInLobby {
 
     @Autowired
     private GameService gameService;
@@ -33,13 +33,13 @@ public class GameServiceIntegrationTestWithRobosInLobby {
     private UserRepository userRepository;
 
     @AfterEach
-    public void tearDown() {
+    void tearDown() {
         gameRepository.deleteAll();
         userRepository.deleteAll();
     }
 
     @Test
-    public void testLobbyFillingWithRobos(){
+    void testLobbyFillingWithRobos(){
         User user = new User();
         user.setUsername("firstname.lastname");
         user.setEmail("firstname@lastname.ch");

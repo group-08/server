@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @WebAppConfiguration
 @SpringBootTest
-public class BoardServiceIntegrationTest {
+class BoardServiceIntegrationTest {
 
     @Qualifier("boardRepository")
     @Autowired
@@ -48,20 +48,20 @@ public class BoardServiceIntegrationTest {
     private Game game;
 
     @BeforeEach
-    public void init() {
+    void init() {
         gameRepository.deleteAll();
         userRepository.deleteAll();
     }
 
     @AfterEach
-    public void tearDown() {
+    void tearDown() {
         boardRepository.deleteAll();
         gameRepository.deleteAll();
         userRepository.deleteAll();
     }
 
     @Test
-    public void setUpBoard() {
+    void setUpBoard() {
         Board board = new Board();
         for (Field field : board.getFields())   {
             if (field.getOccupant() != null)    {
@@ -71,7 +71,7 @@ public class BoardServiceIntegrationTest {
     }
 
     @Test
-    public void boardIntegrationTest() {
+    void boardIntegrationTest() {
         Board board = new Board();
         boardRepository.saveAndFlush(board);
         Board afterBoard = boardRepository.findById(board.getId()).orElse(null);
@@ -84,7 +84,7 @@ public class BoardServiceIntegrationTest {
     }
 
     @Test
-    public void blowAwayFigureTests(){
+    void blowAwayFigureTests(){
 
     }
 }

@@ -1,6 +1,5 @@
 package ch.uzh.ifi.seal.soprafs20.rest.dto;
 
-import ch.uzh.ifi.seal.soprafs20.cards.Card;
 
 public class ExchangePostDTO {
 

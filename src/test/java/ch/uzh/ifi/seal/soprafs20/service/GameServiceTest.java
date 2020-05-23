@@ -64,7 +64,7 @@ class GameServiceTest {
 
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         MockitoAnnotations.initMocks(this);
 
         int leaderBoardScore1 = 0;
@@ -96,7 +96,7 @@ class GameServiceTest {
 
     }
     @Test
-    public void initGame_Test(){
+    void initGame_Test(){
         User user = new User();
         user.setUsername("firstname.lastname");
         user.setEmail("firstname@lastname.ch");
@@ -118,7 +118,7 @@ class GameServiceTest {
     }
 
     @Test
-    public void increaseScoreTest(){
+    void increaseScoreTest(){
 
 
         Mockito.when(userRepository.findById(1l)).thenReturn(java.util.Optional.ofNullable(user1));
@@ -149,7 +149,7 @@ class GameServiceTest {
 
 
     @Test
-    public void checkTokenTest(){
+    void checkTokenTest(){
         long gameID = 1L;
         Game game = new Game();
         game.setHost(user1);

@@ -22,8 +22,7 @@ public class LobbyController {
     @ResponseBody
     public List<LobbyGetDTO> getAllLobbies(@RequestHeader("X-Token") String token){
         if(gameService.checkIfUserExists(token)) {
-            List<LobbyGetDTO> allGames = gameService.getAllLobbies();
-            return allGames;
+            return gameService.getAllLobbies();
         }
         else{
            return null; // throw exception?
@@ -37,8 +36,7 @@ public class LobbyController {
                                    @RequestHeader("X-Token") String token){
         String lobbyName = lobbyPostCreateDTO.getName();
         User userCreatingLobby = gameService.getUserByToken(token);
-        LobbyGetDTO createdLobby = gameService.createLobby(userCreatingLobby, lobbyName);
-        return createdLobby;
+        return gameService.createLobby(userCreatingLobby, lobbyName);
     }
 
 
