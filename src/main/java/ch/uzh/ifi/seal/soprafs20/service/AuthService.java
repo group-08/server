@@ -32,6 +32,10 @@ import java.util.UUID;
             // Get the user trying to login
             User loginUser = this.userRepository.findByEmail(loginPostUser.getEmail());
 
+            if (loginUser == null) {
+                throw new IllegalAccessException();
+            }
+
             // Check the password
             if (!loginUser.checkPassword(loginPostUser.getPassword())) {
                 throw new IllegalAccessException("wrong password");
@@ -59,12 +63,5 @@ import java.util.UUID;
 
         }
 
-        public User getUserByUsername(String username) {
-            return this.userRepository.findByUsername(username);
-        }
-
-        public Boolean checkToken(String userToken) {
-            return this.userRepository.existsByToken(userToken);
-        }
     }
 

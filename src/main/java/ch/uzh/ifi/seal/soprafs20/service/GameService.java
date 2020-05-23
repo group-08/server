@@ -626,9 +626,8 @@ public class GameService {
     }
 
 
-    public LobbyGetDTO getLobbyById(long id){
-        Game game = gameRepository.findById(id).orElse(null);
-        return DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(game);
+    public Game getLobbyById(long id){
+        return gameRepository.findById(id).orElse(null);
     }
 
     public void addUser(Long gameId, String tokenOfUser){
@@ -636,6 +635,27 @@ public class GameService {
         Game actualGame = gameRepository.findById(gameId).orElse(null);
         if(actualGame!=null) {
             this.addPlayerFromUser(gameId, userToBeAdded);
+        }
+    }
+
+    public void removeUser(Long gameId, Long userId) {
+        Game game = gameRepository.findById(gameId).orElse(null);
+        assert game!=null;
+        User user = userRepository.findById(userId).orElse(null);
+        assert user != null;
+        Player player = playerRepository.findByUser(user);
+        game.getPlayers().remove(player);
+
+        playerRepository.delete(player);
+        playerRepository.flush();
+        gameRepository.saveAndFlush(game);
+
+    }
+
+    public void removeSelf(Long gameId, String token, Long userId) {
+        User user = userRepository.findByToken(token);
+        if (user.getId().equals(userId)) {
+            this.removeUser(gameId, userId);
         }
     }
 
@@ -795,6 +815,12 @@ public class GameService {
                 }
             }
         }return null;
+    }
+
+    public void deleteGame(long gameId) {
+        Game game = gameRepository.findById(gameId).orElse(null);
+        assert game!=null;
+        gameRepository.delete(game);
     }
 
 

@@ -118,9 +118,7 @@ class LobbyControllerTest {
         lobby.setId((long)1);
         lobby.setWeatherState(WeatherState.UNKNOWN);
 
-        LobbyGetDTO lobbyGetDTO = DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(lobby);
-
-        given(gameService.getLobbyById(1)).willReturn(DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(lobby));
+        given(gameService.getLobbyById(1)).willReturn(lobby);
 
         MockHttpServletRequestBuilder getRequest = get("/lobby/{id}", "1")
                 .contentType(MediaType.APPLICATION_JSON)
