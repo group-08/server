@@ -29,7 +29,7 @@ public class Deck implements Serializable {
 
 /*
     ///number of decks we play with default 2
-    private final int numberOfDecks = 2;
+
 
 
     /// deals cards implemented as singleton
