@@ -1,7 +1,10 @@
 package ch.uzh.ifi.seal.soprafs20.controller;
 
 
+import ch.uzh.ifi.seal.soprafs20.game.Game;
+import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
+import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import ch.uzh.ifi.seal.soprafs20.service.GameService;
 import ch.uzh.ifi.seal.soprafs20.user.User;
 import org.springframework.http.HttpStatus;
@@ -16,6 +19,13 @@ public class LobbyController {
 
     LobbyController(GameService gameService){this.gameService = gameService;}
 
+    // Return 404 if lobby not found
+    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Error: Lobby doesn't exist")
+    private static class LobbyNotFound extends RuntimeException { }
+
+    @ResponseStatus(value = HttpStatus.FORBIDDEN, reason = "Error: User doesn't exist")
+    private static class UserNotFound extends RuntimeException { }
+
 
     @GetMapping("/lobbies")
     @ResponseStatus(HttpStatus.OK)
@@ -26,7 +36,7 @@ public class LobbyController {
             return allGames;
         }
         else{
-           return null; // throw exception?
+           throw new UserNotFound();
         }
     }
 
@@ -46,7 +56,11 @@ public class LobbyController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public LobbyGetDTO getLobbyById(@PathVariable Long id){
-        return gameService.getLobbyById(id);
+        Game lobby = gameService.getLobbyById(id);
+        if (lobby == null) {
+            throw new LobbyNotFound();
+        }
+        return DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(lobby);
     }
 
 
@@ -57,13 +71,15 @@ public class LobbyController {
         gameService.addUser(id, token);
     }
 
-    @DeleteMapping("/lobby/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @DeleteMapping("/lobby/{id}/user/{userId}")
+    @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public void deleteUser(@PathVariable Long id, @RequestBody UserPostDTO userPostDTO){
-        // TODO require token
-        // TODO not userPostDTO object but probably just a string or something
-        // TODO be made later
+    public void deleteUser(@PathVariable Long id, @RequestHeader("X-Token") String token, @PathVariable Long userId){
+        if (gameService.checkToken(id, token)) {
+            gameService.removeUser(id, userId);
+        } else {
+            gameService.removeSelf(id, token, userId);
+        }
     }
 
     @PostMapping("/lobby/{id}/start")
@@ -72,6 +88,15 @@ public class LobbyController {
     public void startGame(@PathVariable Long id, @RequestHeader("X-Token") String token){
         if(gameService.checkToken(id, token)) {
             gameService.setUpGame(id);
+        }
+    }
+
+    @DeleteMapping("/lobby/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public void deleteLobby(@PathVariable Long id, @RequestHeader("X-Token") String token) {
+        if(gameService.checkToken(id, token)) {
+            gameService.deleteGame(id);
         }
     }
 }
