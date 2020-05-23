@@ -36,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * This tests if the UserController works.
  */
 @WebMvcTest(AuthController.class)
-public class AuthControllerTest {
+class AuthControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -48,7 +48,7 @@ public class AuthControllerTest {
     private UserService userService;
 
     @Test
-    public void createUser_validInput_userCreated() throws Exception {
+    void createUser_validInput_userCreated() throws Exception {
         // given
         User user = new User();
         user.setId(1L);
@@ -80,7 +80,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    public void loginUser_valid() throws Exception{
+    void loginUser_valid() throws Exception{
         User user = new User();
         user.setId(1L);
         user.setEmail("test@user.tld");

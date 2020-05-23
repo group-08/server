@@ -6,6 +6,7 @@ import ch.uzh.ifi.seal.soprafs20.cards.*;
 import ch.uzh.ifi.seal.soprafs20.field.Field;
 import ch.uzh.ifi.seal.soprafs20.field.FirstField;
 import ch.uzh.ifi.seal.soprafs20.field.GoalField;
+import ch.uzh.ifi.seal.soprafs20.field.HomeField;
 import ch.uzh.ifi.seal.soprafs20.game.Game;
 import ch.uzh.ifi.seal.soprafs20.game.GameState;
 import ch.uzh.ifi.seal.soprafs20.game.LogItem;
@@ -18,9 +19,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Transactional
@@ -147,10 +146,40 @@ public class GameService {
             return boardService.getPossibleFieldsSeven(card, currentField);
         }
         else if (card.getValue() == Value.JACK) {
-            return boardService.getPossibleFieldsJack(actualGame, card, currentField);
+            return boardService.getPossibleFieldsJack(actualGame, currentField);
         } else {
             return boardService.getPossibleFields(actualGame, card, currentField);
         }
+    }
+
+    public boolean swapCheck(Field targetField, Field currentField, Player partner){
+        if(currentField instanceof HomeField){
+            return false;
+        }
+        if(targetField.getOccupant()!=null && targetField.getOccupant().getPlayer().getId()==partner.getId()){
+            return true;
+        }
+        int level = 0;
+        Queue<Field> queue = new LinkedList<>();
+        queue.add(currentField);
+        queue.add(null);
+        Field temp = currentField;
+        assert temp != null;
+        while(!queue.isEmpty()){
+            temp = queue.poll();
+            if(temp == null){
+                level++;
+                queue.add(null);
+            }
+            else{
+                if(temp.getId()==targetField.getId()){
+                    return level>=14&&level!=60;
+                }
+                List<Field> adjFields = new ArrayList<>(temp.getAdjacencyList());
+                queue.addAll(adjFields);
+            }
+        }
+        return level>=14&&level!=60;
     }
 
         public Board playPlayersMove(long gameId, MovePostDTO move) {
@@ -173,7 +202,7 @@ public class GameService {
         updateLogItem(card,currentPlayer,game);
         playerService.removeFromHand(currentPlayer, card);
 
-        if (card.getValue() == Value.JACK ) {
+        if (card.getValue() == Value.JACK || (card.getValue()==Value.JOKER && swapCheck(targetField, figure.getField(), partner))) {
             this.swapFigure(game, figure, targetField);
         } else {
             this.moveFigure(game, figure, targetField);
@@ -192,22 +221,13 @@ public class GameService {
 
 
         this.rotatePlayersUntilNextPossible(game);
-        //gameRepository.saveAndFlush(game);
-        //game = gameRepository.findById(gameId).orElse(null);
-        //assert game != null;
-        // check if game still running and no cards left, distribute new cards
 
 
         if(!checkIfCardsLeft(game)) {
-                //while (!checkIfCardsLeft(game)) {
+
                     distributeCards(game, game.getCardNum());
                     game.decreaseCardNum();
                     this.setExchangeCard(game,true);
-
-                    //if (!playerService.checkIfCanPlay(game, game.getPlayer(0).getId())) {
-                    //    this.rotatePlayersUntilNextPossible(game);
-                    //}
-                //}
             weatherService.updateWeather(game);
             boardService.checkFieldsWeatherChange(game);
         }
@@ -228,7 +248,6 @@ public class GameService {
         // get the game from gameId
         Game game = gameRepository.findById(gameId).orElse(null);
         assert game != null;
-        long gameID = game.getId();
 
         // set currentPlayer, partner, and rotate players
         Player currentPlayer = game.getPlayer(0);
@@ -281,15 +300,9 @@ public class GameService {
             // check if game still running and no cards left, distribute new cards
 
             if(game.getGameState() == GameState.RUNNING && !checkIfCardsLeft(game)) {
-                //while (game.getGameState() == GameState.RUNNING && !checkIfCardsLeft(game)) {
                     distributeCards(game, game.getCardNum());
                     game.decreaseCardNum();
                     this.setExchangeCard(game, true);
-
-                    //if (!playerService.checkIfCanPlay(game, game.getPlayer(0).getId())) {
-                      //  this.rotatePlayersUntilNextPossible(game);
-                    //}
-                //}
 
                 weatherService.updateWeather(game);
                 boardService.checkFieldsWeatherChange(game);
@@ -647,7 +660,8 @@ public class GameService {
     }
 
     public boolean checkToken(Long gameId, String tokenToCheck){
-        Game actualGameToCheck = gameRepository.findById(gameId).get();
+        Game actualGameToCheck = gameRepository.findById(gameId).orElse(null);
+        assert actualGameToCheck != null;
         User Host = actualGameToCheck.getHost();
         User UserBelongingToToken = userService.getUserByToken(tokenToCheck);
         return Host == UserBelongingToToken;
@@ -729,7 +743,6 @@ public class GameService {
     }
      */
 
-    // For testing reasons
     public MovePostDTO automaticMove(Player player, long gameId) {
         Game game = gameRepository.findById(gameId).orElse(null);
         assert game != null;

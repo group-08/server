@@ -1,7 +1,6 @@
 package ch.uzh.ifi.seal.soprafs20.user;
 
 import ch.uzh.ifi.seal.soprafs20.cards.Card;
-import ch.uzh.ifi.seal.soprafs20.rest.dto.MovePostDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.UserGetDTO;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
 import org.hibernate.annotations.LazyCollection;
@@ -37,8 +36,8 @@ public class Player {
     boolean finished = false;
 
     public Player() {
-        this.figures = new ArrayList<Figure>();
-        this.hand = new ArrayList<Card>();
+        this.figures = new ArrayList<>();
+        this.hand = new ArrayList<>();
     }
 
     public void setHand(List<Card> cards) {

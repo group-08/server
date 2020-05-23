@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 import org.json.*;
@@ -22,6 +21,7 @@ public class WeatherService {
     Weather weather = new Weather();
     City city = new City();
     HashMap<String, WeatherState> weatherHashMap= weather.getHashMapWeather();
+    Random random = new Random();
 
     public String getAPIResponse(int woeid) throws IOException {
 
@@ -69,14 +69,14 @@ public class WeatherService {
             }
         }
         catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
 
     public CityState randomCityChooser(){
         List<CityState> cities = new ArrayList<>(city.getHashMapCity().keySet());
-        Random r = new Random();
-        int i = r.nextInt(cities.size());
+        int i = random.nextInt(cities.size());
         return cities.get(i);
     }
 

@@ -38,19 +38,12 @@ public abstract class Field implements Serializable {
     }
 
 
-   /* public void removeAdjacency(Field removeField) {
-        if (this.adjacencyList.contains(removeField)) {
-            this.adjacencyList.remove(removeField);
-        }
-    }*/
 
     public List<Field> getAdjacencyList() {
         return this.adjacencyList;
     }
 
-    /*public void setAdjacencyList(List<Field> adjacencyList) {
-        this.adjacencyList = adjacencyList;
-    }*/
+
 
     public Figure getOccupant() {
         return occupant;
@@ -60,28 +53,7 @@ public abstract class Field implements Serializable {
         this.occupant = occupant;
     }
 
-    /*
-    public boolean equals(Object v){
-        if (v==this){
-            return true;
-        }
-        if(!(v instanceof Field)){
-            return false;
-        }
-
-        Field v2 = (Field) v;
-
-        return id == v2.id;
-    }
-
-    public int hashCode() {
-        int result = 17;
-        result = (int) (31 * result + id);
-        return result;
-    }
-    */
-
-    public long getId(){return id;};
+    public long getId(){return id;}
 
     public void setId(long id) {
         this.id = id;

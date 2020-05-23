@@ -34,7 +34,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(LobbyController.class)
-public class LobbyControllerTest {
+class LobbyControllerTest {
 
         @Autowired
         private MockMvc mockMvc;
@@ -44,7 +44,7 @@ public class LobbyControllerTest {
 
 
     @Test
-    public void givenLobbies_whenGetLobbies_thenReturnJsonArray() throws Exception {
+    void givenLobbies_whenGetLobbies_thenReturnJsonArray() throws Exception {
         // given
 
         User user = new User();
@@ -76,7 +76,7 @@ public class LobbyControllerTest {
     }
 
     @Test
-    public void createLobby_whenPostLobbies() throws Exception{
+    void createLobby_whenPostLobbies() throws Exception{
         User user = new User();
         user.setUsername("firstname.lastname");
         user.setEmail("firstname@lastname.ch");
@@ -108,7 +108,7 @@ public class LobbyControllerTest {
     }
 
     @Test
-    public void getLobbyById_whenGetLobby() throws Exception{
+    void getLobbyById_whenGetLobby() throws Exception{
         User user = new User();
         user.setUsername("firstname.lastname");
         user.setEmail("firstname@lastname.ch");
@@ -136,7 +136,7 @@ public class LobbyControllerTest {
     }
 
     @Test
-    public void addUserToLobby() throws Exception{
+    void addUserToLobby() throws Exception{
 
 
         Mockito.doNothing().when(gameService).addUser(Mockito.any(), Mockito.anyString());
@@ -151,7 +151,7 @@ public class LobbyControllerTest {
     }
 
     @Test
-    public void startGame() throws Exception{
+    void startGame() throws Exception{
 
         given(gameService.checkToken(Mockito.any(), Mockito.anyString())).willReturn(true);
         Mockito.doNothing().when(gameService).setUpGame(Mockito.anyLong());

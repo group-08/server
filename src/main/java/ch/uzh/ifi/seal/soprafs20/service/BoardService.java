@@ -10,7 +10,6 @@ import ch.uzh.ifi.seal.soprafs20.field.*;
 import ch.uzh.ifi.seal.soprafs20.game.Game;
 import ch.uzh.ifi.seal.soprafs20.game.WeatherState;
 import ch.uzh.ifi.seal.soprafs20.repository.BoardRepository;
-import ch.uzh.ifi.seal.soprafs20.repository.CardRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs20.user.Figure;
 import ch.uzh.ifi.seal.soprafs20.user.Player;
@@ -18,10 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import javax.print.attribute.standard.PDLOverrideSupported;
 import javax.transaction.Transactional;
 import java.util.*;
-import java.nio.channels.FileLockInterruptionException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,12 +30,14 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final GameRepository gameRepository;
+    private Random random;
 
     @Autowired
     public BoardService(@Qualifier("boardRepository") BoardRepository boardRepository,
                         @Qualifier("gameRepository") GameRepository gameRepository){
         this.boardRepository = boardRepository;
         this.gameRepository = gameRepository;
+        this.random = new Random();
     }
 
     public Board getBoard(Game game) {
@@ -78,9 +77,8 @@ public class BoardService {
                 casualFields.add(field);
             }
         }
-        Random rand = new Random();
 
-        Field randomCasualField = casualFields.get(rand.nextInt(casualFields.size()));
+        Field randomCasualField = casualFields.get(random.nextInt(casualFields.size()));
 
         if(randomCasualField.getOccupant()!=null){
             Figure figureOfField = randomCasualField.getOccupant();
@@ -183,9 +181,6 @@ public class BoardService {
         Field targetField = this.matchFields(game, targetFieldObject);
         Field currentField = getFieldfromFigure(game, figure);
         Figure occ = currentField.getOccupant();
-        if (occ == null) {
-            System.out.println();
-        }
         assert occ != null;
 
         if (targetField.getOccupant() != null) {
@@ -414,11 +409,10 @@ public class BoardService {
 
 
         ///fours valid moves
-        Board gameBoard = actualGame.getBoard();
         possibleMovesJoker.addAll(getPossibleFields(actualGame, card4, field));
 
         ///Jacks valid move
-        possibleMovesJoker.addAll(getPossibleFieldsJack(actualGame,cardJack,field));
+        possibleMovesJoker.addAll(getPossibleFieldsJack(actualGame,field));
 
 
         return possibleMovesJoker;
@@ -449,7 +443,7 @@ public class BoardService {
             queue.add(fieldToCheck);
             queue.add(null);
             while (!queue.isEmpty() && level < moveValue) {
-                Field temp = queue.poll();
+                    Field temp = queue.poll();
                 if (temp == null) {
                     level++;
                     queue.add(null);
@@ -495,7 +489,7 @@ public class BoardService {
         return possibleFields;
     }
 
-    public ArrayList<Field> getPossibleFieldsJack(Game actualGame, Card card, Field field){
+    public ArrayList<Field> getPossibleFieldsJack(Game actualGame, Field field){
         ArrayList<Field> possibleFields = new ArrayList<>();
         Player playerOnField = field.getOccupant().getPlayer();
         Board board = actualGame.getBoard();

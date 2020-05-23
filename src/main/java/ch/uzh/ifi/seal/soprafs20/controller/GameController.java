@@ -1,8 +1,5 @@
 package ch.uzh.ifi.seal.soprafs20.controller;
 
-
-import ch.uzh.ifi.seal.soprafs20.board.Board;
-import ch.uzh.ifi.seal.soprafs20.cards.Card;
 import ch.uzh.ifi.seal.soprafs20.field.Field;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.*;
 import ch.uzh.ifi.seal.soprafs20.rest.mapper.DTOMapper;
@@ -12,7 +9,6 @@ import ch.uzh.ifi.seal.soprafs20.user.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.FieldPosition;
 import java.util.ArrayList;
 import java.util.List;
 

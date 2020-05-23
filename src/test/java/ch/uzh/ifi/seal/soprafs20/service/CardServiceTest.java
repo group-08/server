@@ -30,7 +30,7 @@ class CardServiceTest {
     private Card testCard;
 
     @Test
-    public void removeCard(){
+    void removeCard(){
         List<Card> hand = new ArrayList<>();
         Card cardKing = new NormalCard(Suit.CLUBS, Value.KING);
         Card cardFive = new NormalCard(Suit.CLUBS, Value.FIVE);

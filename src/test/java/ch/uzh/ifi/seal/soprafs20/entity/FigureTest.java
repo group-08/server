@@ -6,9 +6,9 @@ import ch.uzh.ifi.seal.soprafs20.field.Field;
 import ch.uzh.ifi.seal.soprafs20.user.Figure;
 import org.junit.jupiter.api.Test;
 
-public class FigureTest {
+class FigureTest {
     @Test
-    public void TestCorrectFigureCreation() {
+    void TestCorrectFigureCreation() {
         Field testField = new CasualField();
         Figure testFigure = new Figure(testField);
         assertEquals(testField, testFigure.getField());
