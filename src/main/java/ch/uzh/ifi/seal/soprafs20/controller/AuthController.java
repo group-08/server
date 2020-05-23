@@ -24,6 +24,11 @@ public class AuthController {
         this.userService = userService;
     }
 
+    // Return 401 if user doesn't exists or pwd and username combo is incorrect
+    @ResponseStatus(value = HttpStatus.UNAUTHORIZED, reason = "Error: E-Mail and Password don't match.")
+    private static class IncorrectCredentials extends RuntimeException { }
+
+
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -35,8 +40,7 @@ public class AuthController {
         }
         catch (IllegalAccessException e) {
             // Wrong password
-            // TODO return proper 403
-            throw new Exception("Wrong password");
+            throw new IncorrectCredentials();
         }
         // convert internal representation of user back to API
         return loginUser;
