@@ -97,7 +97,7 @@ public class DeckService {
     /// second version
     public List<Card> drawCards (int amountToDraw, Long  Id){
 
-        List<Card> hand = new ArrayList<Card>();
+        List<Card> hand = new ArrayList<>();
 
 
         ///drawing as many cards from cards as necessary
@@ -143,7 +143,7 @@ public class DeckService {
 
     ///create normal cards by iterating through the values and suits
     private List<Card> createCardsNormalPart(){
-        List<Card> cards = new ArrayList<Card>();
+        List<Card> cards = new ArrayList<>();
         for(Suit suit : Suit.values()){
             for(Value myValue : Value.values()){
                 Card newNormalCard = new NormalCard(suit, myValue);

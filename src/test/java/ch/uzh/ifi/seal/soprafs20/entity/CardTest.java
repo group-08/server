@@ -6,12 +6,12 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class CardTest {
+class CardTest {
 
 
 
     @Test
-    public void createNormalCard() {
+    void createNormalCard() {
         // given
         Value valueTestCard = Value.ACE;
         Suit suitTestCard = Suit.CLUBS;
@@ -22,11 +22,11 @@ public class CardTest {
     }
 
     @Test
-    public void createNormalCardWithSuitAndValue() {
+    void createNormalCardWithSuitAndValue() {
         // given
         Card testCard = new NormalCard(Suit.DIAMONDS, Value.EIGHT);
 
         // assert
-        assertEquals(testCard.getValue(), Value.EIGHT);
+        assertEquals(Value.EIGHT, testCard.getValue());
     }
 }

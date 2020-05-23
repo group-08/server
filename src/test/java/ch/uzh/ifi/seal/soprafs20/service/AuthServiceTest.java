@@ -27,7 +27,7 @@ class AuthServiceTest {
     private UserPostLoginDTO userPostLoginDTO;
 
     @BeforeEach
-    public void setup() throws IllegalAccessException {
+    void setup() throws IllegalAccessException {
         MockitoAnnotations.initMocks(this);
 
         // given
@@ -45,7 +45,7 @@ class AuthServiceTest {
     }
 
     @Test
-    public void loginTestCorrect() throws IllegalAccessException {
+    void loginTestCorrect() throws IllegalAccessException {
 
 
         UserPostLoginDTO userPostLoginDTO = new UserPostLoginDTO();
@@ -63,7 +63,7 @@ class AuthServiceTest {
     }
 
     @Test
-    public void loginTestIncorrect() throws IllegalAccessException{
+    void loginTestIncorrect() throws IllegalAccessException{
 
 
         UserPostLoginDTO userPostLoginDTOFalse = new UserPostLoginDTO();
@@ -78,7 +78,7 @@ class AuthServiceTest {
     }
 
     @Test
-    public void logoutTest(){
+    void logoutTest(){
 
         String userToken = "randomString";
 

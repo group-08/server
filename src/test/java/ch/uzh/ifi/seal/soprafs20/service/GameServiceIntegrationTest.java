@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @WebAppConfiguration
 @SpringBootTest
-public class GameServiceIntegrationTest {
+class GameServiceIntegrationTest {
 
     @Qualifier("gameRepository")
     @Autowired
@@ -69,7 +69,7 @@ public class GameServiceIntegrationTest {
     private long ID;
 
     @BeforeEach
-    public void init() {
+    void init() {
         gameRepository.deleteAll();
         userRepository.deleteAll();
         cardRepository.deleteAll();
@@ -135,14 +135,14 @@ public class GameServiceIntegrationTest {
     }
 
     @AfterEach
-    public void tearDown() {
+    void tearDown() {
         gameRepository.deleteAll();
         userRepository.deleteAll();
         cardRepository.deleteAll();
     }
 
     @Test
-    public void SetUpGameIntegrationTest() {
+    void SetUpGameIntegrationTest() {
         // Check if every player has 4 figures
         assertEquals(4, game.getPlayer(0).getFigures().size());
         assertEquals(4, game.getPlayer(1).getFigures().size());
@@ -172,7 +172,7 @@ public class GameServiceIntegrationTest {
     }
 
     @Test
-    public void MoveFigureTest() {
+    void MoveFigureTest() {
         ////////// CARD SETUP ///////////
         Card KingClubs = new NormalCard(Suit.CLUBS, Value.KING);
         cardRepository.saveAndFlush(KingClubs);
@@ -214,7 +214,7 @@ public class GameServiceIntegrationTest {
     }
 
     @RepeatedTest(value = 10)
-    public void PlayRounds() {
+    void PlayRounds() {
         /////////// MOVE LOGIC ///////////
         List<Card> playedCards = new ArrayList<>();
         List<Player> players = new ArrayList<>();
@@ -260,7 +260,7 @@ public class GameServiceIntegrationTest {
     }
 
     @Test
-    public void sendHome() {
+    void sendHome() {
         long gameId = game.getId();
         Figure figure1 = game.getPlayer(0).getFigures().get(0);
         long figure1Id = figure1.getId();
@@ -312,7 +312,7 @@ public class GameServiceIntegrationTest {
 
 
     @Test
-    public void playPlayersMoveSevenTest(){
+    void playPlayersMoveSevenTest(){
 
         long gameId = game.getId();
         Figure figure1 = game.getPlayer(0).getFigures().get(0);
@@ -369,7 +369,7 @@ public class GameServiceIntegrationTest {
     }
 
     @Test
-    public void playPlayersMoveSevenRemainingTest(){
+    void playPlayersMoveSevenRemainingTest(){
 
         long gameId = game.getId();
         Figure figure1 = game.getPlayer(0).getFigures().get(0);
@@ -424,7 +424,7 @@ public class GameServiceIntegrationTest {
     }
 
     @Test
-    public void testTakeOverPartnersFigures(){
+    void testTakeOverPartnersFigures(){
 
         Player player1 = game.getPlayer(0);
 
@@ -469,7 +469,7 @@ public class GameServiceIntegrationTest {
     }
 
     @Test
-    public void getFiguresFromPartner(){
+    void getFiguresFromPartner(){
 
         Player player1 = game.getPlayer(0);
         Player partner = game.getPlayer(2);
@@ -517,7 +517,7 @@ public class GameServiceIntegrationTest {
     }
 
     @Test
-    public void checkPossibleMovesWithPartnerFigures() {
+    void checkPossibleMovesWithPartnerFigures() {
 
         Player player1 = game.getPlayer(0);
         Player partner = game.getPlayer(2);
@@ -575,7 +575,7 @@ public class GameServiceIntegrationTest {
 
 
     @Test
-    public void checkIfGameFinishes() {
+    void checkIfGameFinishes() {
 
         Player player1 = game.getPlayer(0);
         Player partner = game.getPlayer(2);

@@ -12,9 +12,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * DTOMapperTest
  * Tests if the mapping between the internal and the external/API representation works.
  */
-public class DTOMapperTest {
+class DTOMapperTest {
     @Test
-    public void testCreateUser_fromUserPostDTO_toUser_success() {
+    void testCreateUser_fromUserPostDTO_toUser_success() {
         // create UserPostDTO
         UserPostDTO userPostDTO = new UserPostDTO();
         userPostDTO.setEmail("user@name.tld");
@@ -31,7 +31,7 @@ public class DTOMapperTest {
     }
 
     @Test
-    public void testGetUser_fromUser_toUserGetDTO_success() {
+    void testGetUser_fromUser_toUserGetDTO_success() {
         // create User
         User user = new User();
         user.setEmail("firstname@lastname.tld");
@@ -50,7 +50,7 @@ public class DTOMapperTest {
     }
 
     @Test
-    public void testCreateGameGetDTO_fromGame(){
+    void testCreateGameGetDTO_fromGame(){
         //create Game
         User user = new User();
         user.setEmail("firstname@lastname.tld");
@@ -69,7 +69,7 @@ public class DTOMapperTest {
     }
 
     @Test
-    public void testCreatePlayerGetDTO_fromPlayer() {
+    void testCreatePlayerGetDTO_fromPlayer() {
         Player testPlayer = new Player();
         testPlayer.setColour(Colour.GREEN);
 

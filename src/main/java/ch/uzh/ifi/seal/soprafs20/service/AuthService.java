@@ -27,16 +27,6 @@ import java.util.UUID;
             this.userRepository = userRepository;
         }
 
-        // Check if username and password matches
-       /* public Boolean checkPassword(String username, String password) {
-            if (this.userRepository.existsUserByUsername(username)) {
-                User user = this.userRepository.findByUsername(username);
-                return user.checkPassword(password);
-            }
-
-            return false;
-        }*/
-
         // Actually login the user
         public User login(UserPostLoginDTO loginPostUser) throws IllegalAccessException{
             // Get the user trying to login

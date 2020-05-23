@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class Weather {
 
-    HashMap<String, WeatherState> hashMapWeather = new HashMap<String, WeatherState>();
+    HashMap<String, WeatherState> hashMapWeather = new HashMap<>();
 
     public Weather() {
         hashMapWeather.put("Snow", WeatherState.RAINY);

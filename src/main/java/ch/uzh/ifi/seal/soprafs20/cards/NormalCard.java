@@ -60,8 +60,8 @@ public class NormalCard extends Card {
     public int hashCode() {
         int result = 17;
 
-        result = (int) (31 * result + suit.hashCode());
-        result = (int) (31 * result + value.hashCode());
+        result = (31 * result + suit.hashCode());
+        result = (31 * result + value.hashCode());
         return result;
     }
 

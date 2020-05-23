@@ -24,7 +24,7 @@ import java.util.List;
 
 @WebAppConfiguration
 @SpringBootTest
-public class ApiTest {
+class ApiTest {
 
 
     @Autowired
@@ -42,13 +42,13 @@ public class ApiTest {
     private UserRepository userRepository;
 
     @AfterEach
-    public void tearDown() {
+    void tearDown() {
         gameRepository.deleteAll();
         userRepository.deleteAll();
     }
 
     @Test
-    public void ApiTestFull() {
+    void ApiTestFull() {
         User user = new User();
         user.setUsername("firstname.lastname");
         user.setEmail("firstname@lastname.ch");
