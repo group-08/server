@@ -17,7 +17,7 @@ public class Deck implements Serializable {
 
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(targetEntity = Card.class, cascade = CascadeType.ALL)
-    List<Card> cards = new ArrayList<>();
+    private List<Card> cards = new ArrayList<>();
 
 
 
