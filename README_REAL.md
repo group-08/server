@@ -4,7 +4,7 @@
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=group-08_server&metric=security_rating)](https://sonarcloud.io/dashboard?id=group-08_server)
 
 
-# Brändi Dog
+# Dog
 
 ## Introduction
 
