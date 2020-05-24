@@ -125,5 +125,5 @@ We would especially like to thank Alex, for his support and good advice during o
 
 ## License
 
-GNU General Public License v3.0 Full License
+GNU General Public License v3.0 [Full License](https://sopra-fs20-group-08-client.herokuapp.com/license)
 
