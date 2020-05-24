@@ -54,7 +54,7 @@ public class GameController {
     }
     //get current game with id
 
-    @PostMapping("/game/{id}/finished")
+    @GetMapping("/game/{id}/finished")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public GameFinishedDTO getGameFinished(@PathVariable Long id) {
