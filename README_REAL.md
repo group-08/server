@@ -7,12 +7,12 @@ In addition, the goal was to also create a game, that is visually appealing and 
 
 ## Technologies
 
-- For the writing of the code an the debugging IntelliJ
-- For the deployment of the server Heroku was used
-- For the version control and the exchanging of code Github was used
-- For the planning of the tasks Jira was used
-- For the communication, MS Teams was mostly used
-- Sonarcloud
+- IntelliJ: For the writing of the code an the debugging
+- Heroku: For the deployment of the server
+- GitHub: For the version control and the exchanging of code
+- Jira: For the planning of the tasks
+- Ms Teams: For the communication
+- Sonarcloud: For the testing of our project and the security checks
 
 ## High Level Components
 
@@ -36,6 +36,12 @@ The GameController handles all the calls that are received from the frontend, an
 https://github.com/group-08/server/blob/master/src/main/java/ch/uzh/ifi/seal/soprafs20/game/Game.java
 The Game class is an entity in the database. It includes the main information about the game and is the most complex entity in the database, because it is connected to a lot of other classes.
 
+## Launch & Deployment:
+
+-
+-
+-
+-
 
 
 
@@ -62,5 +68,9 @@ One more interesting feature would be a new board for more players. So if there 
 
 We would especially like to thank Alex, for his support and good advice during our whole project time!
 
-
+## License
+-
+-
+-
+-
 
