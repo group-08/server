@@ -53,12 +53,12 @@ One more interesting feature would be a new board for more players. So if there 
 
 ## Authors and acknowledgement
 
-**Oliver Kamer** - *Backend and Frontend* [olikami](https://github.com/orgs/group-08/people/olikami)
-**Felix Hoffmann** - *Backend and Frontend* [Felixuss](https://github.com/orgs/group-08/people/Felixuss)
-**Nick Kipfer** - *Backend and Frontend* [GiantDwarf42](https://github.com/orgs/group-08/people/GiantDwarf42)
-**Philip Flury** - *Backend and Frontend* [TheRobihno70](https://github.com/orgs/group-08/people/TheRobihno70)
-**Flurin Knellwolf** - *Backend and Frontend* [saegge123](https://github.com/orgs/group-08/people/saegge123)
-**Alex Scheitlin** - *Support and Advice* [alexscheitlin](https://github.com/orgs/group-08/people/alexscheitlin)
+**Oliver Kamer** - *Backend and Frontend* [olikami](https://github.com/orgs/group-08/people/olikami)<br>
+**Felix Hoffmann** - *Backend and Frontend* [Felixuss](https://github.com/orgs/group-08/people/Felixuss)<br>
+**Nick Kipfer** - *Backend and Frontend* [GiantDwarf42](https://github.com/orgs/group-08/people/GiantDwarf42)<br>
+**Philip Flury** - *Backend and Frontend* [TheRobihno70](https://github.com/orgs/group-08/people/TheRobihno70)<br>
+**Flurin Knellwolf** - *Backend and Frontend* [saegge123](https://github.com/orgs/group-08/people/saegge123)<br>
+**Alex Scheitlin** - *Support and Advice* [alexscheitlin](https://github.com/orgs/group-08/people/alexscheitlin)<br>
 
 We would especially like to thank Alex, for his support and good advice during our whole project time!
 
