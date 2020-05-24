@@ -808,13 +808,12 @@ public class GameService {
                         userList.add(partnerUser);
                     }
 
-
-                    
                     gameFinishedDTO.setWinners(userList);
                     return gameFinishedDTO;
                 }
             }
-        }return null;
+        }
+        return null;
     }
 
     public void deleteGame(long gameId) {
