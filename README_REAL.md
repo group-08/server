@@ -46,7 +46,7 @@ The Game class is an entity in the database. It includes the main information ab
 
 ## Launch & Deployment:
 
-Download your IDE of choice: (e.g., [Eclipse](http://www.eclipse.org/downloads/), [IntelliJ](https://www.jetbrains.com/idea/download/)) and make sure Java 13 is installed on your system. **Important:** A smooth run of the application is only guaranteed on the browser GoogleChrome.
+Download your IDE of choice: (e.g., [Eclipse](http://www.eclipse.org/downloads/), [IntelliJ](https://www.jetbrains.com/idea/download/)) and make sure Java 13 is installed on your system. **Important:** A smooth run of the application is only guaranteed in the browser GoogleChrome.
 
 1. File -> Open... -> SoPra Server Template
 2. Accept to import the project as a `gradle project`
