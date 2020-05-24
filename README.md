@@ -1,3 +1,5 @@
+# Dog
+
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=group-08_server&metric=alert_status)](https://sonarcloud.io/dashboard?id=group-08_server)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=group-08_server&metric=bugs)](https://sonarcloud.io/dashboard?id=group-08_server)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=group-08_server&metric=coverage)](https://sonarcloud.io/dashboard?id=group-08_server)
@@ -5,7 +7,6 @@
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=group-08_server&metric=ncloc)](https://sonarcloud.io/dashboard?id=group-08_server)
 
 
-# Dog
 
 ## Introduction
 
@@ -21,27 +22,22 @@ In addition, the goal was to also create a game, that is visually appealing and 
 - Jira: For the planning of the tasks
 - Ms Teams: For the communication
 - Sonarcloud: For the testing of our project and the security checks
+- Spring Boot: Framework for server aplicaiton
+- Spring Security Crypto Module: For storing passwords in a secure fashion
 
 ## High Level Components
 
-### GameService
+### [GameService](https://github.com/group-08/server/blob/master/src/main/java/ch/uzh/ifi/seal/soprafs20/service/GameService.java)
 
-https://github.com/group-08/server/blob/master/src/main/java/ch/uzh/ifi/seal/soprafs20/service/GameService.java
 The most important component in the server part is the GameService. It is responsible for the gameflow and the redirecting to other classes
 
-### BoardService
-
-https://github.com/group-08/server/blob/master/src/main/java/ch/uzh/ifi/seal/soprafs20/service/BoardService.java
+### [BoardService](https://github.com/group-08/server/blob/master/src/main/java/ch/uzh/ifi/seal/soprafs20/service/BoardService.java)
 The board service is responsible for the movement over the board and also for the calculation of the possible fields. The graph function which connects the fields is also in the boardservice. The graph is responsible for the correct calculation of the possible fields.
 
-### GameController
-
-https://github.com/group-08/server/blob/master/src/main/java/ch/uzh/ifi/seal/soprafs20/controller/LobbyController.java
+### [GameController](https://github.com/group-08/server/blob/master/src/main/java/ch/uzh/ifi/seal/soprafs20/controller/LobbyController.java)
 The GameController handles all the calls that are received from the frontend, and redirects them. This class is the one that is active while the game is actually played.
 
-### Game
-
-https://github.com/group-08/server/blob/master/src/main/java/ch/uzh/ifi/seal/soprafs20/game/Game.java
+### [Game](https://github.com/group-08/server/blob/master/src/main/java/ch/uzh/ifi/seal/soprafs20/game/Game.java)
 The Game class is an entity in the database. It includes the main information about the game and is the most complex entity in the database, because it is connected to a lot of other classes.
 
 ## Launch & Deployment:
