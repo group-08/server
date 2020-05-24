@@ -100,6 +100,10 @@ If you want to avoid running all tests with every change, use the following comm
 
 `./gradlew build --continuous -xtest`
 
+### Build and deploy
+
+Before adding new code, a new branch with a meaningful name has to be made. One should always work on a branch and not on the master. Before a branch can be merged into the master, a pull request has to be made for the branch, and at least someone has to review it. The tests have to pass before the code can be merged. After the tests pass and the code is reviewed, the changes can be merged with the master.
+Before the deployment on heroku, the code is checked in sonarcloud for issues and bugs.
 
 
 ## Road Map
