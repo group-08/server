@@ -59,7 +59,6 @@ public class GameService {
         this.boardService = new BoardService(boardRepository, gameRepository);
         this.playerService = new PlayerService(playerRepository, boardRepository, gameRepository);
         this.userService = new UserService(userRepository);
-        this.cardService = new CardService(cardRepository);
         this.deckService = new DeckService(deckRepository, cardRepository);
         this.weatherService = new WeatherService();
     }
