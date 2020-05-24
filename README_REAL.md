@@ -124,8 +124,6 @@ One more interesting feature would be a new board for more players. So if there 
 We would especially like to thank Alex, for his support and good advice during our whole project time!
 
 ## License
--
--
--
--
+
+GNU General Public License v3.0 Full License
 
