@@ -2,6 +2,7 @@
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=group-08_server&metric=bugs)](https://sonarcloud.io/dashboard?id=group-08_server)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=group-08_server&metric=coverage)](https://sonarcloud.io/dashboard?id=group-08_server)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=group-08_server&metric=security_rating)](https://sonarcloud.io/dashboard?id=group-08_server)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=group-08_server&metric=ncloc)](https://sonarcloud.io/dashboard?id=group-08_server)
 
 
 # Dog
