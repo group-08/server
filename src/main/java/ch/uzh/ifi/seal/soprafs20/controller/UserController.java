@@ -48,17 +48,4 @@ public class UserController {
         //somewhere has to be a token
     }
 
-
-    // return user with that id
-
-    @PutMapping("/user/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ResponseBody
-    public void updateUser() {
-
-    }
-    //updates user
-    //returns nothing
-
-
 }

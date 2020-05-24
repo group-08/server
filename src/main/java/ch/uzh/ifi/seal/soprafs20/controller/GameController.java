@@ -23,7 +23,7 @@ public class GameController {
     @PostMapping("/game/{id}/possible")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public ArrayList<FieldGetDTO> getPossibleFields(@RequestBody MovePostDTO move, @PathVariable long id) {
+    public List<FieldGetDTO> getPossibleFields(@RequestBody MovePostDTO move, @PathVariable long id) {
         List<Field> fields = gameService.getPossibleFields(id, move);
         ArrayList<FieldGetDTO> fieldsDTO = new ArrayList<>();
         for (Field field : fields) {
@@ -73,13 +73,12 @@ public class GameController {
         User userExchangingCard = gameService.getUserByToken(token);
         Player playerExchangingCard = gameService.getPlayerFromUser(userExchangingCard);
         long cardId = exchangePostDTO.getCardId();
-        GameGetDTO updatedGame = DTOMapper.INSTANCE.convertEntityToGameGetDTO(
+        return DTOMapper.INSTANCE.convertEntityToGameGetDTO(
                 gameService.letPlayersChangeCard(
                         id,
                         playerExchangingCard.getId(),
                         cardId)
         );
-        return updatedGame;
     }
 
 }

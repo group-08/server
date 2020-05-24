@@ -21,8 +21,7 @@ public class FieldGetDTO {
     }
 
     public FigureGetDTO getOccupant() {
-        FigureGetDTO occupantDTO = DTOMapper.INSTANCE.convertEntityToFigureGetDTO(this.occupant);
-        return occupantDTO;
+        return DTOMapper.INSTANCE.convertEntityToFigureGetDTO(this.occupant);
     }
 
     public void setOccupant(Figure occupant) {

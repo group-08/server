@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @DataJpaTest
-public class PlayerRepositoryIntegrationTest {
+class PlayerRepositoryIntegrationTest {
 
     @Autowired
     private TestEntityManager entityManager;
@@ -35,7 +35,7 @@ public class PlayerRepositoryIntegrationTest {
     }
 
     @Test
-    public void getOnePlayerRepositoryTest() {
+    void getOnePlayerRepositoryTest() {
         //given
         User user = new User();
         user.setEmail("firstname@lastname.tld");

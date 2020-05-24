@@ -32,7 +32,6 @@ public class GameService {
     private final BoardService boardService;
     private final GameRepository gameRepository;
     private UserRepository userRepository;
-    private CardService cardService;
     private FieldRepository fieldRepository;
     private FigureRepository figureRepository;
     private CardRepository cardRepository;
@@ -60,7 +59,6 @@ public class GameService {
         this.boardService = new BoardService(boardRepository, gameRepository);
         this.playerService = new PlayerService(playerRepository, boardRepository, gameRepository);
         this.userService = new UserService(userRepository);
-        this.cardService = new CardService(cardRepository);
         this.deckService = new DeckService(deckRepository, cardRepository);
         this.weatherService = new WeatherService();
     }
@@ -432,8 +430,7 @@ public class GameService {
     }
 
     public Player createRoboPlayer(){
-        Player roboPlayer = new Player();
-        return roboPlayer;
+        return new Player();
     }
 
 
@@ -519,11 +516,11 @@ public class GameService {
     public void playRoboMove(long gameId) {
         Game game = gameRepository.findById(gameId).orElse(null);
         assert game != null;
-        long ID = game.getId();
+        long id = game.getId();
 
         Player player = game.getPlayers().get(0);
 
-        MovePostDTO move = automaticMove(player, ID);
+        MovePostDTO move = automaticMove(player, id);
 
         long cardId = move.getCardId();
         Card card = getCardFromId(cardId);
@@ -532,7 +529,7 @@ public class GameService {
             while (card.getRemainingSteps() > 0) {
                 player = playerService.findById(playerId);
                 assert player != null;
-                move = automaticMoveSeven(ID, card, player);
+                move = automaticMoveSeven(id, card, player);
                 playPlayersMoveSeven(game.getId(), move);
                 card = cardRepository.findById(cardId).orElse(null);
                 assert card != null;
@@ -662,9 +659,9 @@ public class GameService {
     public boolean checkToken(Long gameId, String tokenToCheck){
         Game actualGameToCheck = gameRepository.findById(gameId).orElse(null);
         assert actualGameToCheck != null;
-        User Host = actualGameToCheck.getHost();
-        User UserBelongingToToken = userService.getUserByToken(tokenToCheck);
-        return Host == UserBelongingToToken;
+        User host = actualGameToCheck.getHost();
+        User userBelongingToToken = userService.getUserByToken(tokenToCheck);
+        return host == userBelongingToToken;
     }
 
     public boolean checkIfUserExists(String tokenOfUser){
@@ -713,9 +710,8 @@ public class GameService {
         assert game != null;
         long gameId = game.getId();
 
-        if (allPlayersExchanged(game)) {
-            if (roboCheck(game) && hostCheck(game, token) && timedelta(game))
-            {playRoboMove(gameId);}
+        if (allPlayersExchanged(game) && roboCheck(game) && hostCheck(game, token) && timedelta(game)) {
+            playRoboMove(gameId);
         }
 
         return DTOMapper.INSTANCE.convertEntityToGameGetDTO(game);
@@ -731,17 +727,7 @@ public class GameService {
         }
         return exchanged;
     }
-    /*
-    public void deleteUser(Long id, UserPostDTO userToBeDeletedDTO){
-        String userToBeAddedUsername = userToBeDeletedDTO.getUsername();
-        User userToBeDeleted = userRepository.findByUsername(userToBeAddedUsername);
-        Game actualGame = gameRepository.findById(id).orElse(null);
-        if(actualGame!=null) {
-            actualGame.removePlayer(userToBeDeleted);
-        }
-        //We need function to delete User; Takes id and User;
-    }
-     */
+
 
     public MovePostDTO automaticMove(Player player, long gameId) {
         Game game = gameRepository.findById(gameId).orElse(null);
@@ -776,8 +762,7 @@ public class GameService {
                 return move;
             }
         }
-        MovePostDTO move = new MovePostDTO();
-        return move;
+        return new MovePostDTO();
     }
 
     public GameFinishedDTO findWinners(long gameID){

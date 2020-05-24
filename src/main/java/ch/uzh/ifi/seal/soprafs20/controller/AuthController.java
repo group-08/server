@@ -32,7 +32,7 @@ public class AuthController {
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public User login(@RequestBody UserPostLoginDTO userPostLoginDTO) throws Exception {
+    public User login(@RequestBody UserPostLoginDTO userPostLoginDTO) throws IncorrectCredentials {
         // Login the user
         User loginUser = null;
         try {

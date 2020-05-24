@@ -53,19 +53,17 @@ public class WeatherService {
         in.close();
         con.disconnect();
 
-        String response = content.toString();
-
-        return response;
+        return content.toString();
     }
 
     public WeatherState getWeather(String response){
         try {
             JSONObject obj = new JSONObject(response);
             JSONArray array = (JSONArray) obj.get("consolidated_weather");
-            JSONObject today_weather = (JSONObject) array.get(1);
-            String weather_state_name = (String) today_weather.get("weather_state_name");
-            if(weatherHashMap.containsKey(weather_state_name)){
-                return weatherHashMap.get(weather_state_name);
+            JSONObject todayWeather = (JSONObject) array.get(1);
+            String weatherStateName = (String) todayWeather.get("weather_state_name");
+            if(weatherHashMap.containsKey(weatherStateName)){
+                return weatherHashMap.get(weatherStateName);
             }
         }
         catch (Exception e) {
