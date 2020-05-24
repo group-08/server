@@ -73,13 +73,12 @@ public class GameController {
         User userExchangingCard = gameService.getUserByToken(token);
         Player playerExchangingCard = gameService.getPlayerFromUser(userExchangingCard);
         long cardId = exchangePostDTO.getCardId();
-        GameGetDTO updatedGame = DTOMapper.INSTANCE.convertEntityToGameGetDTO(
+        return DTOMapper.INSTANCE.convertEntityToGameGetDTO(
                 gameService.letPlayersChangeCard(
                         id,
                         playerExchangingCard.getId(),
                         cardId)
         );
-        return updatedGame;
     }
 
 }
