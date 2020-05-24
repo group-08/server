@@ -12,6 +12,7 @@ In addition, the goal was to also create a game, that is visually appealing and 
 - For the version control and the exchanging of code Github was used
 - For the planning of the tasks Jira was used
 - For the communication, MS Teams was mostly used
+- Sonarcloud
 
 ## High Level Components
 
@@ -37,6 +38,8 @@ The Game class is an entity in the database. It includes the main information ab
 
 
 
+
+
 ## Road Map
 
 ### Better AI
@@ -50,6 +53,14 @@ One more interesting feature would be a new board for more players. So if there 
 
 ## Authors and acknowledgement
 
+**Oliver Kamer** - *Backend and Frontend* [olikami](https://github.com/orgs/group-08/people/olikami)
+**Felix Hoffmann** - *Backend and Frontend* [Felixuss](https://github.com/orgs/group-08/people/Felixuss)
+**Nick Kipfer** - *Backend and Frontend* [GiantDwarf42](https://github.com/orgs/group-08/people/GiantDwarf42)
+**Philip Flury** - *Backend and Frontend* [TheRobihno70](https://github.com/orgs/group-08/people/TheRobihno70)
+**Flurin Knellwolf** - *Backend and Frontend* [saegge123](https://github.com/orgs/group-08/people/saegge123)
+**Alex Scheitlin** - *Support and Advice* [alexscheitlin](https://github.com/orgs/group-08/people/alexscheitlin)
+
+We would especially like to thank Alex, for his support and good advice during our whole project time!
 
 
 
