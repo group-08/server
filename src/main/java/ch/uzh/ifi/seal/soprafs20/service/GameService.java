@@ -213,7 +213,7 @@ public class GameService {
         if (playerService.checkIfPlayerFinished(game, currentPlayer)) {
             currentPlayer.setFinished(true);
             if (playerService.checkIfPlayerFinished(game, partner)) {
-                game.setGameState(GameState.FINISHED);
+                partner.setFinished(true);
                 increaseScore(currentPlayer,partner);
                 game.setGameState(GameState.FINISHED);
             }
