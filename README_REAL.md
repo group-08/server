@@ -38,11 +38,59 @@ The Game class is an entity in the database. It includes the main information ab
 
 ## Launch & Deployment:
 
--
--
--
--
+Download your IDE of choice: (e.g., [Eclipse](http://www.eclipse.org/downloads/), [IntelliJ](https://www.jetbrains.com/idea/download/)) and make sure Java 13 is installed on your system.
 
+1. File -> Open... -> SoPra Server Template
+2. Accept to import the project as a `gradle project`
+
+To build right click the `build.gradle` file and choose `Run Build`
+
+### Building with Gradle
+
+You can use the local Gradle Wrapper to build the application.
+
+Plattform-Prefix:
+
+-   MAC OS X: `./gradlew`
+-   Linux: `./gradlew`
+-   Windows: `./gradlew.bat`
+
+More Information about [Gradle Wrapper](https://docs.gradle.org/current/userguide/gradle_wrapper.html) and [Gradle](https://gradle.org/docs/).
+
+### Build
+
+```bash
+./gradlew build
+```
+
+### Run
+
+```bash
+./gradlew bootRun
+```
+
+### Test
+
+```bash
+./gradlew test
+```
+
+### Development Mode
+
+You can start the backend in development mode, this will automatically trigger a new build and reload the application
+once the content of a file has been changed and you save the file.
+
+Start two terminal windows and run:
+
+`./gradlew build --continuous`
+
+and in the other one:
+
+`./gradlew bootRun`
+
+If you want to avoid running all tests with every change, use the following command instead:
+
+`./gradlew build --continuous -xtest`
 
 
 
@@ -59,11 +107,11 @@ One more interesting feature would be a new board for more players. So if there 
 
 ## Authors and acknowledgement
 
-**Oliver Kamer** - *Backend and Frontend* [olikami](https://github.com/orgs/group-08/people/olikami)<br>
-**Felix Hoffmann** - *Backend and Frontend* [Felixuss](https://github.com/orgs/group-08/people/Felixuss)<br>
+**Oliver Kamer** - *Team Lead and Back-/Frontend* [olikami](https://github.com/orgs/group-08/people/olikami)<br>
+**Felix Hoffmann** - *Frontend* [Felixuss](https://github.com/orgs/group-08/people/Felixuss)<br>
 **Nick Kipfer** - *Backend and Frontend* [GiantDwarf42](https://github.com/orgs/group-08/people/GiantDwarf42)<br>
 **Philip Flury** - *Backend and Frontend* [TheRobihno70](https://github.com/orgs/group-08/people/TheRobihno70)<br>
-**Flurin Knellwolf** - *Backend and Frontend* [saegge123](https://github.com/orgs/group-08/people/saegge123)<br>
+**Flurin Knellwolf** - *Backend* [saegge123](https://github.com/orgs/group-08/people/saegge123)<br>
 **Alex Scheitlin** - *Support and Advice* [alexscheitlin](https://github.com/orgs/group-08/people/alexscheitlin)<br>
 
 We would especially like to thank Alex, for his support and good advice during our whole project time!
